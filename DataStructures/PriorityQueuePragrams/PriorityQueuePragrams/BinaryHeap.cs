@@ -52,9 +52,13 @@ namespace PriorityQueuePragrams
     /// <param name="value"></param>
     public void Insert(int value)
     {
+      //Insert a value at the end of the list.
       _lastNodeIndex = InsertValue(value);
 
+      //Heapify to upside. Which means, newly added node will get swapped with its parent if parent is greater than node.
       HeapifyUp(_lastNodeIndex);
+
+      //During heapify upwards if we messed with an order of tree then we will reorder it again from top to bottom. Rule is: Parent should be less than its left and right child.
       HeapifyDown();
     }
 
@@ -62,7 +66,7 @@ namespace PriorityQueuePragrams
     /// Inserts value into Heap as last node.
     /// </summary>
     /// <param name="value"></param>
-    /// <returns></returns>
+    /// <returns>Returns index where we have added last child</returns>
     private int InsertValue(int value)
     {
       var parentIndex = 1;
@@ -97,6 +101,10 @@ namespace PriorityQueuePragrams
       return childIndex;
     }
 
+    /// <summary>
+    /// //Heapify to upside. Which means, newly added node will get swapped with its parent if parent is greater than node.
+    /// </summary>
+    /// <param name="childIndex">Index of the newly added node in list.</param>
     private void HeapifyUp(int childIndex)
     {
       while (childIndex / 2 != 0)
@@ -117,18 +125,23 @@ namespace PriorityQueuePragrams
           break;
         }
 
+        //Lets return index where we have added node.
         childIndex = parentIndex;
       }
     }
 
+    /// <summary>
+    /// During heapify upwards if we messed with an order of tree then we will reorder it again from top to bottom. Rule is: Parent should be less than its left and right child.
+    /// </summary>
     private void HeapifyDown()
     {
       var parentIndex = 1;
       var leftChildIndex = 2 * parentIndex;
       var rightChildIndex = 2 * parentIndex + 1;
-      ;
+
       while (true)
       {
+        //If we are at end of the list
         if (_heap[parentIndex] == 0 || (parentIndex >= _heapSize))
         {
           break;
@@ -136,15 +149,15 @@ namespace PriorityQueuePragrams
 
         leftChildIndex = 2 * parentIndex;
 
+        //If child index is Out of bound.
         if (leftChildIndex >= _heapSize)
           break;
 
-
+        //We will ignore zeros
         if (_heap[leftChildIndex] == 0)
           break;
 
-
-
+        //If parent is greater than its left child. We will swap parent with its left child
         if ((_heap[parentIndex] > _heap[leftChildIndex]) && (_heap[leftChildIndex] > 0))
         {
           var temp = _heap[parentIndex];
@@ -154,15 +167,15 @@ namespace PriorityQueuePragrams
 
         rightChildIndex = 2 * parentIndex + 1;
 
+        //If child index is Out of bound.
         if (rightChildIndex >= _heapSize)
           return;
 
+        //Will ignore zeros
         if (_heap[rightChildIndex] == 0)
           break;
 
-
-        
-
+        //If parent is greater than its right child. We will swap parent with its right child
         if ((_heap[parentIndex] > _heap[rightChildIndex]) && (_heap[rightChildIndex] > 0))
         {
           var temp = _heap[parentIndex];
@@ -170,6 +183,7 @@ namespace PriorityQueuePragrams
           _heap[rightChildIndex] = temp;
         }
 
+        //Move to next item
         parentIndex++;
       }
     }
