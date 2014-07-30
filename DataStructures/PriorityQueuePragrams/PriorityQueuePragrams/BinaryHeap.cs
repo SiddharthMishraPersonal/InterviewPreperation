@@ -46,7 +46,10 @@ namespace PriorityQueuePragrams
       //}
     }
 
-
+    /// <summary>
+    /// Inserts value to its desired position. It also does percolation or heapify to keep Heap in order.
+    /// </summary>
+    /// <param name="value"></param>
     public void Insert(int value)
     {
       _lastNodeIndex = InsertValue(value);
@@ -55,10 +58,16 @@ namespace PriorityQueuePragrams
       HeapifyDown();
     }
 
+    /// <summary>
+    /// Inserts value into Heap as last node.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
     private int InsertValue(int value)
     {
       var parentIndex = 1;
       var childIndex = 0;
+
       while (true)
       {
         if (_heap[parentIndex] == 0)
@@ -90,11 +99,13 @@ namespace PriorityQueuePragrams
 
     private void HeapifyUp(int childIndex)
     {
-      var parentIndex = 1;
-
       while (childIndex / 2 != 0)
       {
-        parentIndex = childIndex / 2;
+        var parentIndex = childIndex / 2;
+
+        if (_heap[parentIndex] == 0)
+          continue;
+
         if (_heap[parentIndex] > _heap[childIndex])
         {
           var temp = _heap[parentIndex];
@@ -113,8 +124,8 @@ namespace PriorityQueuePragrams
     private void HeapifyDown()
     {
       var parentIndex = 1;
-      var leftChildIndex = 0;
-      var rightChildIndex = 0;
+      var leftChildIndex = 2 * parentIndex;
+      var rightChildIndex = 2 * parentIndex + 1;
       ;
       while (true)
       {
@@ -124,22 +135,35 @@ namespace PriorityQueuePragrams
         }
 
         leftChildIndex = 2 * parentIndex;
-        rightChildIndex = 2 * parentIndex + 1;
 
         if (leftChildIndex >= _heapSize)
           break;
 
-        if (_heap[parentIndex] > _heap[leftChildIndex])
+
+        if (_heap[leftChildIndex] == 0)
+          break;
+
+
+
+        if ((_heap[parentIndex] > _heap[leftChildIndex]) && (_heap[leftChildIndex] > 0))
         {
           var temp = _heap[parentIndex];
           _heap[parentIndex] = _heap[leftChildIndex];
           _heap[leftChildIndex] = temp;
         }
 
+        rightChildIndex = 2 * parentIndex + 1;
+
         if (rightChildIndex >= _heapSize)
           return;
 
-        if (_heap[parentIndex] > _heap[rightChildIndex])
+        if (_heap[rightChildIndex] == 0)
+          break;
+
+
+        
+
+        if ((_heap[parentIndex] > _heap[rightChildIndex]) && (_heap[rightChildIndex] > 0))
         {
           var temp = _heap[parentIndex];
           _heap[parentIndex] = _heap[rightChildIndex];
