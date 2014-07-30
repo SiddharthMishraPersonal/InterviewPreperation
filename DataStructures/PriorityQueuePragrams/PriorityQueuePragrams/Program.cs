@@ -26,6 +26,9 @@ namespace PriorityQueuePragrams
       heap.Insert(10);
 
       heap.Display();
+      heap.DeleteMin();
+      Console.WriteLine();
+      heap.Display();
       Console.Read();
 
     }

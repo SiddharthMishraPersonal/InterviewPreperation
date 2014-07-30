@@ -9,10 +9,12 @@ namespace PriorityQueuePragrams
   public class BinaryHeap
   {
     private int[] _heap;
-    private int _currentSize = 0;
+    private int _heapSize = 0;
+    private int _lastNodeIndex = 0;
 
     public BinaryHeap(int heapSize)
     {
+      _heapSize = heapSize;
       _heap = new int[heapSize];
     }
 
@@ -23,18 +25,18 @@ namespace PriorityQueuePragrams
         Console.WriteLine(value);
       }
 
-      //for (int j = 0; j < _currentSize; )
+      //for (int j = 0; j < _heapSize; )
       //{
       //  var t = j;
       //  for (int k = 0; k < t; k++)
       //  {
-      //    for (int i = 0; i < _currentSize / j; i++)
+      //    for (int i = 0; i < _heapSize / j; i++)
       //    {
       //      Console.Write("\t");
       //    }
-      //    if (j != _currentSize)
+      //    if (j != _heapSize)
       //      Console.Write(_heap[j++]);
-      //    for (int i = _currentSize / j; i > 0; i--)
+      //    for (int i = _heapSize / j; i > 0; i--)
       //    {
       //      Console.Write("\t");
       //    }
@@ -47,8 +49,9 @@ namespace PriorityQueuePragrams
 
     public void Insert(int value)
     {
-      var childIndex = InsertValue(value);
-      HeapifyUp(childIndex);
+      _lastNodeIndex = InsertValue(value);
+
+      HeapifyUp(_lastNodeIndex);
       HeapifyDown();
     }
 
@@ -61,6 +64,7 @@ namespace PriorityQueuePragrams
         if (_heap[parentIndex] == 0)
         {
           _heap[parentIndex] = value;
+          childIndex = parentIndex;
           break;
         }
 
@@ -114,7 +118,7 @@ namespace PriorityQueuePragrams
       ;
       while (true)
       {
-        if (_heap[parentIndex] == 0 || (parentIndex - 1 == _currentSize))
+        if (_heap[parentIndex] == 0 || (parentIndex >= _heapSize))
         {
           break;
         }
@@ -122,14 +126,20 @@ namespace PriorityQueuePragrams
         leftChildIndex = 2 * parentIndex;
         rightChildIndex = 2 * parentIndex + 1;
 
-        if (_heap[parentIndex] < _heap[leftChildIndex])
+        if (leftChildIndex >= _heapSize)
+          break;
+
+        if (_heap[parentIndex] > _heap[leftChildIndex])
         {
           var temp = _heap[parentIndex];
           _heap[parentIndex] = _heap[leftChildIndex];
           _heap[leftChildIndex] = temp;
         }
 
-        if (_heap[parentIndex] < _heap[rightChildIndex])
+        if (rightChildIndex >= _heapSize)
+          return;
+
+        if (_heap[parentIndex] > _heap[rightChildIndex])
         {
           var temp = _heap[parentIndex];
           _heap[parentIndex] = _heap[rightChildIndex];
@@ -142,7 +152,17 @@ namespace PriorityQueuePragrams
 
     public void DeleteMin()
     {
+      var parentIndex = 1;
 
+      //We will replace top item with the last item. And then we will do percolation downwards to fit that item at proper place.
+      _heap[parentIndex] = _heap[_lastNodeIndex];
+      PopLastItem();
+      HeapifyDown();
+    }
+
+    public void PopLastItem()
+    {
+      _heap[_lastNodeIndex] = 0;
     }
 
   }
