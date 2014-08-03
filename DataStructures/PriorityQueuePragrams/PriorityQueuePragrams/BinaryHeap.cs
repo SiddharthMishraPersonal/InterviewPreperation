@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PriorityQueuePragrams
 {
-  public class BinaryHeap
+  public class BinaryHeap : IDisposable
   {
     private int[] _heap;
     private int _heapSize = 0;
@@ -16,6 +16,11 @@ namespace PriorityQueuePragrams
     {
       _heapSize = heapSize;
       _heap = new int[heapSize];
+    }
+
+    ~BinaryHeap()
+    {
+      _heap = null;
     }
 
     public void Display()
@@ -203,5 +208,14 @@ namespace PriorityQueuePragrams
       _heap[_lastNodeIndex] = 0;
     }
 
+
+    #region IDisposable Members
+
+    public void Dispose()
+    {
+
+    }
+
+    #endregion
   }
 }

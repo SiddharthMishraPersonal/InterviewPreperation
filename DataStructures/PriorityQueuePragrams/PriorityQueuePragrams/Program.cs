@@ -10,26 +10,46 @@ namespace PriorityQueuePragrams
   {
     static void Main(string[] args)
     {
-      BinaryHeap heap = new BinaryHeap(16);
 
-      heap.Insert(5);
-      heap.Insert(11);
-      heap.Insert(18);
-      heap.Insert(21);
-      heap.Insert(33);
-      heap.Insert(7);
-      heap.Insert(1);
-      heap.Insert(2);
-      heap.Insert(3);
-      heap.Insert(19);
-      heap.Insert(6);
-      heap.Insert(10);
-      heap.Insert(4);
+      using (var heap = new BinaryHeap(16))
+      {
 
-      heap.Display();
-      heap.DeleteMin();
-      Console.WriteLine();
-      heap.Display();
+
+        heap.Insert(5);
+        heap.Insert(11);
+        heap.Insert(18);
+        heap.Insert(21);
+        heap.Insert(33);
+        heap.Insert(7);
+        heap.Insert(1);
+        heap.Insert(2);
+        heap.Insert(3);
+        heap.Insert(19);
+        heap.Insert(6);
+        heap.Insert(10);
+        heap.Insert(4);
+
+        heap.Display();
+        heap.DeleteMin();
+        Console.WriteLine();
+        heap.Display();
+
+      }
+
+
+      using (var priorityQueue = new PriorityQueueLinkedList())
+      {
+
+        priorityQueue.Insert(5);
+        priorityQueue.Insert(11);
+        priorityQueue.Insert(18);
+        priorityQueue.Insert(21);
+        priorityQueue.Insert(33);
+        priorityQueue.Insert(7);
+
+        priorityQueue.Display();
+      }
+
       Console.Read();
 
     }
