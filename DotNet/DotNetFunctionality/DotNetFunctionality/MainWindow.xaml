@@ -1,0 +1,182 @@
+﻿<Window x:Class="DotNetFunctionality.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Application"
+        SizeToContent="WidthAndHeight"
+        WindowStyle="ToolWindow">
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="Auto" />
+      <ColumnDefinition Width="Auto" />
+    </Grid.ColumnDefinitions>
+
+    <Grid Grid.Column="0">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+      <TextBlock Grid.Row="0"
+                 Grid.Column="0"
+                 Margin="5"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Center"
+                 Text="File Name:" />
+      <TextBox Grid.Row="0"
+               Grid.Column="01"
+               Width="150"
+               Margin="5"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Center" />
+
+      <TextBlock Grid.Row="1"
+                 Grid.Column="0"
+                 Margin="5"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Center"
+                 Text="File Path:" />
+
+      <StackPanel Grid.Row="1"
+                  Grid.Column="1"
+                  Margin="5"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Center"
+                  Orientation="Horizontal">
+        <TextBox Width="300"
+                 Margin="0,0,5,0"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Center" />
+        <Button HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Content="Browse..." />
+      </StackPanel>
+
+      <TextBlock Grid.Row="2"
+                 Grid.Column="0"
+                 Margin="5"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Top"
+                 Text="File Content:" />
+      <TextBox Grid.Row="2"
+               Grid.Column="1"
+               Width="355"
+               Height="400"
+               Margin="5"
+               HorizontalAlignment="Stretch"
+               VerticalAlignment="Center" />
+      <Button Grid.Row="3"
+              Grid.Column="1"
+              Margin="5"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Center"
+              Content="Save" />
+    </Grid>
+    <Grid Grid.Column="1">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
+      <TextBlock Grid.Row="0"
+                 Margin="5,5,5,15"
+                 FontWeight="Bold"
+                 Text="File Properties:" />
+      <TextBlock Grid.Row="1"
+                 Grid.Column="0"
+                 Margin="5"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Center"
+                 Text="File Name:" />
+      <TextBlock Grid.Row="1"
+                 Grid.Column="1"
+                 Margin="5"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Center"
+                 Text="{Binding FileName}" />
+      <TextBlock Grid.Row="2"
+                 Grid.Column="0"
+                 Margin="5"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Center"
+                 Text="File Path:" />
+      <TextBlock Grid.Row="2"
+                 Grid.Column="1"
+                 Margin="5"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Center"
+                 Text="{Binding FilePath}" />
+      <TextBlock Grid.Row="3"
+                 Grid.Column="0"
+                 Margin="5"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Center"
+                 Text="File Attributes:" />
+      <TextBlock Grid.Row="3"
+                 Grid.Column="1"
+                 Margin="5"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Center"
+                 Text="{Binding FileAttributes}" />
+      <TextBlock Grid.Row="4"
+                 Grid.Column="0"
+                 Margin="5"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Top"
+                 Text="File Content:" />
+      <TextBlock Grid.Row="4"
+                 Grid.Column="1"
+                 Width="400"
+                 Height="100"
+                 Margin="5"
+                 HorizontalAlignment="Stretch"
+                 VerticalAlignment="Center"
+                 Text="{Binding FileContent}" />
+      <TextBlock Grid.Row="5"
+                 Grid.Column="0"
+                 Margin="5,5,5,15"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Center"
+                 FontWeight="Bold"
+                 Text="Directory Info:" />
+      <TextBlock Grid.Row="6"
+                 Grid.Column="0"
+                 Margin="5"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Center"
+                 Text="Directory Attributes:" />
+      <TextBlock Grid.Row="6"
+                 Grid.Column="1"
+                 Margin="5"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Center" />
+      <TextBlock Grid.Row="7"
+                 Grid.Column="0"
+                 Margin="5"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Center"
+                 Text="Files in Directory:" />
+      <TextBlock Grid.Row="7"
+                 Grid.Column="1"
+                 Margin="5"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Center"
+                 Text="{Binding Files}" />
+
+    </Grid>
+  </Grid>
+</Window>
