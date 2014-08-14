@@ -33,6 +33,7 @@
             Grid.Column="0"
             Height="25"
             MinWidth="50"
+            Margin="5"
             VerticalAlignment="Bottom">
       <Button.Content>
         <WrapPanel>

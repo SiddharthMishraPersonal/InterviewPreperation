@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFTutorial", "WPFTutorial\WPFTutorial.csproj", "{A362A119-F939-4039-AF77-28E5CA4E8E0A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFContentPresenter", "WPFContentPresenter\WPFContentPresenter.csproj", "{7E99F548-D93B-42FA-9826-23684B1EFEFB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{A362A119-F939-4039-AF77-28E5CA4E8E0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A362A119-F939-4039-AF77-28E5CA4E8E0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A362A119-F939-4039-AF77-28E5CA4E8E0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E99F548-D93B-42FA-9826-23684B1EFEFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E99F548-D93B-42FA-9826-23684B1EFEFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E99F548-D93B-42FA-9826-23684B1EFEFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E99F548-D93B-42FA-9826-23684B1EFEFB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
