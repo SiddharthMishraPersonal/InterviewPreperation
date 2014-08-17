@@ -1,0 +1,180 @@
+BASIC PROGRAMMING
+
+1. On a modern 64-bit OS such as Windows or Unix, what is sizeof(s) if s is defined as follows:
+(a)
+struct s
+{
+    char c;
+    int i;
+};
+
+(b)
+struct s
+{
+    int i;
+    double d;
+};
+
+(c)
+struct s
+{
+    char c;
+    char *pc;
+};
+
+
+
+2. Function f represents a simple operation performed on its arguments, and is defined as follows:
+unsigned int f(unsigned int a, unsigned int b)
+{
+    return a ? f((a&b) << 1, a^b) : b;
+}
+
+What is the operation that f performs?
+Ans: Add a and b.
+
+
+3. What does the following function return:
+int f(unsigned int a)
+{
+    int c = 0;
+    if (a != 0)
+    {
+        do
+            ++c;
+        while (a = a & (a - 1));
+    }
+
+    return 0;
+}
+
+Ans: Always returns ZERO if while statement has correct comparison. Else there would be compilation error
+
+
+
+
+DEBUGGING
+
+1. Find the bug in the following code:
+// Find the first break in monotonically increasing sequence
+// Returns c if there is no break.
+int r(int *p, size_t c)
+{
+    int i = 0;
+    while(p[i + 1] >= p[i] && i < c - 1)
+        ++i;
+
+    return i + 1;
+}
+
+Ans: 
+
+
+
+MATH, PROBABILITY, COMPLEXITY
+
+1. A rare disease afflicts 1% of the population. A medical test for this disease has 1% false positive rate
+(if a person is healthy, there is a 1% probability that the test will show that the person is ill),
+and 1% false negative rate (if a person is ill, there is a 1% probability that the test will that the person is healthy).
+
+A person tests as having the disease. What is the probability that the person actually has the disease?
+
+Use a tree diagram with d,d' for diseased and not diseased
+Use p,n for diagnosed positive and diagnosed negative
+================================================================== 
+What is the probability the test comes back positive?
+P(p) = P(p and d) + P(p and d') = P(p}d)P(d) + P(p]d')P(d')
+= 0.01*0.01 + 0.01*0.99 = 0.0001 + 0.0099 = 0.01
+================================================================== 
+What is the probability the test comes back positive and the person actually has the disease?
+P(p and d) = P(p|d)*P(d) = 0.01*0.01 = 0.001
+==================================================================
+If the test comes back positive, what then is the conditional probability that he actually does have the disease?
+P(d}p) = P(d and p)/P(p) = 0.0368/[P(p and d) + P(p and d')
+= 0.0368/0.1328 = 0.2771
+===================================================================
+
+
+2. An evil dictator captured you and made you play a game. You are in front of three glasses of wine. Two of them are
+poisoned; one is not. You must pick one can and drink it. If you survive, the evil dictator will release you.
+
+When you pick one of the glasses, the dictator reveals which one of the other two is poisoned, and offers you to stay
+with your original choice, or switch.
+
+Should you switch?
+
+Will not switch because picking up a poi
+
+
+3. In front of you there is a black box. The box can perform two operations: push(N) adds a number to its internal storage;
+pop-min() extracts the current minimum of all numbers that are currently stored, and makes the box forget it. The numbers
+are mathematical objects: there is no upper bound. Both push(N) and pop-min() execute in O(1) time.
+
+Design and algorithm that could be used to implement such a box.
+
+
+
+4. You are asked to design a plotter. A plotter is a computer-controlled device that picks a pen, carries it to a point
+on paper using mechanical maniplator, lowers it so that it touches the paper, and drags it to the next point drawing a line.
+
+In your plotter there will be 3 pens, red, green, and blue. Computer uploads a picture to the plotter which consists of list of
+segments and colors in which these segments must be drawn. You are asked to reorder the segments such that the work performed
+by mechanical manipulator is optimal.
+
+Can you design an algorithm that would do so?
+
+
+
+5. What is the time complexity of the following algorithm:
+
+unsigned int Rabbits(unsigned int r)
+{
+    return (r < 2) ? r : Rabbits(r - 1) + Rabbits(r - 2);
+}
+
+Its a fibonacci series which has complexity of 2^n.
+
+
+
+
+
+BASIC ALGORITHMS
+
+1. What is the best data structure to implement priority queue?
+Heap
+
+
+2. What are the worst case time complexity of the following algorithms, performed on containers of size N:
+(a) Locating a number in an unsorted array. n^2
+(b) Locating a number in a sorted array. n
+(c) Inserting a number in a balanced binary tree log n
+(d) Deleting a number from a balanced binary tree log n
+(e) Inserting a number in an unbalanced binary tree n
+(f) Deleting a number from an unbalanced binary tree n
+(g) Building a heap n log n
+(h) Adding a number to a hash table constant
+(i) Sorting an array n^2
+
+
+
+3. What is the relation (less, greater, equal) between O(n) and O(2n)? O(log2 N) and O(log10 N)?
+
+
+
+
+
+CODING
+
+1. In a two dimensional array of integers of size m x n, for each element which value is zero, set to zero the entire row and 
+the column where this element is located, and leave the rest of the elements untouched. 
+
+EXPECTED TIME TO COMPLETE: 20-30 minutes
+
+2. Write a function that takes an integer argument and returns the corresponding Excel column name. 
+For instance 1 would return 'A', 2 would return 'B', ...., 27 would return 'AA' and so on
+
+EXPECTED TIME TO COMPLETE: 20-30 minutes
+
+3. Write code to merge 3 sorted arrays of integers (all different sizes) into a single sorted array.
+
+EXPECTED TIME TO COMPLETE: 20-30 minutes
