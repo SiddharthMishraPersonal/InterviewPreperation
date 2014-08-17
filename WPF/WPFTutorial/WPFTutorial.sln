@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFTutorial", "WPFTutorial\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFContentPresenter", "WPFContentPresenter\WPFContentPresenter.csproj", "{7E99F548-D93B-42FA-9826-23684B1EFEFB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCTS70-511Questions", "MCTS70-511Questions\MCTS70-511Questions.csproj", "{B435E606-9A1C-4BF2-8FC0-51EBD2C71FE0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{7E99F548-D93B-42FA-9826-23684B1EFEFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E99F548-D93B-42FA-9826-23684B1EFEFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E99F548-D93B-42FA-9826-23684B1EFEFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B435E606-9A1C-4BF2-8FC0-51EBD2C71FE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B435E606-9A1C-4BF2-8FC0-51EBD2C71FE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B435E606-9A1C-4BF2-8FC0-51EBD2C71FE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B435E606-9A1C-4BF2-8FC0-51EBD2C71FE0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
