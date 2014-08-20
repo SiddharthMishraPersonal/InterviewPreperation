@@ -13,7 +13,7 @@ namespace MultiThreadingPractices
   {
     static void Main(string[] args)
     {
-      Thread newThread = new Thread(StartCounter);
+      var newThread = new Thread(StartCounter);
       newThread.Start();
 
       var counter = 0;
@@ -27,8 +27,6 @@ namespace MultiThreadingPractices
 
       Console.Read();
       newThread.Abort();
-
-      
       Console.Read();
     }
 
