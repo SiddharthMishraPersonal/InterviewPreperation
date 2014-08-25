@@ -13,6 +13,8 @@ namespace MultiThreadingPractices
   {
     static void Main(string[] args)
     {
+      IsBackgroundTest.RunTest();
+
       var newThread = new Thread(StartCounter);
       newThread.Start();
 
