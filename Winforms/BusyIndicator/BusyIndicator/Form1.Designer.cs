@@ -31,9 +31,8 @@
       this.btnShow = new System.Windows.Forms.Button();
       this.btnHide = new System.Windows.Forms.Button();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.panel = new System.Windows.Forms.Panel();
       this.usBusyIndicator1 = new BusyIndicator.usBusyIndicator();
-      this.panel.SuspendLayout();
+      this.groupBox1.SuspendLayout();
       this.SuspendLayout();
       // 
       // btnShow
@@ -58,6 +57,7 @@
       // 
       // groupBox1
       // 
+      this.groupBox1.Controls.Add(this.usBusyIndicator1);
       this.groupBox1.Location = new System.Drawing.Point(75, 137);
       this.groupBox1.Name = "groupBox1";
       this.groupBox1.Size = new System.Drawing.Size(453, 235);
@@ -65,20 +65,11 @@
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "groupBox1";
       // 
-      // panel
-      // 
-      this.panel.Controls.Add(this.usBusyIndicator1);
-      this.panel.Location = new System.Drawing.Point(43, 96);
-      this.panel.Name = "panel";
-      this.panel.Size = new System.Drawing.Size(541, 380);
-      this.panel.TabIndex = 3;
-      this.panel.Visible = false;
-      // 
       // usBusyIndicator1
       // 
-      this.usBusyIndicator1.Location = new System.Drawing.Point(186, 106);
+      this.usBusyIndicator1.Location = new System.Drawing.Point(6, -26);
       this.usBusyIndicator1.Name = "usBusyIndicator1";
-      this.usBusyIndicator1.Size = new System.Drawing.Size(150, 150);
+      this.usBusyIndicator1.Size = new System.Drawing.Size(441, 255);
       this.usBusyIndicator1.TabIndex = 0;
       // 
       // Form1
@@ -86,13 +77,12 @@
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(641, 531);
-      this.Controls.Add(this.panel);
       this.Controls.Add(this.groupBox1);
       this.Controls.Add(this.btnHide);
       this.Controls.Add(this.btnShow);
       this.Name = "Form1";
       this.Text = "Form1";
-      this.panel.ResumeLayout(false);
+      this.groupBox1.ResumeLayout(false);
       this.ResumeLayout(false);
 
     }
@@ -102,7 +92,6 @@
     private System.Windows.Forms.Button btnShow;
     private System.Windows.Forms.Button btnHide;
     private System.Windows.Forms.GroupBox groupBox1;
-    private System.Windows.Forms.Panel panel;
     private usBusyIndicator usBusyIndicator1;
   }
 }

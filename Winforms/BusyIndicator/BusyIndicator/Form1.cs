@@ -15,16 +15,24 @@ namespace BusyIndicator
     public Form1()
     {
       InitializeComponent();
+      Load += Form1_Load;
+    }
+
+    void Form1_Load(object sender, EventArgs e)
+    {
+      usBusyIndicator1.Hide();
     }
 
     private void btnShow_Click(object sender, EventArgs e)
     {
-      panel.Show();
+      usBusyIndicator1.Show();
+      usBusyIndicator1.BackColor = Color.FromArgb(10, 0, 0, 0);
     }
 
     private void btnHide_Click(object sender, EventArgs e)
     {
-      panel.Hide();
+      usBusyIndicator1.Hide();
+      usBusyIndicator1.BackColor = Color.FromArgb(10, 0, 0, 0);
     }
   }
 }
