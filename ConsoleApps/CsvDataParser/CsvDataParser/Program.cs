@@ -12,7 +12,7 @@ namespace CsvDataParser
     static void Main(string[] args)
     {
       var parser = new CsvParser(@"C:\Users\smishra\Desktop\DART\Test Import Files\Test Import Files\Hit Pick.csv");
-      parser.ParseReadLine();
+      parser.ParseFields();
     }
   }
 }

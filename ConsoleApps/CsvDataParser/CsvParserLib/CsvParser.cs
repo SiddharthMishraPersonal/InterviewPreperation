@@ -31,7 +31,7 @@ namespace CsvParserLib
       using (var parser = new TextFieldParser(_csvFilePath))
       {
         parser.CommentTokens = new string[] { "#" };
-        parser.SetDelimiters(new string[] { ";" });
+        parser.SetDelimiters(new string[] { "," });
         parser.HasFieldsEnclosedInQuotes = false;
 
         parser.ReadLine();
@@ -49,18 +49,26 @@ namespace CsvParserLib
       using (var parser = new TextFieldParser(_csvFilePath))
       {
         parser.CommentTokens = new string[] { "#" };
-        parser.SetDelimiters(new string[] { ";" });
+        parser.SetDelimiters(new string[] { "," });
         parser.HasFieldsEnclosedInQuotes = false;
 
         parser.ReadLine();
 
         while (!parser.EndOfData)
         {
-          string[] fields = parser.ReadFields();
-          foreach (var field in fields)
+          var fields = parser.ReadFields().ToList();
+          //foreach (var field in fields)
+          //{
+          //  Console.WriteLine(field);
+          //}
+
+          var distinct = fields.Distinct();
+
+          foreach (var field in distinct)
           {
             Console.WriteLine(field);
           }
+
         }
 
 
@@ -72,7 +80,7 @@ namespace CsvParserLib
       using (var parser = new TextFieldParser(_csvFilePath))
       {
         parser.CommentTokens = new string[] { "#" };
-        parser.SetDelimiters(new string[] { ";" });
+        parser.SetDelimiters(new string[] { "," });
         parser.HasFieldsEnclosedInQuotes = false;
         
         while (!parser.EndOfData)
@@ -88,7 +96,7 @@ namespace CsvParserLib
       using (var parser = new TextFieldParser(_csvFilePath))
       {
         parser.CommentTokens = new string[] { "#" };
-        parser.SetDelimiters(new string[] { ";" });
+        parser.SetDelimiters(new string[] { "," });
         parser.HasFieldsEnclosedInQuotes = false;
 
         while (!parser.EndOfData)
