@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace DispatcherConcept
 {
@@ -20,9 +21,38 @@ namespace DispatcherConcept
   /// </summary>
   public partial class MainWindow : Window
   {
+    private DispatcherTimer _timer;
+    private static int _counter;
+
     public MainWindow()
     {
       InitializeComponent();
+    }
+
+    private void btnStart_Click(object sender, RoutedEventArgs e)
+    {
+      _timer.Start();
+    }
+
+    private void btnStop_Click(object sender, RoutedEventArgs e)
+    {
+      _timer.Stop();
+    }
+
+    private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
+    {
+      _timer = new DispatcherTimer(DispatcherPriority.Background);
+      _timer.Interval = new TimeSpan(0, 0, 0, 1);
+      _timer.Tick += _timer_Tick;
+    }
+
+    void _timer_Tick(object sender, EventArgs e)
+    {
+      txtOutput.Dispatcher.BeginInvoke((Action)(() =>
+      {
+        txtOutput.Text = _counter.ToString();
+        _counter++;
+      }));
     }
   }
 }
