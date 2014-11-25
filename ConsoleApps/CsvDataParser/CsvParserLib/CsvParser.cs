@@ -82,10 +82,11 @@ namespace CsvParserLib
         parser.CommentTokens = new string[] { "#" };
         parser.SetDelimiters(new string[] { "," });
         parser.HasFieldsEnclosedInQuotes = false;
-        
+        //string fields = parser.ReadLine();
         while (!parser.EndOfData)
         {
           string fields = parser.ReadLine();
+          Console.ReadKey();
           Console.WriteLine(fields);
         }
       }
