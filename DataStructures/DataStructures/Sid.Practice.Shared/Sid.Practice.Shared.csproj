@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{57E4AA30-DEF8-4F70-80AF-E2D33A15FD75}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{3A49CFA2-3138-44EF-8AC6-823CCE32E8AE}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>StackPractice</RootNamespace>
-    <AssemblyName>StackPractice</AssemblyName>
+    <RootNamespace>Sid.Practice.Shared</RootNamespace>
+    <AssemblyName>Sid.Practice.Shared</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\Artifacts\Release\</OutputPath>
@@ -41,18 +39,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="DoublyNode.cs" />
+    <Compile Include="MyException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Stack.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Sid.Practice.Shared\Sid.Practice.Shared.csproj">
-      <Project>{3a49cfa2-3138-44ef-8ac6-823cce32e8ae}</Project>
-      <Name>Sid.Practice.Shared</Name>
-    </ProjectReference>
+    <Compile Include="SinglyNode.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
