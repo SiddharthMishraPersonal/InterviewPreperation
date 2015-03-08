@@ -5,14 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StackPractice
+namespace Sid.Practice.Stack
 {
-  class Program
+  public class StackProgram
   {
     static Stack stack = new Stack();
     static string key = "n";
 
-    static void Main(string[] args)
+    public static void Main(string[] args)
     {
       try
       {
@@ -43,13 +43,16 @@ namespace StackPractice
           catch (MyException exception)
           {
             Console.WriteLine(exception.Message);
+            Console.WriteLine();
+            Console.WriteLine("***********************");
+            Console.WriteLine("Enter following commands:\nn : Push into Stack\nr : Pop from Stack\nd : Display Stack\n");
           }
 
           Console.WriteLine();
           Console.WriteLine();
           Console.Write("Enter Command: ");
           key = Console.ReadKey().KeyChar.ToString().ToLowerInvariant();
-         
+
         }
 
       }

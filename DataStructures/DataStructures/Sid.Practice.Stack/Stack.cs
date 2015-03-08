@@ -5,8 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
-namespace StackPractice
+namespace Sid.Practice.Stack
 {
   public class Stack
   {
@@ -105,6 +104,7 @@ namespace StackPractice
     {
       var current = _head;
 
+      Console.WriteLine("Stack as Array:");
       while (current != null)
       {
         Console.WriteLine(string.Format("[  {0}  ]", current.NodeValue));
@@ -113,6 +113,7 @@ namespace StackPractice
 
       Console.WriteLine();
 
+      Console.WriteLine("Stack as LinkedList:");
       current = _head;
       while (current != null)
       {
@@ -174,8 +175,7 @@ namespace StackPractice
       //dispose the current.
       current.Dispose();
     }
-
-
     #endregion
   }
+
 }

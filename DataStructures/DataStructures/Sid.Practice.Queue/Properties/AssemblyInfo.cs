@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("StackPractice")]
+[assembly: AssemblyTitle("Sid.Practice.Queue")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("StackPractice")]
+[assembly: AssemblyProduct("Sid.Practice.Queue")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("8c737060-7f36-4ea0-b5ec-171806019062")]
+[assembly: Guid("e5350946-71b7-4cbb-b598-80f30bf06487")]
 
 // Version information for an assembly consists of the following four values:
 //
