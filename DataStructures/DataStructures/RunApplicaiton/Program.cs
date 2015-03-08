@@ -1,4 +1,5 @@
-﻿using Sid.Practice.Queue;
+﻿using Sid.Practice.PriorityQueue;
+using Sid.Practice.Queue;
 using Sid.Practice.Stack;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace RunApplicaiton
           {
             case "s": StackProgram.Main(null); break;
             case "q": QueueProgram.Main(null); break;
-            case "pq":break;
+            case "pq": PriorityQueueProgram.Main(null); break;
             case "t":  break;
             default:
               Console.WriteLine();

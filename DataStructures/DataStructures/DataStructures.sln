@@ -3,19 +3,27 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{F9C9C5E0-365F-4273-8111-088038CDA561}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0.Shared", "0.Shared", "{F9C9C5E0-365F-4273-8111-088038CDA561}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sid.Practice.Shared", "Sid.Practice.Shared\Sid.Practice.Shared.csproj", "{3A49CFA2-3138-44EF-8AC6-823CCE32E8AE}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Queue", "Queue", "{6ACBB9BB-87E2-4CEC-A94D-C80AD1FDAD5C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2.Queue", "2.Queue", "{6ACBB9BB-87E2-4CEC-A94D-C80AD1FDAD5C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Stack", "Stack", "{A0212538-DE38-4553-9570-BF04343712B0}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.Stack", "1.Stack", "{A0212538-DE38-4553-9570-BF04343712B0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sid.Practice.Stack", "Sid.Practice.Stack\Sid.Practice.Stack.csproj", "{648C9196-EC82-4469-9BF5-C99877DA66CF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sid.Practice.Queue", "Sid.Practice.Queue\Sid.Practice.Queue.csproj", "{C8967B87-8020-4514-B931-143AF759073F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RunApplicaiton", "RunApplicaiton\RunApplicaiton.csproj", "{D7D790CD-56CE-4E8A-9F49-27D4C6A7124A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sid.Practice.PriorityQueue", "Sid.Practice.PriorityQueue\Sid.Practice.PriorityQueue.csproj", "{A431B919-785D-4131-B825-D07850BF8DBD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3.Trees", "3.Trees", "{D3C9F2BB-1FE2-40FD-BAFE-6C15ABAA2638}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.Graphs", "4.Graphs", "{B8384A90-5FCB-40B6-A929-9E51BBA5C134}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Problems", "Problems", "{0DE8F22E-E4B5-48E4-AA21-49147A4BF995}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +47,10 @@ Global
 		{D7D790CD-56CE-4E8A-9F49-27D4C6A7124A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7D790CD-56CE-4E8A-9F49-27D4C6A7124A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7D790CD-56CE-4E8A-9F49-27D4C6A7124A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A431B919-785D-4131-B825-D07850BF8DBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A431B919-785D-4131-B825-D07850BF8DBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A431B919-785D-4131-B825-D07850BF8DBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A431B919-785D-4131-B825-D07850BF8DBD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -47,5 +59,6 @@ Global
 		{3A49CFA2-3138-44EF-8AC6-823CCE32E8AE} = {F9C9C5E0-365F-4273-8111-088038CDA561}
 		{648C9196-EC82-4469-9BF5-C99877DA66CF} = {A0212538-DE38-4553-9570-BF04343712B0}
 		{C8967B87-8020-4514-B931-143AF759073F} = {6ACBB9BB-87E2-4CEC-A94D-C80AD1FDAD5C}
+		{A431B919-785D-4131-B825-D07850BF8DBD} = {6ACBB9BB-87E2-4CEC-A94D-C80AD1FDAD5C}
 	EndGlobalSection
 EndGlobal

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sid.Practice.Queue
+namespace Sid.Practice.PriorityQueue
 {
-  public class Queue
+  public class PriorityQueue
   {
     #region Private Memeber Variables
 
