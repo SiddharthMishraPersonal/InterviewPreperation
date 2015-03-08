@@ -12,10 +12,17 @@ namespace Sid.Practice.Shared
 
     private int _nodeValue;
     private SinglyNode _nextNode = null;
+    private Guid _nodeId = Guid.Empty;
 
     #endregion
 
     #region Public Properties
+
+    public Guid NodeId
+    {
+      get { return _nodeId; }
+      set { _nodeId = value; }
+    }
 
     public int NodeValue
     {
@@ -35,6 +42,7 @@ namespace Sid.Practice.Shared
 
     public SinglyNode(int nodeValue)
     {
+      this.NodeId = Guid.NewGuid();
       this.NodeValue = nodeValue;
     }
 

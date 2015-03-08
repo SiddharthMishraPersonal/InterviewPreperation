@@ -73,7 +73,7 @@ namespace Sid.Practice.Stack
       {
         try
         {
-          Convert.ToInt32(key);
+          inputInt = Convert.ToInt32(key);
         }
         catch (Exception)
         {
