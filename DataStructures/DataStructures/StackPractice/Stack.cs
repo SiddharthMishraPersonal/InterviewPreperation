@@ -39,17 +39,20 @@ namespace StackPractice
     public void Push(int value)
     {
       try
-      {        
+      {
         if (_head == null)
         {
           _head = new SinglyNode(value);
+
         }
         else
         {
           var newNode = new SinglyNode(value);
           newNode.NextNode = _head;
           _head = newNode;
+
         }
+        _size++;
       }
       catch (Exception exception)
       {
@@ -66,17 +69,32 @@ namespace StackPractice
       }
 
       RemoveNode(lastNode);
+      _size--;
 
       return lastNode;
     }
 
     public SinglyNode Peep(int position)
     {
+      if (position > _size - 1)
+      {
+        var message = string.Format("Can't reach to position: '{0}'.\nStack size is '{1}'.", position, _size);
+        if (_size == 0)
+        {
+          message = "Stack is empty.";
+        }
+
+        throw new MyException(message);
+      }
+
+      if (_head == null)
+        throw new MyException("Stack is Empty.");
+
       var node = GetNode(position);
 
       if (node == null)
       {
-        throw new MyException("Stack is Empty.");
+        throw new MyException("Node not found at this position.");
       }
 
       return node;
