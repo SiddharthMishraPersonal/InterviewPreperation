@@ -59,11 +59,11 @@ namespace Sid.Practice.Shared
     public void Display()
     {
       var display = string.Empty;
-      var nextNode = this.NextNode == null ? "(NULL)" : this.NextNode.NodeValue.ToString();
+      //var nextNode = this.NextNode == null ? "END" : this.NextNode.NodeValue.ToString();
       if (this.NextNode != null)
-        display = string.Format("{0}-->{1}", this.NodeValue, nextNode);
+        display = string.Format("{0}-->", this.NodeValue);
       else
-        display = string.Format("{0}-->(NULL)", this.NodeValue);
+        display = string.Format("{0}-->END", this.NodeValue);
       Console.Write(display);
     }
 
