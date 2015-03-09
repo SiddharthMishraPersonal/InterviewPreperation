@@ -117,7 +117,16 @@ namespace Sid.Practice.Singly.LinkedList
     {
       if (_head == null)
         throw new MyException("Linked List is Empty.");
-
+      var prevNode = _head;
+      var curentNode = _head.NextNode;
+      while (prevNode != null)
+      {
+        while (curentNode.NodeValue>=prevNode.NodeValue)
+        {
+          
+        }
+        prevNode++;
+      }
 
     }
 
