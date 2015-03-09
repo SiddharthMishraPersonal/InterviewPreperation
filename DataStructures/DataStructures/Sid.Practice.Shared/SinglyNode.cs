@@ -63,7 +63,7 @@ namespace Sid.Practice.Shared
       if (this.NextNode != null)
         display = string.Format("{0}-->{1}", this.NodeValue, nextNode);
       else
-        display = string.Format("{0}-->", this.NodeValue);
+        display = string.Format("{0}-->(NULL)", this.NodeValue);
       Console.Write(display);
     }
 
