@@ -60,7 +60,7 @@ namespace Sid.Practice.Shared
     {
       var display = string.Empty;
       var nextNode = this.NextNode == null ? "(NULL)" : this.NextNode.NodeValue.ToString();
-      if (this.NextNode == null)
+      if (this.NextNode != null)
         display = string.Format("{0}-->{1}", this.NodeValue, nextNode);
       else
         display = string.Format("{0}-->", this.NodeValue);

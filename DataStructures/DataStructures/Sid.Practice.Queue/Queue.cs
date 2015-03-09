@@ -32,6 +32,10 @@ namespace Sid.Practice.Queue
 
     #region Public Methods
 
+    /// <summary>
+    /// Inserts element (node) into the front of the queue.
+    /// </summary>
+    /// <param name="nodeValue">Value to be inserted as node.</param>
     public void Enqueue(int nodeValue)
     {
       if (_head == null)
@@ -47,6 +51,10 @@ namespace Sid.Practice.Queue
       }
     }
 
+    /// <summary>
+    /// Removes an element (node) from the front of the queue.
+    /// </summary>
+    /// <returns>Node removed.</returns>
     public SinglyNode Dequeue()
     {
       var node = _front;
@@ -55,14 +63,15 @@ namespace Sid.Practice.Queue
       return node;
     }
 
+    /// <summary>
+    /// Displays list between front to end of the node.
+    /// </summary>
     public void Display()
     {
       if (_head == null)
         throw new MyException("Queue is Empty.");
 
-
       Console.WriteLine("Queue as Array:");
-
       var currentNode = _front;
       while (!currentNode.NodeId.Equals(_rear.NodeId))
       {
@@ -71,7 +80,6 @@ namespace Sid.Practice.Queue
       }
 
       Console.WriteLine();
-
       Console.WriteLine("Queue as LinkedList:");
       currentNode = _front;
       while (!currentNode.NodeId.Equals(_rear.NodeId))
@@ -79,6 +87,22 @@ namespace Sid.Practice.Queue
         currentNode.Display();
         currentNode = currentNode.NextNode;
       }
+    }
+
+    public SinglyNode Peep(int position)
+    {
+      if (_head == null && _front == null)
+        throw new MyException("Queue is Empty.");
+
+      var currentPosition = 0;
+      var currentNode = _front;
+      while (!currentPosition.Equals(position))
+      {
+        currentNode = currentNode.NextNode;
+        currentPosition++;
+      }
+
+      return currentNode;
     }
 
     #endregion
@@ -90,9 +114,6 @@ namespace Sid.Practice.Queue
     #endregion
 
 
-    internal SinglyNode Peep(int inputInt)
-    {
-      throw new NotImplementedException();
-    }
+
   }
 }
