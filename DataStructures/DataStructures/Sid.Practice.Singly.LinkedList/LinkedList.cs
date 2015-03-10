@@ -83,6 +83,9 @@ namespace Sid.Practice.Singly.LinkedList
 
       if (_head == null)
         throw new MyException("Linked List is Empty.");
+
+      if (_head.NodeValue.Equals(nodeValue))
+        _head = _head.NextNode;
       else
       {
         while (!currentNode.NodeValue.Equals(nodeValue))
@@ -118,14 +121,15 @@ namespace Sid.Practice.Singly.LinkedList
       if (_head == null)
         throw new MyException("Linked List is Empty.");
       var prevNode = _head;
-      var curentNode = _head.NextNode;
+      var currentNode = _head.NextNode;
       while (prevNode != null)
       {
-        while (curentNode.NodeValue>=prevNode.NodeValue)
+        while (currentNode.NodeValue >= prevNode.NodeValue)
         {
-          
+          currentNode = currentNode.NextNode;
         }
-        prevNode++;
+
+        prevNode = prevNode.NextNode;
       }
 
     }
