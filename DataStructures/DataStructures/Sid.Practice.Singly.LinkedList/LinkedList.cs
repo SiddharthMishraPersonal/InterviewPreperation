@@ -122,16 +122,30 @@ namespace Sid.Practice.Singly.LinkedList
         throw new MyException("Linked List is Empty.");
       var prevNode = _head;
       var currentNode = _head.NextNode;
+      var previousNode = _head;
+
       while (prevNode != null)
       {
-        while (currentNode.NodeValue >= prevNode.NodeValue)
+        while (null != currentNode.NextNode)
         {
+          if (prevNode.NodeValue >= currentNode.NodeValue)
+          {
+            if (_head.NodeId.Equals(currentNode.NodeId))
+              _head = prevNode;
+
+            var tempNode = currentNode.NextNode;
+            currentNode.NextNode = prevNode.NextNode;
+            prevNode.NextNode = tempNode;
+
+          }
+          previousNode = currentNode;
           currentNode = currentNode.NextNode;
         }
-
         prevNode = prevNode.NextNode;
-      }
 
+        if (prevNode != null)
+          currentNode = prevNode.NextNode;
+      }
     }
 
     public void SortListDecending()
