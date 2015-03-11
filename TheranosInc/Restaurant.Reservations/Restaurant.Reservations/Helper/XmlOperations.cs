@@ -17,20 +17,24 @@ namespace Restaurant.Reservations.Helper
     {
     }
 
-    public static TableModels DeSerialize(string xmlFilePath)
+    public static List<Table> DeSerialize(string xmlFilePath)
     {
       //xmlFilePath =
       //  @"C:\Users\smishra\Documents\GitHub\InterviewPreperation\TheranosInc\Restaurant.Reservations\Restaurant.Reservations\Data\Tables.xml";
+      List<Table> _tableList = null;
 
       _xmlFilePath = xmlFilePath;
 
-      var xmlSerializer = new XmlSerializer(typeof (TableModels));
+      var xmlSerializer = new XmlSerializer(typeof(Tables));
       using (var fileStream = new FileStream(xmlFilePath, FileMode.Open))
       {
-        return (TableModels) xmlSerializer.Deserialize(fileStream);
+        var tableModelsObj = (Tables)xmlSerializer.Deserialize(fileStream);
+
+        if (tableModelsObj != null)
+          _tableList = tableModelsObj.ListTableModel;
       }
 
-      return null;
+      return _tableList;
     }
   }
 }

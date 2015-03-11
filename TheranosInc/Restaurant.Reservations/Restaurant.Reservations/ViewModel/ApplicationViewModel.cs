@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Restaurant.Reservations.Helper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,6 +30,11 @@ namespace Restaurant.Reservations.ViewModel
     #endregion
 
     #region Private Methods
+
+    private void LoadTableDetails(string xmlFilePath)
+    {
+      var tableList = XmlOperations.DeSerialize(xmlFilePath);
+    }
 
     #endregion
   }

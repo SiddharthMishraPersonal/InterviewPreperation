@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 namespace Restaurant.Reservations.Model
 {
   [XmlType("Table")]
-  public class TableModel
+  public class Table
   {
     #region Private Member Variables
 

@@ -13,6 +13,14 @@ namespace Restaurant.Reservations.ViewModel
 
     public event PropertyChangedEventHandler PropertyChanged;
 
+    public void OnPropertyChanged(string propertyName)
+    {
+      if (null != PropertyChanged)
+      {
+        PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+      }
+    }
+
     #endregion
   }
 }
