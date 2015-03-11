@@ -7,8 +7,8 @@ using System.Xml.Serialization;
 
 namespace Restaurant.Reservations.Model
 {
-  [Serializable]
-  internal class TableModel
+  [XmlType("Table")]
+  public class TableModel
   {
     #region Private Member Variables
 
@@ -32,22 +32,6 @@ namespace Restaurant.Reservations.Model
       get { return _id; }
       set { _id = value; }
     }
-
-    #endregion
-
-    #region Constructors
-
-    #endregion
-
-    #region Commands
-
-    #endregion
-
-    #region Public Methods
-
-    #endregion
-
-    #region Private Methods
 
     #endregion
   }

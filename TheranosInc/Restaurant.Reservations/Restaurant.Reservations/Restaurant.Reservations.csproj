@@ -62,8 +62,10 @@
     </Compile>
     <Compile Include="AutoFac\ApplicationRegisteration.cs" />
     <Compile Include="Helper\Constants.cs" />
+    <Compile Include="Helper\XmlOperations.cs" />
     <Compile Include="Model\Reservation.cs" />
     <Compile Include="Model\TableModel.cs" />
+    <Compile Include="Model\TableModels.cs" />
     <Compile Include="ViewModel\ApplicationViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="View\MainWindow.xaml.cs">
@@ -98,7 +100,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Data\Tables.xml" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Restaurant.Reservations.Shared\Restaurant.Reservations.Shared.csproj">
       <Project>{2cf862e9-1643-48ab-bf59-94fe46cf001e}</Project>
