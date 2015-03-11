@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Tables xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Table MaxOccupancy="4" Id="1" />
+  <Table MaxOccupancy="8" Id="2" />
+  <Table MaxOccupancy="6" Id="3" />
+</Tables>
