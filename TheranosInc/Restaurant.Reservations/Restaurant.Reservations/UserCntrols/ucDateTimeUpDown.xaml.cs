@@ -31,6 +31,7 @@ namespace Restaurant.Reservations.UserControls
       AmPmTypes.Add("AM");
       AmPmTypes.Add("PM");
       CurrentTime = DateTime.UtcNow.ToLocalTime();
+      SelectedTime = CurrentTime.ToLocalTime().ToString("t");
     }
 
     #endregion
@@ -125,7 +126,21 @@ namespace Restaurant.Reservations.UserControls
         OnPropertyChanged("DisplayTimeHours");
         OnPropertyChanged("DisplayTimeMinutes");
         OnPropertyChanged("DisplayAmPm");
+        SelectedTime = value.ToLocalTime().ToString("t");
       }
+    }
+
+    #endregion
+
+    #region Dependency Properties
+
+    public static readonly DependencyProperty SelectedTimeProperty = DependencyProperty.Register(
+      "SelectedTime", typeof (string), typeof (ucDateTimeUpDown), new PropertyMetadata(default(string)));
+
+    public string SelectedTime
+    {
+      get { return ((DateTime) GetValue(SelectedTimeProperty)).ToLocalTime().ToString("t"); }
+      set { SetValue(SelectedTimeProperty, value); }
     }
 
     #endregion
@@ -135,21 +150,25 @@ namespace Restaurant.Reservations.UserControls
     private void MinutesUpButton_OnClick(object sender, RoutedEventArgs e)
     {
       CurrentTime = CurrentTime.AddMinutes(1);
+      SelectedTime = CurrentTime.ToLocalTime().ToString("t");
     }
 
     private void MinutesDownButton_OnClick(object sender, RoutedEventArgs e)
     {
       CurrentTime = CurrentTime.AddMinutes(-1);
+      SelectedTime = CurrentTime.ToLocalTime().ToString("t");
     }
 
     private void HourUpButton_OnClick(object sender, RoutedEventArgs e)
     {
       CurrentTime = CurrentTime.AddHours(1);
+      SelectedTime = CurrentTime.ToLocalTime().ToString("t");
     }
 
     private void HourDownButton_OnClick(object sender, RoutedEventArgs e)
     {
       CurrentTime = CurrentTime.AddHours(-1);
+      SelectedTime = CurrentTime.ToLocalTime().ToString("t");
     }
 
     #endregion
