@@ -25,7 +25,7 @@ namespace Restaurant.Reservations.ViewModel
       get { return _selectedDate.ToLocalTime(); }
       set
       {
-        _selectedDate = value;
+        _selectedDate = value.ToUniversalTime();
         OnPropertyChanged("SelectedDate");
       }
     }
