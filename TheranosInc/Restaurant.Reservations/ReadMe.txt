@@ -23,3 +23,11 @@ The input file Tables.xml was not in correct format:
 2. All 'Table' elements didn't have closing tags.
 
 I fixed it to read properly through XmlSerializer class.
+
+Prerequisites:
+===============
+
+1. Make sure you are connected to internet.
+2. Build the code first which will download all nuget packages required for this application.
+3. I have used Nlog for logging.
+4. MahApp.Metro has been used for beautiful UI which matches the Window 8 themes.
