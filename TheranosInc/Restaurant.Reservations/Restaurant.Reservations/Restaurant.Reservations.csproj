@@ -67,6 +67,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AutoFac\ApplicationRegisteration.cs" />
+    <Compile Include="Helper\RelayCommand.cs" />
     <Compile Include="UserCntrols\ucDateTimeUpDown.xaml.cs">
       <DependentUpon>ucDateTimeUpDown.xaml</DependentUpon>
     </Compile>
@@ -77,6 +78,7 @@
     <Compile Include="Model\Table.cs" />
     <Compile Include="Model\Tables.cs" />
     <Compile Include="ViewModel\ApplicationViewModel.cs" />
+    <Compile Include="ViewModel\ReservationViewModel.cs" />
     <Compile Include="ViewModel\TableViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="View\MainWindow.xaml.cs">

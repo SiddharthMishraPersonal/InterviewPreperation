@@ -15,8 +15,8 @@ namespace Restaurant.Reservations.AutoFac
     {
       base.Load(builder);
 
-      builder.RegisterType<ApplicationViewModel>().AsSelf().SingleInstance();
       builder.RegisterType<MainWindow>().AsSelf().SingleInstance();
+      builder.RegisterType<ApplicationViewModel>().AsSelf().SingleInstance();
     }
   }
 }

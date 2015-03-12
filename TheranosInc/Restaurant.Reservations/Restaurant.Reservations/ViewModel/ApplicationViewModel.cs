@@ -1,9 +1,12 @@
 ﻿using Restaurant.Reservations.Helper;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using Restaurant.Reservations.View;
 
 namespace Restaurant.Reservations.ViewModel
 {
@@ -15,10 +18,20 @@ namespace Restaurant.Reservations.ViewModel
     private DateTime _selectedDate;
     private DateTime _startDate;
     private DateTime _endDate;
+    private MainWindow _view;
+
+    private ObservableCollection<ReservationViewModel> _currentReservations =
+      new ObservableCollection<ReservationViewModel>();
 
     #endregion
 
     #region Properties
+
+    public ObservableCollection<ReservationViewModel> CurrentReservations
+    {
+      get { return _currentReservations; }
+      set { _currentReservations = value; }
+    }
 
     public DateTime SelectedDate
     {
@@ -55,8 +68,9 @@ namespace Restaurant.Reservations.ViewModel
 
     #region Constructors
 
-    public ApplicationViewModel()
+    public ApplicationViewModel(MainWindow view)
     {
+      _view = view;
       _monthRange = 12;
       StartDate = DateTime.UtcNow;
     }
@@ -64,6 +78,27 @@ namespace Restaurant.Reservations.ViewModel
     #endregion
 
     #region Commands
+
+    private ICommand _createNewReservationCommand;
+
+    public ICommand CreateNewReservationCommand
+    {
+      get
+      {
+        return _createNewReservationCommand ??
+               new RelayCommands(CreateNewReservationCommand_Execute, CreateNewReservationCommand_CanExecute);
+      }
+    }
+
+
+    private void CreateNewReservationCommand_Execute(object param)
+    {
+    }
+
+    private bool CreateNewReservationCommand_CanExecute(object param)
+    {
+      return true;
+    }
 
     #endregion
 
