@@ -1,20 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Restaurant.Reservations.ViewModel;
 
 namespace Restaurant.Reservations.UserControls
 {
@@ -23,12 +12,17 @@ namespace Restaurant.Reservations.UserControls
   /// </summary>
   public partial class ucDateTimeUpDown : UserControl, INotifyPropertyChanged
   {
+    #region Private Member variable
+
     private DateTime _currentTime = DateTime.UtcNow;
     private bool _adHours;
     private bool _addMinutes;
     private ObservableCollection<string> _amPmTypes = new ObservableCollection<string>();
     private string _displayAmPm;
 
+    #endregion
+
+    #region Constructors
 
     public ucDateTimeUpDown()
     {
@@ -38,6 +32,10 @@ namespace Restaurant.Reservations.UserControls
       AmPmTypes.Add("PM");
       CurrentTime = DateTime.UtcNow.ToLocalTime();
     }
+
+    #endregion
+
+    #region Public Properties
 
     public ObservableCollection<string> AmPmTypes
     {
@@ -130,6 +128,9 @@ namespace Restaurant.Reservations.UserControls
       }
     }
 
+    #endregion
+
+    #region Methods
 
     private void MinutesUpButton_OnClick(object sender, RoutedEventArgs e)
     {
@@ -140,6 +141,18 @@ namespace Restaurant.Reservations.UserControls
     {
       CurrentTime = CurrentTime.AddMinutes(-1);
     }
+
+    private void HourUpButton_OnClick(object sender, RoutedEventArgs e)
+    {
+      CurrentTime = CurrentTime.AddHours(1);
+    }
+
+    private void HourDownButton_OnClick(object sender, RoutedEventArgs e)
+    {
+      CurrentTime = CurrentTime.AddHours(-1);
+    }
+
+    #endregion
 
     #region INotifyPropertyChanged Implementation
 
@@ -154,15 +167,5 @@ namespace Restaurant.Reservations.UserControls
     }
 
     #endregion
-
-    private void HourUpButton_OnClick(object sender, RoutedEventArgs e)
-    {
-      CurrentTime = CurrentTime.AddHours(1);
-    }
-
-    private void HourDownButton_OnClick(object sender, RoutedEventArgs e)
-    {
-      CurrentTime = CurrentTime.AddHours(-1);
-    }
   }
 }

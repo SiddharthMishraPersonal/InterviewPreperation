@@ -4,7 +4,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d">
-    <UserControl.Resources />
     <Grid>
         <Border BorderBrush="Black" BorderThickness=".25" />
         <StackPanel Orientation="Horizontal">
