@@ -8,7 +8,7 @@
                       Height="470">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" MinWidth="500" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" MinWidth="100" />
         </Grid.ColumnDefinitions>
@@ -18,7 +18,9 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+
         <TextBlock Grid.Row="0"
                    Grid.Column="0"
                    Margin="5"
@@ -143,54 +145,38 @@
         </DataGrid>
         <Separator Grid.Row="2"
                    Grid.Column="0"
+                   Grid.ColumnSpan="3"
                    HorizontalAlignment="Stretch" />
         <TextBlock Grid.Row="3"
                    Grid.Column="0"
                    Margin="5"
-                   Text="Month's Reservations:" />
-        <DataGrid Grid.Row="4"
-                  Grid.Column="0"
-                  Margin="5"
-                  HorizontalAlignment="Stretch"
-                  VerticalAlignment="Top"
-                  AutoGenerateColumns="False"
-                  ItemsSource="{Binding CurrentReservations}">
-            <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding SerialNumber}" />
-                <DataGridTextColumn Width="*"
-                                    Binding="{Binding CustomerName}"
-                                    Header="Customer" />
-                <DataGridTextColumn Width="Auto"
-                                    Binding="{Binding ContactNumber}"
-                                    Header="Contact" />
-                <DataGridTextColumn Width="Auto"
-                                    Binding="{Binding Occupants}"
-                                    Header="Occupants" />
-                <DataGridTextColumn Width="Auto"
-                                    Binding="{Binding TableNumber}"
-                                    Header="Table" />
-                <DataGridTextColumn Width="Auto"
-                                    Binding="{Binding CheckInTime}"
-                                    Header="Check-in" />
-                <!--<DataGridCheckBoxColumn Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow},
-                                                          Path=IsSelected,
-                                                          Mode=OneWay}"
-                                        EditingElementStyle="{DynamicResource MetroDataGridCheckBox}"
-                                        ElementStyle="{DynamicResource MetroDataGridCheckBox}"
-                                        Header="IsSelected" />-->
-                <DataGridTemplateColumn Header="Action">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <ItemContainerTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Button Content="+" />
-                                <Button Content="-" />
-                            </StackPanel>
-                        </ItemContainerTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+                   Text="Customer Details:" />
+        <StackPanel Grid.Row="3"
+                    Grid.RowSpan="2"
+                    Grid.Column="2"
+                    Orientation="Vertical">
+            <Button Width="60"
+                    Height="60"
+                    Margin="5"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Background="OrangeRed"
+                    Command="{Binding DeleteReservationCommand}"
+                    Content="Delete" />
+            <Button Width="60"
+                    Height="60"
+                    Margin="5"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Background="LightSkyBlue"
+                    Command="{Binding DeleteReservationCommand}"
+                    Content="Update" />
+        </StackPanel>
+        <userControls:ucReservation Grid.Row="4"
+                                    Grid.Column="0"
+                                    Margin="3"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch" />
     </Grid>
 
 

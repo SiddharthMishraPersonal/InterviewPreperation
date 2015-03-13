@@ -10,19 +10,19 @@ namespace Restaurant.Reservations.ViewModel
   {
     #region Private Member Variables
 
-    private int _id;
+    private int _tableNumber;
     private int _maxOccupancy;
 
     #endregion
 
     #region Properties
 
-    public int Id
+    public int TableNumber
     {
-      get { return _id; }
+      get { return _tableNumber; }
       set
       {
-        _id = value;
+        _tableNumber = value;
         OnPropertyChanged("Id");
       }
     }
@@ -41,9 +41,9 @@ namespace Restaurant.Reservations.ViewModel
 
     #region Constructors
 
-    public TableViewModel(int id, int maxOccupancy)
+    public TableViewModel(int tableNumber, int maxOccupancy)
     {
-      Id = id;
+      TableNumber = tableNumber;
       MaxOccupancy = maxOccupancy;
     }
 
