@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Input;
 using MahApps.Metro.Controls;
 using Restaurant.Reservations.Helper;
+using Restaurant.Reservations.View;
 
 namespace Restaurant.Reservations.ViewModel
 {
@@ -24,8 +25,10 @@ namespace Restaurant.Reservations.ViewModel
     private DateTime _selectedDate;
     private DateTime _startDate;
     private DateTime _endDate;
+    private DateTime _checkInDate;
+    private DateTime _checkInTime;
     private readonly int _monthRange;
-    private MetroWindow _view;
+    private NewReservation _view;
     private bool _isSaved;
 
     #endregion
@@ -35,38 +38,84 @@ namespace Restaurant.Reservations.ViewModel
     public ObservableCollection<TableViewModel> TablesAvaialble
     {
       get { return _tablesAvaialble; }
-      set { _tablesAvaialble = value; }
+      set
+      {
+        _tablesAvaialble = value;
+        OnPropertyChanged("TablesAvaialble");
+      }
     }
 
     public string CustomerName
     {
       get { return _customerName; }
-      set { _customerName = value; }
+      set
+      {
+        _customerName = value;
+        OnPropertyChanged("CustomerName");
+      }
     }
 
     public string ContactNumber
     {
       get { return _contactNumber; }
-      set { _contactNumber = value; }
+      set
+      {
+        _contactNumber = value;
+        OnPropertyChanged("ContactNumber");
+      }
     }
 
     public TableViewModel SelectedTable
     {
       get { return _selectedTable; }
-      set { _selectedTable = value; }
+      set
+      {
+        _selectedTable = value;
+        OnPropertyChanged("SelectedTable");
+      }
     }
 
     public int MaximumOccupantsForTable
     {
       get { return _maximumOccupantsForTable; }
-      set { _maximumOccupantsForTable = value; }
+      set
+      {
+        _maximumOccupantsForTable = value;
+        OnPropertyChanged("MaximumOccupantsForTable");
+      }
     }
 
     public int Occupants
     {
       get { return _occupants; }
-      set { _occupants = value; }
+      set
+      {
+        _occupants = value;
+        OnPropertyChanged("Occupants");
+      }
     }
+
+    public DateTime CheckInDate
+    {
+      get { return _checkInDate; }
+      set
+      {
+        _checkInDate = value;
+        OnPropertyChanged("CheckInDate");
+      }
+    }
+
+    public DateTime CheckInTime
+    {
+      get { return _checkInTime; }
+      set
+      {
+        _checkInTime = value;
+
+        OnPropertyChanged("CheckInTime");
+      }
+    }
+
 
     public DateTime SelectedDate
     {
@@ -103,9 +152,11 @@ namespace Restaurant.Reservations.ViewModel
 
     #region Constructors
 
-    public ReservationViewModel(Window view)
+    public ReservationViewModel(Func<NewReservation> view)
     {
-      _view = view as MetroWindow;
+      //Every time when this view model class will get instantiated we will get new View object.
+      _view = view();
+
       if (_view == null)
       {
         return;
@@ -130,6 +181,24 @@ namespace Restaurant.Reservations.ViewModel
 
     private void SaveCommand_Execute(object param)
     {
+      CheckInDate = SelectedDate;
+      //Check whether reservation is between 10AM to 10PM.
+      var currentTime = DateTime.Now.TimeOfDay + new TimeSpan(12, 0, 0);
+      var openTime = DateTime.Parse("10:00 AM").TimeOfDay;
+      var closeTime = DateTime.Parse("10:00 PM").TimeOfDay;
+
+      if (currentTime >= openTime && currentTime <= closeTime)
+      {
+        Console.WriteLine("We are open");
+      }
+      else
+      {
+        Console.WriteLine("We are closed");
+      }
+
+      //Can select multiple tables
+      //
+
       _isSaved = true;
       _view.Close();
     }

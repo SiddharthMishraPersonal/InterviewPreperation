@@ -19,6 +19,10 @@ namespace Restaurant.Reservations.ViewModel
     private DateTime _startDate;
     private DateTime _endDate;
     private MainWindow _view;
+    private Func<NewReservation> _newReservation;
+    private Func<ReservationViewModel> _reservationViewModel;
+    private Func<TableViewModel> _tableViewModel;
+
 
     private ObservableCollection<ReservationViewModel> _currentReservations =
       new ObservableCollection<ReservationViewModel>();
@@ -68,9 +72,12 @@ namespace Restaurant.Reservations.ViewModel
 
     #region Constructors
 
-    public ApplicationViewModel(MainWindow view)
+    public ApplicationViewModel(MainWindow view,
+      Func<ReservationViewModel> reservationViewModel, Func<TableViewModel> tableViewModel)
     {
       _view = view;
+      _reservationViewModel = reservationViewModel;
+      _tableViewModel = tableViewModel;
       _monthRange = 12;
       StartDate = DateTime.UtcNow;
     }
@@ -78,6 +85,8 @@ namespace Restaurant.Reservations.ViewModel
     #endregion
 
     #region Commands
+
+    #region New Reservation Command
 
     private ICommand _createNewReservationCommand;
 
@@ -90,15 +99,22 @@ namespace Restaurant.Reservations.ViewModel
       }
     }
 
-
     private void CreateNewReservationCommand_Execute(object param)
     {
+      var newReservationVm = _reservationViewModel();
+      var isSaved = newReservationVm.ShowWindow();
+      if (!isSaved)
+        return;
+
+      CurrentReservations.Add(newReservationVm);
     }
 
     private bool CreateNewReservationCommand_CanExecute(object param)
     {
       return true;
     }
+
+    #endregion
 
     #endregion
 

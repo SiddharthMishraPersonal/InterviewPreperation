@@ -119,7 +119,7 @@
                                     Binding="{Binding Occupants}"
                                     Header="Occupants" />
                 <DataGridTextColumn Width="Auto"
-                                    Binding="{Binding TableNumber}"
+                                    Binding="{Binding SelectedTable.TableNumber}"
                                     Header="Table" />
                 <DataGridTextColumn Width="Auto"
                                     Binding="{Binding CheckInTime}"
