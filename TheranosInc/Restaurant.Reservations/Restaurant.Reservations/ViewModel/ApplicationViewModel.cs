@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using MahApps.Metro.Controls.Dialogs;
 using Restaurant.Reservations.View;
 
 namespace Restaurant.Reservations.ViewModel
@@ -101,12 +102,24 @@ namespace Restaurant.Reservations.ViewModel
 
     private void CreateNewReservationCommand_Execute(object param)
     {
-      var newReservationVm = _reservationViewModel();
-      var isSaved = newReservationVm.ShowWindow();
-      if (!isSaved)
-        return;
+      var currentTime = DateTime.Now.TimeOfDay;
+      var openTime = DateTime.Parse("10:00 AM").TimeOfDay;
+      var closeTime = DateTime.Parse("10:00 PM").TimeOfDay;
 
-      CurrentReservations.Add(newReservationVm);
+      if (currentTime >= openTime && currentTime <= closeTime)
+      {
+        var newReservationVm = _reservationViewModel();
+        var isSaved = newReservationVm.ShowWindow(this._view);
+        if (!isSaved)
+          return;
+
+        CurrentReservations.Add(newReservationVm);
+      }
+      else
+      {
+        _view.ShowMessageAsync("New Reservation",
+          "We are closed.\r\nWe are open between 10 A.M. to 10 P.M.\r\n\nPlease try later.");
+      }
     }
 
     private bool CreateNewReservationCommand_CanExecute(object param)

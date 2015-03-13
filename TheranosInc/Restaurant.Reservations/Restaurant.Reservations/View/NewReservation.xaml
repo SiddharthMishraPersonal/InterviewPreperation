@@ -6,6 +6,8 @@
                       Title="New Reservation"
                       Width="550"
                       Height="250"
+                      BorderThickness="1"
+                      BorderBrush="Black"
                       WindowStartupLocation="CenterOwner"
                       WindowStyle="ToolWindow">
     <Grid Margin="5">

@@ -5,7 +5,9 @@
                       xmlns:userControls="clr-namespace:Restaurant.Reservations.UserControls"
                       Title="Reservation System"
                       Width="600"
-                      Height="470">
+                      Height="470"
+                      BorderBrush="Black"
+                      BorderThickness="1">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" MinWidth="500" />

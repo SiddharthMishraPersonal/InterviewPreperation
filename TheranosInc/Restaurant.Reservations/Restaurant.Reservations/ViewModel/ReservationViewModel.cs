@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 using Restaurant.Reservations.Helper;
 using Restaurant.Reservations.View;
 
@@ -156,6 +157,9 @@ namespace Restaurant.Reservations.ViewModel
     {
       //Every time when this view model class will get instantiated we will get new View object.
       _view = view();
+      _view.DataContext = this;
+
+      this.SelectedDate = DateTime.UtcNow;
 
       if (_view == null)
       {
@@ -189,18 +193,19 @@ namespace Restaurant.Reservations.ViewModel
 
       if (currentTime >= openTime && currentTime <= closeTime)
       {
-        Console.WriteLine("We are open");
+        _view.ShowMessageAsync("New Reservation",
+          "We are Open.");
       }
       else
       {
-        Console.WriteLine("We are closed");
+        _view.ShowMessageAsync("New Reservation",
+          "We are closed.\r\nWe are open between 10 A.M. to 10 P.M.\r\n\nPlease try later.");
       }
 
       //Can select multiple tables
       //
 
       _isSaved = true;
-      _view.Close();
     }
 
     private bool SaveCommand_CanExecute(object param)
@@ -236,8 +241,10 @@ namespace Restaurant.Reservations.ViewModel
 
     #region Public Methods
 
-    public bool ShowWindow()
+    public bool ShowWindow(Window ownerWindow)
     {
+      _view.Owner = ownerWindow;
+      _view.Show();
       return _isSaved;
     }
 
