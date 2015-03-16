@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Documents;
 using System.Xml.Serialization;
 
-namespace Restaurant.Reservations.Model
+namespace Restaurant.Reservations.Shared.Models
 {
   [Serializable, XmlRoot("Tables"), XmlType("Tables")]
-  internal class Tables
+  public class TableList
   {
     private List<Table> _list;
 
@@ -20,7 +19,7 @@ namespace Restaurant.Reservations.Model
       set { _list = value; }
     }
 
-    public Tables()
+    public TableList()
     {
       ListTableModel = new List<Table>();
     }

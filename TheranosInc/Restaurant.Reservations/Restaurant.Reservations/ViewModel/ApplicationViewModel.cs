@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using System.Windows.Input;
 using MahApps.Metro.Controls.Dialogs;
 using Restaurant.Reservations.View;
 using System.Windows;
+using Restaurant.Reservations.Shared.NLogger;
 
 namespace Restaurant.Reservations.ViewModel
 {
@@ -23,6 +25,7 @@ namespace Restaurant.Reservations.ViewModel
     private MainWindow _view;
     private Func<ReservationViewModel> _reservationViewModel;
     private Func<TableViewModel> _tableViewModel;
+    private SettingsViewModel _settingsViewModel;
 
 
     private ObservableCollection<ReservationViewModel> _reservations =
@@ -30,6 +33,8 @@ namespace Restaurant.Reservations.ViewModel
 
     private ObservableCollection<ReservationViewModel> _todayReservations =
       new ObservableCollection<ReservationViewModel>();
+
+    private ObservableCollection<TableViewModel> _tableList = new ObservableCollection<TableViewModel>();
 
     #endregion
 
@@ -45,6 +50,12 @@ namespace Restaurant.Reservations.ViewModel
     {
       get { return _todayReservations; }
       set { _todayReservations = value; }
+    }
+
+    public ObservableCollection<TableViewModel> TableList
+    {
+      get { return _tableList; }
+      set { _tableList = value; }
     }
 
     public DateTime SelectedDate
@@ -82,14 +93,21 @@ namespace Restaurant.Reservations.ViewModel
 
     #region Constructors
 
-    public ApplicationViewModel(MainWindow view,
+    public ApplicationViewModel(MainWindow view, SettingsViewModel settingsViewModel,
       Func<ReservationViewModel> reservationViewModel, Func<TableViewModel> tableViewModel)
     {
       _view = view;
       _reservationViewModel = reservationViewModel;
       _tableViewModel = tableViewModel;
+      _settingsViewModel = settingsViewModel;
       _monthRange = 12;
       StartDate = DateTime.UtcNow;
+      var defaultAppPath =
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Reservations");
+      if (!Directory.Exists(defaultAppPath))
+      {
+        Directory.CreateDirectory(defaultAppPath);
+      }
     }
 
     #endregion
@@ -160,7 +178,8 @@ namespace Restaurant.Reservations.ViewModel
     {
       var todayReservation =
         Reservations.Where(s => s.CheckInDate.ToLocalTime().Date.Equals(DateTime.UtcNow.ToLocalTime().Date));
-      var newlyAdded = todayReservation.Where(t => !TodayReservations.Any(s => s.TableGuid.Equals(t.TableGuid)));
+      var newlyAdded =
+        todayReservation.Where(t => !TodayReservations.Any(s => s.ReservationGuid.Equals(t.ReservationGuid)));
       foreach (var newReservation in newlyAdded)
       {
         TodayReservations.Add(newReservation);
@@ -186,6 +205,7 @@ namespace Restaurant.Reservations.ViewModel
 
     private void SettingsCommand_Execute(object param)
     {
+      _settingsViewModel.ShowWindow(this._view);
     }
 
     private bool SettingsCommand_CanExecute(object param)
@@ -244,11 +264,59 @@ namespace Restaurant.Reservations.ViewModel
 
     #region Private Methods
 
-    private void LoadTableDetails(string xmlFilePath)
+    private void LoadTableDetails()
     {
-      var tableList = XmlOperations.DeSerialize(xmlFilePath);
+      try
+      {
+        var xmlFilePath = string.Empty;
+        if (_settingsViewModel != null)
+        {
+          xmlFilePath = _settingsViewModel.TableFilePath;
+          if (!File.Exists(xmlFilePath))
+          {
+            var resultTask = _view.ShowMessageAsync("Settings",
+              "Table data doesn't exist. Please visit 'Settings' window and update file paths.",
+              MessageDialogStyle.Affirmative,
+              new MetroDialogSettings() {AffirmativeButtonText = "Ok", NegativeButtonText = "No"});
+            resultTask.ContinueWith(s =>
+            {
+              if (s.Result == MessageDialogResult.Affirmative)
+              {
+                _settingsViewModel.ShowWindow(this._view);
+                LoadTableDetails();
+              }
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+            return;
+          }
+        }
+
+        _tableList.Clear();
+        var tableModelList = XmlOperations.DeSerializeTableList(xmlFilePath);
+
+        foreach (var tableModel in tableModelList)
+        {
+          var tableVm = _tableViewModel();
+          tableVm.TableNumber = tableModel.Id;
+          tableVm.MaxOccupancy = tableModel.MaxOccupancy;
+          _tableList.Add(tableVm);
+        }
+      }
+      catch (Exception exception)
+      {
+        NLogger.LogError(exception);
+      }
     }
 
     #endregion
+
+    internal void ShowWindow()
+    {
+      if (this._view == null)
+        return;
+
+      this._view.DataContext = this;
+      this._view.Show();
+      this.LoadTableDetails();
+    }
   }
 }

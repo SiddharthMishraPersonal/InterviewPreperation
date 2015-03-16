@@ -52,9 +52,12 @@ namespace Restaurant.Reservations.ViewModel
 
     #region Constructors
 
-    public TableViewModel(int tableNumber, int maxOccupancy)
+    public TableViewModel()
     {
-      TableGuid = Guid.NewGuid();
+    }
+
+    public void Initialize(int tableNumber, int maxOccupancy)
+    {
       TableNumber = tableNumber;
       MaxOccupancy = maxOccupancy;
     }

@@ -9,6 +9,7 @@ using System.Windows.Input;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using Restaurant.Reservations.Helper;
+using Restaurant.Reservations.Shared.NLogger;
 using Restaurant.Reservations.View;
 
 namespace Restaurant.Reservations.ViewModel
@@ -17,8 +18,9 @@ namespace Restaurant.Reservations.ViewModel
   {
     #region Private Member Variables
 
-    private Guid _tableGuid;
-    private ObservableCollection<TableViewModel> _tablesAvaialble;
+    private Guid _reservationGuid;
+    private ObservableCollection<TableViewModel> _tablesAvaialble = new ObservableCollection<TableViewModel>();
+    private string _selectedTableString;
     private TableViewModel _selectedTable;
     private string _customerName;
     private string _contactNumber;
@@ -38,14 +40,14 @@ namespace Restaurant.Reservations.ViewModel
 
     #region Properties
 
-    public Guid TableGuid
+    public Guid ReservationGuid
     {
-      get { return _tableGuid; }
+      get { return _reservationGuid; }
       set
       {
-        _tableGuid = value;
+        _reservationGuid = value;
 
-        OnPropertyChanged("TableGuid");
+        OnPropertyChanged("ReservationGuid");
       }
     }
 
@@ -79,12 +81,23 @@ namespace Restaurant.Reservations.ViewModel
       }
     }
 
+    public string SelectedTableString
+    {
+      get { return _selectedTableString; }
+      set
+      {
+        _selectedTableString = value;
+        OnPropertyChanged("SelectedTableString");
+      }
+    }
+
     public TableViewModel SelectedTable
     {
       get { return _selectedTable; }
       set
       {
         _selectedTable = value;
+
         OnPropertyChanged("SelectedTable");
       }
     }
@@ -193,7 +206,7 @@ namespace Restaurant.Reservations.ViewModel
 
       _monthRange = 12;
       StartDate = DateTime.UtcNow;
-      TableGuid = Guid.NewGuid();
+      ReservationGuid = Guid.NewGuid();
     }
 
     #endregion
@@ -288,14 +301,60 @@ namespace Restaurant.Reservations.ViewModel
 
     #endregion
 
+    #region SelectingTable Command
+
+    private ICommand _selectingTableCommand;
+
+    public ICommand SelectingTableCommand
+    {
+      get
+      {
+        _selectingTableCommand = _selectingTableCommand ??
+                                 new RelayCommands(SelectingTableCommand_Execute, SelectingTableCommand_CanExecute);
+        return _selectingTableCommand;
+      }
+    }
+
+
+    private void SelectingTableCommand_Execute(object param)
+    {
+    }
+
+    private bool SelectingTableCommand_CanExecute(object param)
+    {
+      return true;
+    }
+
+    #endregion
+
     #endregion
 
     #region Public Methods
 
     public void ShowWindow(Window ownerWindow)
     {
-      _view.Owner = ownerWindow;
-      _view.Show();
+      try
+      {
+        _view.Owner = ownerWindow;
+        LoadTableData();
+        _view.Show();
+      }
+      catch (Exception exception)
+      {
+        NLogger.LogError(exception);
+      }
+    }
+
+    private void LoadTableData()
+    {
+      var allTables = _applicationViewModel.TableList;
+      var reservations = _applicationViewModel.Reservations;
+      var availableTables = allTables.Where(s => !reservations.Any(r => r.SelectedTable.TableGuid.Equals(s.TableGuid)));
+
+      foreach (var tableViewModel in availableTables)
+      {
+        TablesAvaialble.Add(tableViewModel);
+      }
     }
 
     #endregion

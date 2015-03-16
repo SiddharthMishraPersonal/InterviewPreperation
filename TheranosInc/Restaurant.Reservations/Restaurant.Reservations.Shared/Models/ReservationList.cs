@@ -5,20 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace Restaurant.Reservations.Model
+namespace Restaurant.Reservations.Shared.Models
 {
   [Serializable, XmlRoot("Reservations"), XmlType("Reservations")]
-  public class Reservations
+  public class ReservationList
   {
-    private List<CustomerReservation> _todayReservations = null;
+    private List<Reservation> _todayReservations = null;
 
-    public Reservations()
+    public ReservationList()
     {
-      _todayReservations = new List<CustomerReservation>();
+      _todayReservations = new List<Reservation>();
     }
 
     [XmlElement("Reservation")]
-    public List<CustomerReservation> TodayReservations
+    public List<Reservation> TodayReservations
     {
       get { return _todayReservations; }
       set { _todayReservations = value; }

@@ -7,7 +7,8 @@
                       Width="650"
                       Height="470"
                       BorderBrush="Black"
-                      BorderThickness="1">
+                      BorderThickness="1"
+                      Icon="{StaticResource AppIcon}">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" MinWidth="500" />

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-using Restaurant.Reservations.Model;
+using Restaurant.Reservations.Shared.Models;
 
 namespace Restaurant.Reservations.Helper
 {
@@ -17,7 +17,7 @@ namespace Restaurant.Reservations.Helper
     {
     }
 
-    public static List<Table> DeSerialize(string xmlFilePath)
+    public static List<Table> DeSerializeTableList(string xmlFilePath)
     {
       //xmlFilePath =
       //  @"C:\Users\smishra\Documents\GitHub\InterviewPreperation\TheranosInc\Restaurant.Reservations\Restaurant.Reservations\Data\Tables.xml";
@@ -25,16 +25,49 @@ namespace Restaurant.Reservations.Helper
 
       _xmlFilePath = xmlFilePath;
 
-      var xmlSerializer = new XmlSerializer(typeof(Tables));
+      var xmlSerializer = new XmlSerializer(typeof (TableList));
       using (var fileStream = new FileStream(xmlFilePath, FileMode.Open))
       {
-        var tableModelsObj = (Tables)xmlSerializer.Deserialize(fileStream);
+        var tableModelsObj = (TableList) xmlSerializer.Deserialize(fileStream);
 
         if (tableModelsObj != null)
           _tableList = tableModelsObj.ListTableModel;
       }
 
       return _tableList;
+    }
+
+    public static List<Reservation> DeSerializeReservationLists(string xmlFilePath)
+    {
+      List<Reservation> _reservationList = null;
+
+      _xmlFilePath = xmlFilePath;
+
+      var xmlSerializer = new XmlSerializer(typeof (ReservationList));
+      using (var fileStream = new FileStream(xmlFilePath, FileMode.Open))
+      {
+        var tableModelsObj = (ReservationList) xmlSerializer.Deserialize(fileStream);
+
+        if (tableModelsObj != null)
+          _reservationList = tableModelsObj.TodayReservations;
+      }
+
+      return _reservationList;
+    }
+
+    public static SettingsModel DeSerializeSettings(string xmlFilePath)
+    {
+      SettingsModel settingsObject = null;
+
+      _xmlFilePath = xmlFilePath;
+
+      var xmlSerializer = new XmlSerializer(typeof (SettingsModel));
+      using (var fileStream = new FileStream(xmlFilePath, FileMode.Open))
+      {
+        settingsObject = (SettingsModel) xmlSerializer.Deserialize(fileStream);
+      }
+
+      return settingsObject;
     }
   }
 }

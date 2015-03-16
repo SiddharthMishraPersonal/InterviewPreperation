@@ -42,10 +42,7 @@ namespace Restaurant.Reservations
 
         _container = builder.Build();
         _appViewModel = _container.Resolve<ApplicationViewModel>();
-        _view = _container.Resolve<MainWindow>();
-        _view.DataContext = _appViewModel;
-
-        _view.Show();
+        _appViewModel.ShowWindow();
       }
       catch (Exception exception)
       {

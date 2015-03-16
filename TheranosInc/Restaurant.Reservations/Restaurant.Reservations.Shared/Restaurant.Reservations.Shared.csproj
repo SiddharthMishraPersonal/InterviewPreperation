@@ -42,6 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Reservation.cs" />
+    <Compile Include="Models\ReservationList.cs" />
+    <Compile Include="Models\SettingsModel.cs" />
+    <Compile Include="Models\Table.cs" />
+    <Compile Include="Models\TableList.cs" />
     <Compile Include="NLogger\NLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

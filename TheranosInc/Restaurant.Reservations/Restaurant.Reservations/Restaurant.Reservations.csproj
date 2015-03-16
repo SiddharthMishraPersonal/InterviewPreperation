@@ -33,6 +33,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>AppIcon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac">
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
@@ -42,6 +45,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.1.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -73,15 +77,12 @@
     </Compile>
     <Compile Include="Helper\Constants.cs" />
     <Compile Include="Helper\XmlOperations.cs" />
-    <Compile Include="Model\CustomerReservation.cs" />
-    <Compile Include="Model\Reservations.cs" />
-    <Compile Include="Model\Table.cs" />
-    <Compile Include="Model\Tables.cs" />
     <Compile Include="UserControls\ucReservation.xaml.cs">
       <DependentUpon>ucReservation.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\ApplicationViewModel.cs" />
     <Compile Include="ViewModel\ReservationViewModel.cs" />
+    <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\TableViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="View\MainWindow.xaml.cs">
@@ -89,6 +90,9 @@
     </Compile>
     <Compile Include="View\NewReservation.xaml.cs">
       <DependentUpon>NewReservation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -149,10 +153,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\SettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\downImage.png" />
     <Resource Include="Images\upImage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\forkspoon.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\AppIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="AppIcon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
