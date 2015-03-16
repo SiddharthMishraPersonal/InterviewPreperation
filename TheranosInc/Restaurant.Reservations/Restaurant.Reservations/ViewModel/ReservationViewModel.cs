@@ -17,6 +17,7 @@ namespace Restaurant.Reservations.ViewModel
   {
     #region Private Member Variables
 
+    private Guid _tableGuid;
     private ObservableCollection<TableViewModel> _tablesAvaialble;
     private TableViewModel _selectedTable;
     private string _customerName;
@@ -31,10 +32,22 @@ namespace Restaurant.Reservations.ViewModel
     private readonly int _monthRange;
     private NewReservation _view;
     private bool _isSaved;
+    private bool _isSelected;
 
     #endregion
 
     #region Properties
+
+    public Guid TableGuid
+    {
+      get { return _tableGuid; }
+      set
+      {
+        _tableGuid = value;
+
+        OnPropertyChanged("TableGuid");
+      }
+    }
 
     public ObservableCollection<TableViewModel> TablesAvaialble
     {
@@ -149,6 +162,17 @@ namespace Restaurant.Reservations.ViewModel
       }
     }
 
+
+    public bool IsSelected
+    {
+      get { return _isSelected; }
+      set
+      {
+        _isSelected = value;
+        OnPropertyChanged("IsSelected");
+      }
+    }
+
     #endregion
 
     #region Constructors
@@ -168,6 +192,7 @@ namespace Restaurant.Reservations.ViewModel
 
       _monthRange = 12;
       StartDate = DateTime.UtcNow;
+      TableGuid = Guid.NewGuid();
     }
 
     #endregion
@@ -191,21 +216,31 @@ namespace Restaurant.Reservations.ViewModel
       var openTime = DateTime.Parse("10:00 AM").TimeOfDay;
       var closeTime = DateTime.Parse("10:00 PM").TimeOfDay;
 
-      if (currentTime >= openTime && currentTime <= closeTime)
-      {
-        _view.ShowMessageAsync("New Reservation",
-          "We are Open.");
-      }
-      else
+      var areWeOpen = currentTime >= openTime && currentTime <= closeTime;
+
+      if (!areWeOpen)
       {
         _view.ShowMessageAsync("New Reservation",
           "We are closed.\r\nWe are open between 10 A.M. to 10 P.M.\r\n\nPlease try later.");
+        return;
       }
 
       //Can select multiple tables
       //
 
-      _isSaved = true;
+      var resultTask = _view.ShowMessageAsync("Save Reservation", "Do you want to save this reservation?",
+        MessageDialogStyle.AffirmativeAndNegative,
+        new MetroDialogSettings() {AffirmativeButtonText = "Yes", NegativeButtonText = "No"});
+
+      resultTask.ContinueWith(s =>
+      {
+        if (s.Result != MessageDialogResult.Affirmative)
+        {
+          _isSaved = false;
+          return;
+        }
+        _isSaved = true;
+      }, TaskScheduler.FromCurrentSynchronizationContext());
     }
 
     private bool SaveCommand_CanExecute(object param)
@@ -226,8 +261,15 @@ namespace Restaurant.Reservations.ViewModel
 
     private void CancelCommand_Execute(object param)
     {
-      _isSaved = false;
-      _view.Close();
+      var resultTask = _view.ShowMessageAsync("Save & Close", "Do you want to save this reservation?",
+        MessageDialogStyle.AffirmativeAndNegative,
+        new MetroDialogSettings() {AffirmativeButtonText = "Yes", NegativeButtonText = "No"});
+
+      resultTask.ContinueWith(s =>
+      {
+        _isSaved = s.Result == MessageDialogResult.Affirmative;
+        _view.Close();
+      }, TaskScheduler.FromCurrentSynchronizationContext());
     }
 
     private bool CancelCommand_CanExecute(object param)

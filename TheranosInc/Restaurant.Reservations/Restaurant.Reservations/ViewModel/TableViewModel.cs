@@ -10,6 +10,7 @@ namespace Restaurant.Reservations.ViewModel
   {
     #region Private Member Variables
 
+    private Guid _tableGuid;
     private int _tableNumber;
     private int _maxOccupancy;
 
@@ -37,12 +38,23 @@ namespace Restaurant.Reservations.ViewModel
       }
     }
 
+    public Guid TableGuid
+    {
+      get { return _tableGuid; }
+      set
+      {
+        _tableGuid = value;
+        OnPropertyChanged("TableGuid");
+      }
+    }
+
     #endregion
 
     #region Constructors
 
     public TableViewModel(int tableNumber, int maxOccupancy)
     {
+      TableGuid = Guid.NewGuid();
       TableNumber = tableNumber;
       MaxOccupancy = maxOccupancy;
     }
