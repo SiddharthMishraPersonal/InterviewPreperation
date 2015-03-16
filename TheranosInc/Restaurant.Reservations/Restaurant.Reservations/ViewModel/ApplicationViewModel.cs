@@ -12,7 +12,7 @@ using System.Windows;
 
 namespace Restaurant.Reservations.ViewModel
 {
-  internal class ApplicationViewModel : ViewModelBase
+  public class ApplicationViewModel : ViewModelBase
   {
     #region Private Member Variables
 
@@ -117,21 +117,38 @@ namespace Restaurant.Reservations.ViewModel
       var openTime = DateTime.Parse("10:00 AM").TimeOfDay;
       var closeTime = DateTime.Parse("10:00 PM").TimeOfDay;
 
-      if (currentTime >= openTime && currentTime <= closeTime)
-      {
-        var newReservationVm = _reservationViewModel();
-        var isSaved = newReservationVm.ShowWindow(this._view);
-        if (!isSaved)
-          return;
+      var areWeOpen = currentTime >= openTime && currentTime <= closeTime;
 
-        AddReservationToCollection(newReservationVm);
+      if (!areWeOpen)
+      {
+        var resultTask = _view.ShowMessageAsync("Closed!!",
+          "We are closed for the day.\r\nWe are open between 10 A.M. to 10 P.M.\r\n\nDo you still want to continue?",
+          MessageDialogStyle.AffirmativeAndNegative,
+          new MetroDialogSettings() {AffirmativeButtonText = "Yes", NegativeButtonText = "No"});
+        resultTask.ContinueWith(s =>
+        {
+          if (s.Result != MessageDialogResult.Affirmative)
+            return;
+          else
+          {
+            var newReservationVm = _reservationViewModel();
+            newReservationVm.ShowWindow(this._view);
+          }
+        }, TaskScheduler.FromCurrentSynchronizationContext());
       }
       else
       {
-        _view.ShowMessageAsync("New Reservation",
-          "We are closed.\r\nWe are open between 10 A.M. to 10 P.M.\r\n\nPlease try later.");
+        var newReservationVm = _reservationViewModel();
+        newReservationVm.ShowWindow(this._view);
       }
     }
+
+    private bool CreateNewReservationCommand_CanExecute(object param)
+    {
+      return true;
+    }
+
+    #region Helper Methods
 
     private void AddReservationToCollection(ReservationViewModel newReservationVm)
     {
@@ -141,7 +158,8 @@ namespace Restaurant.Reservations.ViewModel
 
     private void GetTodayReservation()
     {
-      var todayReservation = Reservations.Where(s => s.CheckInDate.ToLocalTime().Equals(DateTime.UtcNow.ToLocalTime()));
+      var todayReservation =
+        Reservations.Where(s => s.CheckInDate.ToLocalTime().Date.Equals(DateTime.UtcNow.ToLocalTime().Date));
       var newlyAdded = todayReservation.Where(t => !TodayReservations.Any(s => s.TableGuid.Equals(t.TableGuid)));
       foreach (var newReservation in newlyAdded)
       {
@@ -149,10 +167,7 @@ namespace Restaurant.Reservations.ViewModel
       }
     }
 
-    private bool CreateNewReservationCommand_CanExecute(object param)
-    {
-      return true;
-    }
+    #endregion
 
     #endregion
 
@@ -219,6 +234,11 @@ namespace Restaurant.Reservations.ViewModel
     #endregion
 
     #region Public Methods
+
+    public void AddReservation(ReservationViewModel reservationViewModel)
+    {
+      this.AddReservationToCollection(reservationViewModel);
+    }
 
     #endregion
 

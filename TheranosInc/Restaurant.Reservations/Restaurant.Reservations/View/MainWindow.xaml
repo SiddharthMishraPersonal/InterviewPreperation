@@ -144,12 +144,10 @@
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Top"
                   AutoGenerateColumns="False"
-                  ItemsSource="{Binding CurrentReservations}">
+                  ItemsSource="{Binding TodayReservations}">
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn Width="Auto"
-                                        Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow},
-                                                          Path=IsSelected,
-                                                          Mode=TwoWay}"
+                                        Binding="{Binding IsSelected}"
                                         EditingElementStyle="{DynamicResource MetroDataGridCheckBox}"
                                         ElementStyle="{DynamicResource MetroDataGridCheckBox}" />
                 <DataGridTextColumn Binding="{Binding SerialNumber}" />

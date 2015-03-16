@@ -31,7 +31,7 @@ namespace Restaurant.Reservations.ViewModel
     private DateTime _checkInTime;
     private readonly int _monthRange;
     private NewReservation _view;
-    private bool _isSaved;
+    private ApplicationViewModel _applicationViewModel;
     private bool _isSelected;
 
     #endregion
@@ -177,8 +177,9 @@ namespace Restaurant.Reservations.ViewModel
 
     #region Constructors
 
-    public ReservationViewModel(Func<NewReservation> view)
+    public ReservationViewModel(Func<NewReservation> view, ApplicationViewModel applicationViewModel)
     {
+      _applicationViewModel = applicationViewModel;
       //Every time when this view model class will get instantiated we will get new View object.
       _view = view();
       _view.DataContext = this;
@@ -205,14 +206,18 @@ namespace Restaurant.Reservations.ViewModel
 
     public ICommand SaveCommand
     {
-      get { return _saveCommand ?? new RelayCommands(SaveCommand_Execute, SaveCommand_CanExecute); }
+      get
+      {
+        _saveCommand = _saveCommand ?? new RelayCommands(SaveCommand_Execute, SaveCommand_CanExecute);
+        return _saveCommand;
+      }
     }
 
     private void SaveCommand_Execute(object param)
     {
       CheckInDate = SelectedDate;
       //Check whether reservation is between 10AM to 10PM.
-      var currentTime = DateTime.Now.TimeOfDay + new TimeSpan(12, 0, 0);
+      var currentTime = DateTime.Now.TimeOfDay;
       var openTime = DateTime.Parse("10:00 AM").TimeOfDay;
       var closeTime = DateTime.Parse("10:00 PM").TimeOfDay;
 
@@ -228,18 +233,19 @@ namespace Restaurant.Reservations.ViewModel
       //Can select multiple tables
       //
 
-      var resultTask = _view.ShowMessageAsync("Save Reservation", "Do you want to save this reservation?",
+      var resultTask = _view.ShowMessageAsync("Save & Close",
+        "Your reservation has been saved.\r\nDo you want to close the window?",
         MessageDialogStyle.AffirmativeAndNegative,
         new MetroDialogSettings() {AffirmativeButtonText = "Yes", NegativeButtonText = "No"});
 
+      _applicationViewModel.AddReservation(this);
+
       resultTask.ContinueWith(s =>
       {
-        if (s.Result != MessageDialogResult.Affirmative)
+        if (s.Result == MessageDialogResult.Affirmative)
         {
-          _isSaved = false;
-          return;
+          this._view.Close();
         }
-        _isSaved = true;
       }, TaskScheduler.FromCurrentSynchronizationContext());
     }
 
@@ -261,14 +267,17 @@ namespace Restaurant.Reservations.ViewModel
 
     private void CancelCommand_Execute(object param)
     {
-      var resultTask = _view.ShowMessageAsync("Save & Close", "Do you want to save this reservation?",
+      var resultTask = _view.ShowMessageAsync("Close",
+        "All your reservation information will be lost.\r\nDo you still want to continue?",
         MessageDialogStyle.AffirmativeAndNegative,
         new MetroDialogSettings() {AffirmativeButtonText = "Yes", NegativeButtonText = "No"});
 
       resultTask.ContinueWith(s =>
       {
-        _isSaved = s.Result == MessageDialogResult.Affirmative;
-        _view.Close();
+        if (s.Result == MessageDialogResult.Affirmative)
+        {
+          _view.Close();
+        }
       }, TaskScheduler.FromCurrentSynchronizationContext());
     }
 
@@ -283,11 +292,10 @@ namespace Restaurant.Reservations.ViewModel
 
     #region Public Methods
 
-    public bool ShowWindow(Window ownerWindow)
+    public void ShowWindow(Window ownerWindow)
     {
       _view.Owner = ownerWindow;
       _view.Show();
-      return _isSaved;
     }
 
     #endregion
