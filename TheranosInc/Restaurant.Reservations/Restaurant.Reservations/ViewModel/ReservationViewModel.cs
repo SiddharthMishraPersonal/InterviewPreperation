@@ -428,7 +428,7 @@ namespace Restaurant.Reservations.ViewModel
       var inStoreTime = CheckInTime.Hour >= 10 &&
                         CheckInTime.TimeOfDay <= closingTime;
       var isValid = !string.IsNullOrEmpty(CustomerName) && !string.IsNullOrEmpty(ContactNumber) &&
-                    CheckInDate > DateTime.Now.ToUniversalTime() && inStoreTime;
+                    CheckInDate.Date >= DateTime.Now.Date && inStoreTime;
       return isValid;
     }
 

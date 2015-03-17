@@ -91,7 +91,8 @@
                            HorizontalAlignment="Left"
                            VerticalAlignment="Center"
                            Text=":" />
-                <TextBox Grid.Row="0"
+                <TextBox x:Name="CustomerNameTextBox"
+                         Grid.Row="0"
                          Grid.Column="2"
                          MinWidth="140"
                          Margin="5"
@@ -122,7 +123,8 @@
                            HorizontalAlignment="Left"
                            VerticalAlignment="Center"
                            Text=":" />
-                <TextBox Grid.Row="0"
+                <TextBox x:Name="ContactNumberTextBox"
+                         Grid.Row="0"
                          Grid.Column="5"
                          MinWidth="140"
                          Margin="5"
@@ -348,7 +350,21 @@
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
                 Command="{Binding SaveCommand}"
-                Content="Save" />
+                Content="Save">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="IsEnabled" Value="False" />
+                    <Style.Triggers>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding Validation.HasError, ElementName=ContactNumberTextBox}" Value="False" />
+                                <Condition Binding="{Binding Validation.HasError, ElementName=CustomerNameTextBox}" Value="False" />
+                            </MultiDataTrigger.Conditions>
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
         <Button Grid.Row="2"
                 Grid.Column="3"
                 Width="50"
