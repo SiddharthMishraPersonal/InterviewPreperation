@@ -165,7 +165,8 @@
                                     Binding="{Binding SelectedTable.TableNumber}"
                                     Header="Table" />
                 <DataGridTextColumn Width="Auto"
-                                    Binding="{Binding CheckInTime}"
+                                    Binding="{Binding CheckInTime,
+                                                      StringFormat=Time: {0:HH:mm}}"
                                     Header="Check-in" />
 
                 <DataGridTemplateColumn Header="Action">

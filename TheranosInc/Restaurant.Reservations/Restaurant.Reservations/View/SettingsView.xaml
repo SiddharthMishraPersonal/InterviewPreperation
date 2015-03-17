@@ -8,6 +8,8 @@
                       BorderBrush="Black"
                       BorderThickness="1"
                       ResizeMode="NoResize"
+                      ShowCloseButton="False"
+                      ShowInTaskbar="False"
                       WindowStartupLocation="CenterOwner"
                       WindowStyle="ToolWindow">
     <Grid>

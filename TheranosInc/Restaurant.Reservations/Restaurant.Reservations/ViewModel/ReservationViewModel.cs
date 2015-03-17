@@ -20,21 +20,32 @@ namespace Restaurant.Reservations.ViewModel
 
     private Guid _reservationGuid;
     private ObservableCollection<TableViewModel> _tablesAvaialble = new ObservableCollection<TableViewModel>();
+    private ObservableCollection<TableViewModel> _tablesSelected = new ObservableCollection<TableViewModel>();
     private string _selectedTableString;
     private TableViewModel _selectedTable;
     private string _customerName;
     private string _contactNumber;
-    private int _maximumOccupantsForTable;
     private int _occupants;
-    private DateTime _selectedDate;
     private DateTime _startDate;
     private DateTime _endDate;
     private DateTime _checkInDate;
     private DateTime _checkInTime;
+    private double _maxOccupancy;
     private readonly int _monthRange;
     private NewReservation _view;
     private ApplicationViewModel _applicationViewModel;
     private bool _isSelected;
+
+    #region Timer Up Down variable
+
+    private DateTime _currentTime = DateTime.UtcNow;
+    private bool _adHours;
+    private bool _addMinutes;
+    private ObservableCollection<string> _amPmTypes = new ObservableCollection<string>();
+    private string _displayAmPm;
+    private string _selectedTime;
+
+    #endregion
 
     #endregion
 
@@ -48,6 +59,16 @@ namespace Restaurant.Reservations.ViewModel
         _reservationGuid = value;
 
         OnPropertyChanged("ReservationGuid");
+      }
+    }
+
+    public double MaxOccupancy
+    {
+      get { return _maxOccupancy; }
+      set
+      {
+        _maxOccupancy = value;
+        OnPropertyChanged("MaxOccupancy");
       }
     }
 
@@ -102,55 +123,41 @@ namespace Restaurant.Reservations.ViewModel
       }
     }
 
-    public int MaximumOccupantsForTable
-    {
-      get { return _maximumOccupantsForTable; }
-      set
-      {
-        _maximumOccupantsForTable = value;
-        OnPropertyChanged("MaximumOccupantsForTable");
-      }
-    }
-
     public int Occupants
     {
       get { return _occupants; }
       set
       {
-        _occupants = value;
+        if (value > MaxOccupancy)
+        {
+          _occupants = (int) MaxOccupancy;
+        }
+        else
+        {
+          _occupants = value;
+        }
         OnPropertyChanged("Occupants");
       }
     }
 
     public DateTime CheckInDate
     {
-      get { return _checkInDate; }
+      get { return _checkInDate.ToLocalTime(); }
       set
       {
-        _checkInDate = value;
+        _checkInDate = value.ToUniversalTime();
         OnPropertyChanged("CheckInDate");
       }
     }
 
     public DateTime CheckInTime
     {
-      get { return _checkInTime; }
+      get { return _checkInTime.ToLocalTime(); }
       set
       {
         _checkInTime = value;
 
         OnPropertyChanged("CheckInTime");
-      }
-    }
-
-
-    public DateTime SelectedDate
-    {
-      get { return _selectedDate.ToLocalTime(); }
-      set
-      {
-        _selectedDate = value.ToUniversalTime();
-        OnPropertyChanged("SelectedDate");
       }
     }
 
@@ -175,7 +182,6 @@ namespace Restaurant.Reservations.ViewModel
       }
     }
 
-
     public bool IsSelected
     {
       get { return _isSelected; }
@@ -186,27 +192,176 @@ namespace Restaurant.Reservations.ViewModel
       }
     }
 
+    public ObservableCollection<TableViewModel> TablesSelected
+    {
+      get { return _tablesSelected; }
+      set { _tablesSelected = value; }
+    }
+
+    #region Timer Up Down Public Properties
+
+    public ObservableCollection<string> AmPmTypes
+    {
+      get { return _amPmTypes; }
+      set { _amPmTypes = value; }
+    }
+
+    public string DisplayTime
+    {
+      get { return _currentTime.ToLocalTime().ToString("t"); }
+    }
+
+    public string DisplayAmPm
+    {
+      get
+      {
+        if (_currentTime.ToLocalTime().Hour >= 0 && _currentTime.ToLocalTime().Hour < 12)
+          _displayAmPm = AmPmTypes.FirstOrDefault(s => s.Equals("AM"));
+        else
+        {
+          if (_currentTime.ToLocalTime().Hour >= 12)
+          {
+            _displayAmPm = AmPmTypes.FirstOrDefault(s => s.Equals("PM"));
+          }
+        }
+
+        return _displayAmPm;
+      }
+      set
+      {
+        if (!value.Equals(_displayAmPm))
+        {
+          if (value.Equals("PM"))
+          {
+            CurrentTime = CurrentTime.ToLocalTime().AddHours(12);
+            if (CurrentTime.Hour >= 22)
+            {
+              CurrentTime =
+                new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 21, 30, 00).ToUniversalTime();
+            }
+            if (CurrentTime.Hour < 10)
+            {
+              CurrentTime =
+                new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 10, 00, 00).ToUniversalTime();
+            }
+          }
+          else
+          {
+            CurrentTime = CurrentTime.ToLocalTime().AddHours(-12);
+            if (CurrentTime.Hour >= 22)
+            {
+              CurrentTime =
+                new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 21, 30, 00).ToUniversalTime();
+            }
+            if (CurrentTime.Hour < 10)
+            {
+              CurrentTime =
+                new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 10, 00, 00).ToUniversalTime();
+            }
+          }
+        }
+        _displayAmPm = value;
+      }
+    }
+
+    public string DisplayTimeHours
+    {
+      get
+      {
+        var hours = _currentTime.ToLocalTime().Hour;
+        return hours > 12 ? (hours - 12).ToString("00") : hours.ToString("00");
+        //return hours.ToString();
+      }
+      set
+      {
+        var hour = 0;
+        Int32.TryParse(value, out hour);
+        CurrentTime = CurrentTime.ToLocalTime().AddHours(hour);
+        OnPropertyChanged("DisplayTime");
+        OnPropertyChanged("DisplayTimeHours");
+        OnPropertyChanged("DisplayTimeMinutes");
+      }
+    }
+
+    public string DisplayTimeMinutes
+    {
+      get { return _currentTime.ToLocalTime().Minute.ToString("00"); }
+      set
+      {
+        var minutes = 0;
+        Int32.TryParse(value, out minutes);
+        CurrentTime = CurrentTime.ToLocalTime().AddMinutes(minutes);
+        OnPropertyChanged("DisplayTime");
+        OnPropertyChanged("DisplayTimeHours");
+        OnPropertyChanged("DisplayTimeMinutes");
+      }
+    }
+
+    public DateTime CurrentTime
+    {
+      get { return _currentTime.ToLocalTime(); }
+      set
+      {
+        _currentTime = value;
+
+        OnPropertyChanged("CurrentTime");
+        OnPropertyChanged("DisplayTime");
+        OnPropertyChanged("DisplayTimeHours");
+        OnPropertyChanged("DisplayTimeMinutes");
+        OnPropertyChanged("DisplayAmPm");
+        SelectedTime = value.ToLocalTime().ToString("t");
+        CheckInTime = CurrentTime;
+      }
+    }
+
+    public string SelectedTime
+    {
+      get { return _selectedTime; }
+      set
+      {
+        _selectedTime = value;
+        OnPropertyChanged("SelectedTime");
+      }
+    }
+
+    #endregion
+
     #endregion
 
     #region Constructors
 
+    /// <summary>
+    /// Every time when this view model class will get instantiated we will get new View object.
+    /// </summary>
+    /// <param name="view"></param>
+    /// <param name="applicationViewModel"></param>
     public ReservationViewModel(Func<NewReservation> view, ApplicationViewModel applicationViewModel)
     {
       _applicationViewModel = applicationViewModel;
-      //Every time when this view model class will get instantiated we will get new View object.
+
       _view = view();
       _view.DataContext = this;
 
-      this.SelectedDate = DateTime.UtcNow;
 
+      this.CheckInDate = DateTime.UtcNow;
       if (_view == null)
       {
         return;
       }
 
+      #region Time Up Down
+
+      AmPmTypes.Add("AM");
+      AmPmTypes.Add("PM");
+      CurrentTime = DateTime.UtcNow.ToLocalTime();
+      SelectedTime = CurrentTime.ToLocalTime().ToString("t");
+
+      #endregion
+
       _monthRange = 12;
       StartDate = DateTime.UtcNow;
       ReservationGuid = Guid.NewGuid();
+      CheckInTime = DateTime.UtcNow;
     }
 
     #endregion
@@ -228,11 +383,15 @@ namespace Restaurant.Reservations.ViewModel
 
     private void SaveCommand_Execute(object param)
     {
-      CheckInDate = SelectedDate;
       //Check whether reservation is between 10AM to 10PM.
       var currentTime = DateTime.Now.TimeOfDay;
       var openTime = DateTime.Parse("10:00 AM").TimeOfDay;
       var closeTime = DateTime.Parse("10:00 PM").TimeOfDay;
+
+#if DEBUG
+      currentTime = new TimeSpan(10, 35, 33);
+#endif
+
 
       var areWeOpen = currentTime >= openTime && currentTime <= closeTime;
 
@@ -315,15 +474,147 @@ namespace Restaurant.Reservations.ViewModel
       }
     }
 
-
     private void SelectingTableCommand_Execute(object param)
     {
+      if (param == null)
+        return;
+
+      var table = param as TableViewModel;
+      var existingTable = TablesSelected.FirstOrDefault(s => s.TableGuid.Equals(table.TableGuid));
+      if (null != existingTable)
+      {
+        TablesSelected.Remove(existingTable);
+      }
+      else
+      {
+        TablesSelected.Add(table);
+      }
+
+      MaxOccupancy = 0;
+      var comma = "";
+      SelectedTableString = string.Empty;
+      foreach (var tableViewModel in TablesSelected)
+      {
+        SelectedTableString = String.Format("{0}{1} {2}", SelectedTableString, comma, tableViewModel.TableNumber);
+        comma = ",";
+        MaxOccupancy += tableViewModel.MaxOccupancy;
+      }
+      SelectedTableString = string.Format("Tables: {0}", SelectedTableString);
     }
 
     private bool SelectingTableCommand_CanExecute(object param)
     {
       return true;
     }
+
+    #endregion
+
+    #region Timer Up Down Commands
+
+    #region AddHours Command
+
+    private ICommand _addHoursCommand;
+
+
+    public ICommand AddHoursCommand
+    {
+      get
+      {
+        _addHoursCommand = _addHoursCommand ?? new RelayCommands(AddHoursCommand_Execute, AddHoursCommand_CanExecute);
+        return _addHoursCommand;
+      }
+    }
+
+    private void AddHoursCommand_Execute(object param)
+    {
+      if (null == param)
+        return;
+      int code = Convert.ToInt32(param.ToString());
+
+      if (code == 1)
+      {
+        //Add hours
+        CurrentTime = CurrentTime.AddHours(1);
+
+        if (CurrentTime.Hour >= 22)
+        {
+          CurrentTime = new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 21, 30, 00).ToUniversalTime();
+          return;
+        }
+      }
+
+      if (code == 0)
+      {
+        //Subtract Hours
+        CurrentTime = CurrentTime.AddHours(-1);
+
+        if (CurrentTime.Hour < 10)
+        {
+          CurrentTime = new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 10, 00, 00).ToUniversalTime();
+          return;
+        }
+      }
+    }
+
+    private bool AddHoursCommand_CanExecute(object param)
+    {
+      return true;
+    }
+
+    #endregion
+
+    #region Add Minutes Command
+
+    private ICommand _addMinutesCommand;
+
+    public ICommand AddMinutesCommand
+    {
+      get
+      {
+        _addMinutesCommand = _addMinutesCommand ??
+                             new RelayCommands(AddMinutesCommand_Execute, AddMinutesCommand_CanExecute);
+        return _addMinutesCommand;
+      }
+    }
+
+    private void AddMinutesCommand_Execute(object param)
+    {
+      if (null == param)
+        return;
+
+      int code = Convert.ToInt32(param.ToString());
+
+      if (code == 1)
+      {
+        //Add Minutes
+        CurrentTime = CurrentTime.AddMinutes(15);
+
+        if (CurrentTime.Hour >= 21 && CurrentTime.Minute > 30)
+        {
+          CurrentTime = new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 21, 30, 00).ToUniversalTime();
+          return;
+        }
+      }
+
+      if (code == 0)
+      {
+        //Subtract Minutes
+        CurrentTime = CurrentTime.AddMinutes(-15);
+
+        if (CurrentTime.Hour < 10 && CurrentTime.Minute <= 59)
+        {
+          CurrentTime = new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 10, 00, 00).ToUniversalTime();
+          return;
+        }
+      }
+    }
+
+    private bool AddMinutesCommand_CanExecute(object param)
+    {
+      return true;
+    }
+
+    #endregion
 
     #endregion
 
@@ -349,7 +640,13 @@ namespace Restaurant.Reservations.ViewModel
     {
       var allTables = _applicationViewModel.TableList;
       var reservations = _applicationViewModel.Reservations;
-      var availableTables = allTables.Where(s => !reservations.Any(r => r.SelectedTable.TableGuid.Equals(s.TableGuid)));
+      var availableTables =
+        allTables.Where(
+          s => !reservations.Any(r => r.SelectedTable != null && r.SelectedTable.TableGuid.Equals(s.TableGuid)))
+          .ToList();
+
+      if (availableTables == null)
+        return;
 
       foreach (var tableViewModel in availableTables)
       {

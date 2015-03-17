@@ -54,6 +54,7 @@ namespace Restaurant.Reservations.ViewModel
 
     public TableViewModel()
     {
+      TableGuid = Guid.NewGuid();
     }
 
     public void Initialize(int tableNumber, int maxOccupancy)
