@@ -96,17 +96,25 @@ namespace Restaurant.Reservations.ViewModel
     public ApplicationViewModel(MainWindow view, SettingsViewModel settingsViewModel,
       Func<ReservationViewModel> reservationViewModel, Func<TableViewModel> tableViewModel)
     {
-      _view = view;
-      _reservationViewModel = reservationViewModel;
-      _tableViewModel = tableViewModel;
-      _settingsViewModel = settingsViewModel;
-      _monthRange = 12;
-      StartDate = DateTime.UtcNow;
-      var defaultAppPath =
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Reservations");
-      if (!Directory.Exists(defaultAppPath))
+      try
       {
-        Directory.CreateDirectory(defaultAppPath);
+        _view = view;
+        _view.Closed += (sender, args) => { Application.Current.Shutdown(1); };
+        _reservationViewModel = reservationViewModel;
+        _tableViewModel = tableViewModel;
+        _settingsViewModel = settingsViewModel;
+        _monthRange = 12;
+        StartDate = DateTime.UtcNow;
+        var defaultAppPath =
+          Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Reservations");
+        if (!Directory.Exists(defaultAppPath))
+        {
+          Directory.CreateDirectory(defaultAppPath);
+        }
+      }
+      catch (Exception exception)
+      {
+        NLogger.LogError(exception);
       }
     }
 

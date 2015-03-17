@@ -423,7 +423,13 @@ namespace Restaurant.Reservations.ViewModel
 
     private bool SaveCommand_CanExecute(object param)
     {
-      return true;
+      var closingTime =
+        new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 21, 30, 00).TimeOfDay;
+      var inStoreTime = CheckInTime.Hour >= 10 &&
+                        CheckInTime.TimeOfDay <= closingTime;
+      var isValid = !string.IsNullOrEmpty(CustomerName) && !string.IsNullOrEmpty(ContactNumber) &&
+                    CheckInDate > DateTime.Now.ToUniversalTime() && inStoreTime;
+      return isValid;
     }
 
     #endregion

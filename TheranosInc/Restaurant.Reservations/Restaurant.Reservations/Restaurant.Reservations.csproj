@@ -71,6 +71,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AutoFac\ApplicationRegisteration.cs" />
+    <Compile Include="Converters\ValidationErrorsToStringConverter.cs" />
     <Compile Include="Helper\RelayCommand.cs" />
     <Compile Include="UserControls\ucDateTimeUpDown.xaml.cs">
       <DependentUpon>ucDateTimeUpDown.xaml</DependentUpon>
@@ -80,6 +81,7 @@
     <Compile Include="UserControls\ucReservation.xaml.cs">
       <DependentUpon>ucReservation.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ValidationRules\RegexValidationRule.cs" />
     <Compile Include="ViewModel\ApplicationViewModel.cs" />
     <Compile Include="ViewModel\ReservationViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
@@ -170,6 +172,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="AppIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Error.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
