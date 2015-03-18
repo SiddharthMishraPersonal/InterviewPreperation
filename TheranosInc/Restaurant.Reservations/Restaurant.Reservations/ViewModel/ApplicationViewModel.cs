@@ -32,6 +32,8 @@ namespace Restaurant.Reservations.ViewModel
     private SettingsViewModel _settingsViewModel;
     private int _currentReservationCount;
     private int _futureReservationCount;
+    private int _usedTablesCount;
+    private int _availableTablesCount;
 
     private ReservationViewModel _selectedReservation;
 
@@ -147,6 +149,26 @@ namespace Restaurant.Reservations.ViewModel
       }
     }
 
+    public int UsedTablesCount
+    {
+      get { return _usedTablesCount; }
+      set
+      {
+        _usedTablesCount = value;
+        OnPropertyChanged("UsedTablesCount");
+      }
+    }
+
+    public int AvailableTablesCount
+    {
+      get { return _availableTablesCount; }
+      set
+      {
+        _availableTablesCount = value;
+        OnPropertyChanged("AvailableTablesCount");
+      }
+    }
+
     #endregion
 
     #region Constructors
@@ -206,6 +228,15 @@ namespace Restaurant.Reservations.ViewModel
       var closeTime = DateTime.Parse("10:00 PM").TimeOfDay;
 
       var areWeOpen = currentTime >= openTime && currentTime <= closeTime;
+
+      if (AvailableTablesCount == 0)
+      {
+        _view.ShowMessageAsync("House Full!!",
+          "All tables are booked. Please remove a reservation before creating new one.",
+          MessageDialogStyle.Affirmative,
+          new MetroDialogSettings() {AffirmativeButtonText = "Yes", NegativeButtonText = "No"});
+        return;
+      }
 
       if (!areWeOpen)
       {
@@ -467,11 +498,13 @@ namespace Restaurant.Reservations.ViewModel
       {
         this.AddReservationToCollection(reservationViewModel);
       }
+      GetTablesStatus();
     }
 
     public void RemoveReservation(ReservationViewModel reservationViewModel)
     {
       this.RemoveReservationFromCollection(reservationViewModel);
+      GetTablesStatus();
     }
 
     public void UpdateReservation(ReservationViewModel reservationViewModel)
@@ -481,6 +514,9 @@ namespace Restaurant.Reservations.ViewModel
 
       //Load deserialized data
       LoadReservationsAsync();
+
+      //Count the table
+      GetTablesStatus();
     }
 
     #endregion
@@ -601,6 +637,8 @@ namespace Restaurant.Reservations.ViewModel
         resVm.GetTableSelectedString();
         AddReservation(resVm);
       }
+
+      GetTablesStatus();
     }
 
     private void LoadReservationsAsync()
@@ -684,6 +722,12 @@ namespace Restaurant.Reservations.ViewModel
       {
         FutureReservations.Add(newReservation);
       }
+    }
+
+    private void GetTablesStatus()
+    {
+      UsedTablesCount = TableList.Count(s => s.IsSelected = true);
+      AvailableTablesCount = TableList.Count(s => s.IsSelected == false);
     }
 
     #endregion
