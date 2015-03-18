@@ -30,6 +30,7 @@ namespace Restaurant.Reservations.ViewModel
     private DateTime _startDate;
     private DateTime _endDate;
     private DateTime _checkInDate;
+    private DateTime _selectedDate;
     private TimeSpan _checkInTime;
     private double _maxOccupancy;
     private readonly int _monthRange;
@@ -147,6 +148,21 @@ namespace Restaurant.Reservations.ViewModel
       set
       {
         _checkInDate = value.ToUniversalTime();
+        _selectedDate = _checkInDate;
+
+        OnPropertyChanged("SelectedDate");
+        OnPropertyChanged("CheckInDate");
+      }
+    }
+
+    public DateTime SelectedDate
+    {
+      get { return _selectedDate; }
+      set
+      {
+        _selectedDate = value.ToUniversalTime();
+        _checkInDate = _selectedDate.Date;
+        OnPropertyChanged("SelectedDate");
         OnPropertyChanged("CheckInDate");
       }
     }
@@ -591,6 +607,7 @@ namespace Restaurant.Reservations.ViewModel
         return _addMinutesCommand;
       }
     }
+
 
     private void AddMinutesCommand_Execute(object param)
     {

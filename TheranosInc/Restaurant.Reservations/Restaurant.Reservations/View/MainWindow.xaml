@@ -14,7 +14,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid>
+        <Grid Grid.Row="0" Grid.Column="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" MinWidth="500" />
                 <ColumnDefinition Width="Auto" />
@@ -272,11 +272,12 @@
 
         </Grid>
         <Border Grid.Row="0"
+                Grid.Column="0"
                 Background="White"
                 Opacity="0.5"
                 Visibility="{Binding IsBusy,
                                      Converter={StaticResource BooleanToVisibilityConverter}}">
-            <controls:ProgressRing IsActive="True" />
+            <controls:ProgressRing IsActive="{Binding IsBusy}" />
         </Border>
     </Grid>
 

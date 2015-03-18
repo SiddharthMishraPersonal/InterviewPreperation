@@ -31,3 +31,12 @@ Prerequisites:
 2. Build the code first which will download all nuget packages required for this application.
 3. I have used Nlog for logging.
 4. MahApp.Metro has been used for beautiful UI which matches the Window 8 themes.
+
+
+
+Pending Tasks:
+==================
+1. Error message when all tables are in use.
+2. Tooltip for each row.
+3. Validation on Settings page.
+4. If App Crashes, data should not be lost.
