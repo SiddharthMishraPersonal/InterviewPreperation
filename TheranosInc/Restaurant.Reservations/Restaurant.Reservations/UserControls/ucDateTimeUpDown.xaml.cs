@@ -14,7 +14,7 @@ namespace Restaurant.Reservations.UserControls
   {
     #region Private Member variable
 
-    private DateTime _currentTime = DateTime.UtcNow;
+    private DateTime _currentTime = DateTime.Now;
     private bool _adHours;
     private bool _addMinutes;
     private ObservableCollection<string> _amPmTypes = new ObservableCollection<string>();
@@ -30,8 +30,8 @@ namespace Restaurant.Reservations.UserControls
       this.DataContext = this;
       AmPmTypes.Add("AM");
       AmPmTypes.Add("PM");
-      CurrentTime = DateTime.UtcNow.ToLocalTime();
-      SelectedTime = CurrentTime.ToLocalTime().ToString("t");
+      CurrentTime = DateTime.Now;
+      SelectedTime = CurrentTime.ToString("t");
     }
 
     #endregion
@@ -46,7 +46,7 @@ namespace Restaurant.Reservations.UserControls
 
     public string DisplayTime
     {
-      get { return _currentTime.ToLocalTime().ToString("t"); }
+      get { return _currentTime.ToString("t"); }
     }
 
 
@@ -54,11 +54,11 @@ namespace Restaurant.Reservations.UserControls
     {
       get
       {
-        if (_currentTime.ToLocalTime().Hour >= 0 && _currentTime.ToLocalTime().Hour < 12)
+        if (_currentTime.Hour >= 0 && _currentTime.Hour < 12)
           _displayAmPm = AmPmTypes.FirstOrDefault(s => s.Equals("AM"));
         else
         {
-          if (_currentTime.ToLocalTime().Hour >= 12)
+          if (_currentTime.Hour >= 12)
           {
             _displayAmPm = AmPmTypes.FirstOrDefault(s => s.Equals("PM"));
           }
@@ -71,10 +71,10 @@ namespace Restaurant.Reservations.UserControls
         if (!value.Equals(_displayAmPm))
         {
           if (value.Equals("PM"))
-            CurrentTime = CurrentTime.ToLocalTime().AddHours(12);
+            CurrentTime = CurrentTime.AddHours(12);
           else
           {
-            CurrentTime = CurrentTime.ToLocalTime().AddHours(-12);
+            CurrentTime = CurrentTime.AddHours(-12);
           }
         }
         _displayAmPm = value;
@@ -85,7 +85,7 @@ namespace Restaurant.Reservations.UserControls
     {
       get
       {
-        var hours = _currentTime.ToLocalTime().Hour;
+        var hours = _currentTime.Hour;
         return hours > 12 ? (hours - 12).ToString("00") : hours.ToString("00");
         //return hours.ToString();
       }
@@ -93,7 +93,7 @@ namespace Restaurant.Reservations.UserControls
       {
         var hour = 0;
         Int32.TryParse(value, out hour);
-        CurrentTime = CurrentTime.ToLocalTime().AddHours(hour);
+        CurrentTime = CurrentTime.AddHours(hour);
         OnPropertyChanged("DisplayTime");
         OnPropertyChanged("DisplayTimeHours");
         OnPropertyChanged("DisplayTimeMinutes");
@@ -102,12 +102,12 @@ namespace Restaurant.Reservations.UserControls
 
     public string DisplayTimeMinutes
     {
-      get { return _currentTime.ToLocalTime().Minute.ToString("00"); }
+      get { return _currentTime.Minute.ToString("00"); }
       set
       {
         var minutes = 0;
         Int32.TryParse(value, out minutes);
-        CurrentTime = CurrentTime.ToLocalTime().AddMinutes(minutes);
+        CurrentTime = CurrentTime.AddMinutes(minutes);
         OnPropertyChanged("DisplayTime");
         OnPropertyChanged("DisplayTimeHours");
         OnPropertyChanged("DisplayTimeMinutes");
@@ -126,7 +126,7 @@ namespace Restaurant.Reservations.UserControls
         OnPropertyChanged("DisplayTimeHours");
         OnPropertyChanged("DisplayTimeMinutes");
         OnPropertyChanged("DisplayAmPm");
-        SelectedTime = value.ToLocalTime().ToString("t");
+        SelectedTime = value.ToString("t");
       }
     }
 
@@ -139,7 +139,7 @@ namespace Restaurant.Reservations.UserControls
 
     public string SelectedTime
     {
-      get { return ((DateTime) GetValue(SelectedTimeProperty)).ToLocalTime().ToString("t"); }
+      get { return ((DateTime) GetValue(SelectedTimeProperty)).ToString("t"); }
       set { SetValue(SelectedTimeProperty, value); }
     }
 
@@ -150,25 +150,25 @@ namespace Restaurant.Reservations.UserControls
     private void MinutesUpButton_OnClick(object sender, RoutedEventArgs e)
     {
       CurrentTime = CurrentTime.AddMinutes(1);
-      SelectedTime = CurrentTime.ToLocalTime().ToString("t");
+      SelectedTime = CurrentTime.ToString("t");
     }
 
     private void MinutesDownButton_OnClick(object sender, RoutedEventArgs e)
     {
       CurrentTime = CurrentTime.AddMinutes(-1);
-      SelectedTime = CurrentTime.ToLocalTime().ToString("t");
+      SelectedTime = CurrentTime.ToString("t");
     }
 
     private void HourUpButton_OnClick(object sender, RoutedEventArgs e)
     {
       CurrentTime = CurrentTime.AddHours(1);
-      SelectedTime = CurrentTime.ToLocalTime().ToString("t");
+      SelectedTime = CurrentTime.ToString("t");
     }
 
     private void HourDownButton_OnClick(object sender, RoutedEventArgs e)
     {
       CurrentTime = CurrentTime.AddHours(-1);
-      SelectedTime = CurrentTime.ToLocalTime().ToString("t");
+      SelectedTime = CurrentTime.ToString("t");
     }
 
     #endregion

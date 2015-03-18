@@ -100,17 +100,17 @@ namespace Restaurant.Reservations.ViewModel
 
     public DateTime SelectedDate
     {
-      get { return _selectedDate.ToLocalTime(); }
+      get { return _selectedDate; }
       set
       {
-        _selectedDate = value.ToUniversalTime();
+        _selectedDate = value;
         OnPropertyChanged("SelectedDate");
       }
     }
 
     public DateTime StartDate
     {
-      get { return _startDate.ToLocalTime(); }
+      get { return _startDate; }
       set
       {
         _startDate = value;
@@ -121,7 +121,7 @@ namespace Restaurant.Reservations.ViewModel
 
     public DateTime EndDate
     {
-      get { return _endDate.ToLocalTime(); }
+      get { return _endDate; }
       set
       {
         _endDate = value;
@@ -188,7 +188,7 @@ namespace Restaurant.Reservations.ViewModel
         _tableViewModel = tableViewModel;
         _settingsViewModel = settingsViewModel;
         _monthRange = 12;
-        StartDate = DateTime.UtcNow;
+        StartDate = DateTime.Now;
         var defaultAppPath =
           Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Reservations");
         if (!Directory.Exists(defaultAppPath))
@@ -234,7 +234,7 @@ namespace Restaurant.Reservations.ViewModel
         _view.ShowMessageAsync("House Full!!",
           "All tables are booked. Please remove a reservation before creating new one.",
           MessageDialogStyle.Affirmative,
-          new MetroDialogSettings() {AffirmativeButtonText = "Yes", NegativeButtonText = "No"});
+          new MetroDialogSettings() {AffirmativeButtonText = "Ok", NegativeButtonText = "No"});
         return;
       }
 
@@ -303,7 +303,7 @@ namespace Restaurant.Reservations.ViewModel
         {
           if (s.Result.Equals(MessageDialogResult.Affirmative))
           {
-            RemoveReservation(SelectedReservation);
+            RemoveReservationAsync(SelectedReservation);
           }
         });
       }
@@ -501,15 +501,14 @@ namespace Restaurant.Reservations.ViewModel
       GetTablesStatus();
     }
 
-    public void RemoveReservation(ReservationViewModel reservationViewModel)
+    public void RemoveReservationAsync(ReservationViewModel reservationViewModel)
     {
-      this.RemoveReservationFromCollection(reservationViewModel);
-      GetTablesStatus();
+      _view.Dispatcher.BeginInvoke((Action) ((() => { this.RemoveReservationFromCollection(reservationViewModel); })));
     }
 
     public void UpdateReservation(ReservationViewModel reservationViewModel)
     {
-      reservationViewModel.ShowWindow(this._view);
+      reservationViewModel.ShowWindow(this._view, true);
       GetReservationCounts();
 
       //Load deserialized data
@@ -670,7 +669,17 @@ namespace Restaurant.Reservations.ViewModel
         foreach (var tableViewModel in reservationViewModel.TablesSelected)
         {
           tableViewModel.IsSelected = false;
+          var table =
+            TableList.FirstOrDefault(
+              s =>
+                s.TableNumber.Equals(tableViewModel.TableNumber) && s.MaxOccupancy.Equals(tableViewModel.MaxOccupancy));
+          if (table != null)
+          {
+            table.IsSelected = false;
+          }
         }
+
+        GetTablesStatus();
 
         if (TodayReservations.Contains(reservationViewModel))
         {
@@ -701,7 +710,7 @@ namespace Restaurant.Reservations.ViewModel
     private void GetTodayReservations()
     {
       var todayReservation =
-        Reservations.Where(s => s.CheckInDate.ToLocalTime().Date.Equals(DateTime.UtcNow.ToLocalTime().Date));
+        Reservations.Where(s => s.CheckInDate.Date.Equals(DateTime.Now.Date));
       var newlyAdded =
         todayReservation.Where(t => !TodayReservations.Any(s => s.ReservationGuid.Equals(t.ReservationGuid)));
       TodayReservations.Clear();
@@ -714,7 +723,7 @@ namespace Restaurant.Reservations.ViewModel
     private void GetFutureReservations()
     {
       var todayReservation =
-        Reservations.Where(s => s.CheckInDate.ToLocalTime().Date > (DateTime.UtcNow.ToLocalTime().Date));
+        Reservations.Where(s => s.CheckInDate.Date > (DateTime.Now.Date));
       var newlyAdded =
         todayReservation.Where(t => !TodayReservations.Any(s => s.ReservationGuid.Equals(t.ReservationGuid)));
       FutureReservations.Clear();
@@ -726,7 +735,7 @@ namespace Restaurant.Reservations.ViewModel
 
     private void GetTablesStatus()
     {
-      UsedTablesCount = TableList.Count(s => s.IsSelected = true);
+      UsedTablesCount = TableList.Count(s => s.IsSelected == true);
       AvailableTablesCount = TableList.Count(s => s.IsSelected == false);
     }
 

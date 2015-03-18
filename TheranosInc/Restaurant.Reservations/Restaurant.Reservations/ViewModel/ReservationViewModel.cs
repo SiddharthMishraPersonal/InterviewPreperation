@@ -40,7 +40,7 @@ namespace Restaurant.Reservations.ViewModel
 
     #region Timer Up Down variable
 
-    private DateTime _currentTime = DateTime.UtcNow;
+    private DateTime _currentTime = DateTime.Now;
     private bool _adHours;
     private bool _addMinutes;
     private ObservableCollection<string> _amPmTypes = new ObservableCollection<string>();
@@ -144,10 +144,10 @@ namespace Restaurant.Reservations.ViewModel
 
     public DateTime CheckInDate
     {
-      get { return _checkInDate.ToLocalTime(); }
+      get { return _checkInDate; }
       set
       {
-        _checkInDate = value.ToUniversalTime();
+        _checkInDate = value;
         _selectedDate = _checkInDate;
 
         OnPropertyChanged("SelectedDate");
@@ -160,7 +160,7 @@ namespace Restaurant.Reservations.ViewModel
       get { return _selectedDate; }
       set
       {
-        _selectedDate = value.ToUniversalTime();
+        _selectedDate = value;
         _checkInDate = _selectedDate.Date;
         OnPropertyChanged("SelectedDate");
         OnPropertyChanged("CheckInDate");
@@ -180,7 +180,7 @@ namespace Restaurant.Reservations.ViewModel
 
     public DateTime StartDate
     {
-      get { return _startDate.ToLocalTime(); }
+      get { return _startDate; }
       set
       {
         _startDate = value;
@@ -191,7 +191,7 @@ namespace Restaurant.Reservations.ViewModel
 
     public DateTime EndDate
     {
-      get { return _endDate.ToLocalTime(); }
+      get { return _endDate; }
       set
       {
         _endDate = value;
@@ -225,18 +225,18 @@ namespace Restaurant.Reservations.ViewModel
 
     public string DisplayTime
     {
-      get { return _currentTime.ToLocalTime().ToString("t"); }
+      get { return _currentTime.ToString("t"); }
     }
 
     public string DisplayAmPm
     {
       get
       {
-        if (_currentTime.ToLocalTime().Hour >= 0 && _currentTime.ToLocalTime().Hour < 12)
+        if (_currentTime.Hour >= 0 && _currentTime.Hour < 12)
           _displayAmPm = AmPmTypes.FirstOrDefault(s => s.Equals("AM"));
         else
         {
-          if (_currentTime.ToLocalTime().Hour >= 12)
+          if (_currentTime.Hour >= 12)
           {
             _displayAmPm = AmPmTypes.FirstOrDefault(s => s.Equals("PM"));
           }
@@ -250,30 +250,30 @@ namespace Restaurant.Reservations.ViewModel
         {
           if (value.Equals("PM"))
           {
-            CurrentTime = CurrentTime.ToLocalTime().AddHours(12);
+            CurrentTime = CurrentTime.AddHours(12);
             if (CurrentTime.Hour >= 22)
             {
               CurrentTime =
-                new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 21, 30, 00).ToUniversalTime();
+                new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 21, 30, 00);
             }
             if (CurrentTime.Hour < 10)
             {
               CurrentTime =
-                new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 10, 00, 00).ToUniversalTime();
+                new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 10, 00, 00);
             }
           }
           else
           {
-            CurrentTime = CurrentTime.ToLocalTime().AddHours(-12);
+            CurrentTime = CurrentTime.AddHours(-12);
             if (CurrentTime.Hour >= 22)
             {
               CurrentTime =
-                new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 21, 30, 00).ToUniversalTime();
+                new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 21, 30, 00);
             }
             if (CurrentTime.Hour < 10)
             {
               CurrentTime =
-                new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 10, 00, 00).ToUniversalTime();
+                new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 10, 00, 00);
             }
           }
         }
@@ -285,7 +285,7 @@ namespace Restaurant.Reservations.ViewModel
     {
       get
       {
-        var hours = _currentTime.ToLocalTime().Hour;
+        var hours = _currentTime.Hour;
         return hours > 12 ? (hours - 12).ToString("00") : hours.ToString("00");
         //return hours.ToString();
       }
@@ -293,7 +293,7 @@ namespace Restaurant.Reservations.ViewModel
       {
         var hour = 0;
         Int32.TryParse(value, out hour);
-        CurrentTime = CurrentTime.ToLocalTime().AddHours(hour);
+        CurrentTime = CurrentTime.AddHours(hour);
         OnPropertyChanged("DisplayTime");
         OnPropertyChanged("DisplayTimeHours");
         OnPropertyChanged("DisplayTimeMinutes");
@@ -302,12 +302,12 @@ namespace Restaurant.Reservations.ViewModel
 
     public string DisplayTimeMinutes
     {
-      get { return _currentTime.ToLocalTime().Minute.ToString("00"); }
+      get { return _currentTime.Minute.ToString("00"); }
       set
       {
         var minutes = 0;
         Int32.TryParse(value, out minutes);
-        CurrentTime = CurrentTime.ToLocalTime().AddMinutes(minutes);
+        CurrentTime = CurrentTime.AddMinutes(minutes);
         OnPropertyChanged("DisplayTime");
         OnPropertyChanged("DisplayTimeHours");
         OnPropertyChanged("DisplayTimeMinutes");
@@ -316,7 +316,7 @@ namespace Restaurant.Reservations.ViewModel
 
     public DateTime CurrentTime
     {
-      get { return _currentTime.ToLocalTime(); }
+      get { return _currentTime; }
       set
       {
         _currentTime = value;
@@ -326,7 +326,7 @@ namespace Restaurant.Reservations.ViewModel
         OnPropertyChanged("DisplayTimeHours");
         OnPropertyChanged("DisplayTimeMinutes");
         OnPropertyChanged("DisplayAmPm");
-        SelectedTime = value.ToLocalTime().ToString("t");
+        SelectedTime = value.ToString("t");
         CheckInTime = CurrentTime.TimeOfDay;
       }
     }
@@ -360,7 +360,7 @@ namespace Restaurant.Reservations.ViewModel
       _view.DataContext = this;
 
 
-      this.CheckInDate = DateTime.UtcNow;
+      this.CheckInDate = DateTime.Now;
       if (_view == null)
       {
         return;
@@ -370,15 +370,15 @@ namespace Restaurant.Reservations.ViewModel
 
       AmPmTypes.Add("AM");
       AmPmTypes.Add("PM");
-      CurrentTime = DateTime.UtcNow.ToLocalTime();
-      SelectedTime = CurrentTime.ToLocalTime().ToString("t");
+      CurrentTime = DateTime.Now;
+      SelectedTime = CurrentTime.ToString("t");
 
       #endregion
 
       _monthRange = 12;
-      StartDate = DateTime.UtcNow;
+      StartDate = DateTime.Now;
       ReservationGuid = Guid.NewGuid();
-      CheckInTime = DateTime.UtcNow.TimeOfDay;
+      CheckInTime = DateTime.Now.TimeOfDay;
     }
 
     #endregion
@@ -569,7 +569,7 @@ namespace Restaurant.Reservations.ViewModel
 
         if (CurrentTime.Hour >= 22)
         {
-          CurrentTime = new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 21, 30, 00).ToUniversalTime();
+          CurrentTime = new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 21, 30, 00);
           return;
         }
       }
@@ -581,7 +581,7 @@ namespace Restaurant.Reservations.ViewModel
 
         if (CurrentTime.Hour < 10)
         {
-          CurrentTime = new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 10, 00, 00).ToUniversalTime();
+          CurrentTime = new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 10, 00, 00);
           return;
         }
       }
@@ -623,7 +623,7 @@ namespace Restaurant.Reservations.ViewModel
 
         if (CurrentTime.Hour >= 21 && CurrentTime.Minute > 30)
         {
-          CurrentTime = new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 21, 30, 00).ToUniversalTime();
+          CurrentTime = new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 21, 30, 00);
           return;
         }
       }
@@ -635,7 +635,7 @@ namespace Restaurant.Reservations.ViewModel
 
         if (CurrentTime.Hour < 10 && CurrentTime.Minute <= 59)
         {
-          CurrentTime = new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 10, 00, 00).ToUniversalTime();
+          CurrentTime = new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 10, 00, 00);
           return;
         }
       }
@@ -654,14 +654,14 @@ namespace Restaurant.Reservations.ViewModel
 
     #region Public Methods
 
-    public void ShowWindow(Window ownerWindow)
+    public void ShowWindow(Window ownerWindow, bool toUpdate = false)
     {
       try
       {
         _view.Dispatcher.BeginInvoke((Action) (() =>
         {
           _view.Owner = ownerWindow;
-          LoadTableData();
+          LoadTableData(toUpdate);
           GetTableSelectedString();
           _view.ShowDialog();
         }));
@@ -672,10 +672,23 @@ namespace Restaurant.Reservations.ViewModel
       }
     }
 
-    private void LoadTableData()
+    private void LoadTableData(bool toUpdate = false)
     {
+      TablesAvaialble.Clear();
+
       var allTables = _applicationViewModel.TableList;
       var reservations = _applicationViewModel.Reservations;
+
+      if (toUpdate)
+      {
+        foreach (var tableViewModel in allTables)
+        {
+          TablesAvaialble.Add(tableViewModel);
+        }
+        return;
+      }
+
+
       var availableTables =
         allTables.Where(
           s => !reservations.Any(r => r.SelectedTable != null && r.SelectedTable.TableGuid.Equals(s.TableGuid)))
