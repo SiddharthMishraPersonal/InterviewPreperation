@@ -429,6 +429,8 @@ namespace Restaurant.Reservations.ViewModel
                         CheckInTime.TimeOfDay <= closingTime;
       var isValid = !string.IsNullOrEmpty(CustomerName) && !string.IsNullOrEmpty(ContactNumber) &&
                     CheckInDate.Date >= DateTime.Now.Date && inStoreTime;
+      isValid = isValid && Occupants > 0;
+
       return isValid;
     }
 
@@ -505,7 +507,7 @@ namespace Restaurant.Reservations.ViewModel
         comma = ",";
         MaxOccupancy += tableViewModel.MaxOccupancy;
       }
-      SelectedTableString = string.Format("Tables: {0}", SelectedTableString);
+      //SelectedTableString = string.Format("Tables: {0}", SelectedTableString);
     }
 
     private bool SelectingTableCommand_CanExecute(object param)
