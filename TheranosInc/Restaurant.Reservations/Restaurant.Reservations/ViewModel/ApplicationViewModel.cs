@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using MahApps.Metro.Controls.Dialogs;
@@ -20,6 +22,7 @@ namespace Restaurant.Reservations.ViewModel
     #region Private Member Variables
 
     private readonly int _monthRange;
+    private bool _isBusy;
     private DateTime _selectedDate;
     private DateTime _startDate;
     private DateTime _endDate;
@@ -30,6 +33,7 @@ namespace Restaurant.Reservations.ViewModel
     private int _currentReservationCount;
     private int _futureReservationCount;
 
+    private ReservationViewModel _selectedReservation;
 
     private ObservableCollection<ReservationViewModel> _reservations =
       new ObservableCollection<ReservationViewModel>();
@@ -69,6 +73,27 @@ namespace Restaurant.Reservations.ViewModel
     {
       get { return _tableList; }
       set { _tableList = value; }
+    }
+
+    public bool IsBusy
+    {
+      get { return _isBusy; }
+      set
+      {
+        _isBusy = value;
+        OnPropertyChanged("IsBusy");
+      }
+    }
+
+
+    public ReservationViewModel SelectedReservation
+    {
+      get { return _selectedReservation; }
+      set
+      {
+        _selectedReservation = value;
+        OnPropertyChanged("SelectedReservation");
+      }
     }
 
     public DateTime SelectedDate
@@ -132,7 +157,11 @@ namespace Restaurant.Reservations.ViewModel
       try
       {
         _view = view;
-        _view.Closed += (sender, args) => { Application.Current.Shutdown(1); };
+        _view.Closed += (sender, args) =>
+        {
+          SaveReservationsAsync();
+          Application.Current.Shutdown(1);
+        };
         _reservationViewModel = reservationViewModel;
         _tableViewModel = tableViewModel;
         _settingsViewModel = settingsViewModel;
@@ -192,8 +221,6 @@ namespace Restaurant.Reservations.ViewModel
           {
             var newReservationVm = _reservationViewModel();
             newReservationVm.ShowWindow(this._view);
-            //Serialize Reservation Data.
-            SaveReservations();
           }
         }, TaskScheduler.FromCurrentSynchronizationContext());
       }
@@ -201,65 +228,6 @@ namespace Restaurant.Reservations.ViewModel
       {
         var newReservationVm = _reservationViewModel();
         newReservationVm.ShowWindow(this._view);
-        //Serialize Reservation Data.
-        SaveReservations();
-      }
-    }
-
-    private void SaveReservations()
-    {
-      var reservationList = new ReservationList();
-      foreach (var reservationViewModel in _reservations)
-      {
-        var newReservationModel = new Reservation()
-        {
-          ContactNumber = reservationViewModel.ContactNumber,
-          CheckInDate = reservationViewModel.CheckInDate.Add(reservationViewModel.CheckInTime),
-          CustomerName = reservationViewModel.CustomerName,
-          Occupants = reservationViewModel.Occupants
-        };
-
-        foreach (var tableViewModel in reservationViewModel.TablesSelected)
-        {
-          var table = new Table()
-          {
-            Id = tableViewModel.TableNumber,
-            MaxOccupancy = tableViewModel.MaxOccupancy
-          };
-          newReservationModel.Table.Add(table);
-        }
-
-        reservationList.TodayReservations.Add(newReservationModel);
-      }
-
-      //Serialize the data
-      XmlOperations.SerializeReservations(_settingsViewModel.ReservationFileFullpath, reservationList);
-
-      //Load serialized data
-      LoadReservations();
-    }
-
-    private void LoadReservations()
-    {
-      Reservations.Clear();
-      var reservationModelList = XmlOperations.DeSerializeReservationLists(_settingsViewModel.ReservationFileFullpath);
-      foreach (var resModel in reservationModelList)
-      {
-        var resVm = _reservationViewModel();
-        resVm.CustomerName = resModel.CustomerName;
-        resVm.ContactNumber = resModel.ContactNumber;
-        resVm.CheckInDate = resModel.CheckInDate.Date;
-        resVm.CheckInTime = resModel.CheckInDate.TimeOfDay;
-        resVm.Occupants = resModel.Occupants;
-
-        foreach (var tableModel in resModel.Table)
-        {
-          var tableVm = _tableViewModel();
-          tableVm.TableNumber = tableModel.Id;
-          tableVm.MaxOccupancy = tableModel.MaxOccupancy;
-          resVm.TablesSelected.Add(tableVm);
-        }
-        AddReservationToCollection(resVm);
       }
     }
 
@@ -268,43 +236,141 @@ namespace Restaurant.Reservations.ViewModel
       return true;
     }
 
-    #region Helper Methods
+    #endregion
 
-    private void AddReservationToCollection(ReservationViewModel newReservationVm)
+    #region Delete Reservation
+
+    private ICommand _deleteReservationCommand;
+
+    public ICommand DeleteReservationCommand
     {
-      Reservations.Add(newReservationVm);
-      GetTodayReservations();
-      GetFutureReservations();
-
-      CurrentReservationCount = TodayReservations.Count;
-      FutureReservationCount = FutureReservations.Count;
-    }
-
-    private void GetTodayReservations()
-    {
-      var todayReservation =
-        Reservations.Where(s => s.CheckInDate.ToLocalTime().Date.Equals(DateTime.UtcNow.ToLocalTime().Date));
-      var newlyAdded =
-        todayReservation.Where(t => !TodayReservations.Any(s => s.ReservationGuid.Equals(t.ReservationGuid)));
-      foreach (var newReservation in newlyAdded)
+      get
       {
-        TodayReservations.Add(newReservation);
+        _deleteReservationCommand = _deleteReservationCommand ??
+                                    new RelayCommands(DeleteReservationCommand_Execute,
+                                      DeleteReservationCommand_CanExecute);
+        return _deleteReservationCommand;
       }
     }
 
-    private void GetFutureReservations()
+    private void DeleteReservationCommand_Execute(object param)
     {
-      var todayReservation =
-        Reservations.Where(s => s.CheckInDate.ToLocalTime().Date > (DateTime.UtcNow.ToLocalTime().Date));
-      var newlyAdded =
-        todayReservation.Where(t => !TodayReservations.Any(s => s.ReservationGuid.Equals(t.ReservationGuid)));
-      foreach (var newReservation in newlyAdded)
+      if (SelectedReservation == null)
       {
-        FutureReservations.Add(newReservation);
+        _view.ShowMessageAsync("Not Selected!", "No reservation is selected for deletion.",
+          MessageDialogStyle.Affirmative,
+          new MetroDialogSettings() {AffirmativeButtonText = "Ok", NegativeButtonText = "No"});
       }
+      else
+      {
+        var resultTask = _view.ShowMessageAsync("Delete?",
+          string.Format("Do you want to delete {0}'s reservation?", SelectedReservation.CustomerName),
+          MessageDialogStyle.AffirmativeAndNegative,
+          new MetroDialogSettings() {AffirmativeButtonText = "Yes", NegativeButtonText = "No"});
+
+        resultTask.ContinueWith(s =>
+        {
+          if (s.Result.Equals(MessageDialogResult.Affirmative))
+          {
+            RemoveReservation(SelectedReservation);
+          }
+        });
+      }
+    }
+
+    private bool DeleteReservationCommand_CanExecute(object param)
+    {
+      return SelectedReservation != null;
     }
 
     #endregion
+
+    #region Update Reservation
+
+    private ICommand _updateReservationCommand;
+
+    public ICommand UpdateReservationCommand
+    {
+      get
+      {
+        _updateReservationCommand = _updateReservationCommand ??
+                                    new RelayCommands(UpdateReservationCommand_Execute,
+                                      UpdateReservationCommand_CanExecute);
+        return _updateReservationCommand;
+      }
+    }
+
+    private void UpdateReservationCommand_Execute(object param)
+    {
+      if (SelectedReservation == null)
+      {
+        _view.ShowMessageAsync("Not Selected!", "No reservation is selected for deletion.",
+          MessageDialogStyle.Affirmative,
+          new MetroDialogSettings() {AffirmativeButtonText = "Ok", NegativeButtonText = "No"});
+      }
+      else
+      {
+        var resultTask = _view.ShowMessageAsync("Update?",
+          string.Format("Do you want to update {0}'s reservation details?", SelectedReservation.CustomerName),
+          MessageDialogStyle.AffirmativeAndNegative,
+          new MetroDialogSettings() {AffirmativeButtonText = "Yes", NegativeButtonText = "No"});
+
+        resultTask.ContinueWith(s =>
+        {
+          if (s.Result.Equals(MessageDialogResult.Affirmative))
+          {
+            UpdateReservation(SelectedReservation);
+          }
+        });
+      }
+    }
+
+    private bool UpdateReservationCommand_CanExecute(object param)
+    {
+      return SelectedReservation != null;
+    }
+
+    #endregion
+
+    #region Refresh Reservation Command
+
+    private ICommand _refreshReservationCommand;
+
+    public ICommand RefreshReservationCommand
+    {
+      get
+      {
+        _refreshReservationCommand = _refreshReservationCommand ??
+                                     new RelayCommands(RefreshReservationCommand_Execute,
+                                       RefreshReservationCommand_CanExecute);
+        return _refreshReservationCommand;
+      }
+    }
+
+    private void RefreshReservationCommand_Execute(object param)
+    {
+      try
+      {
+        //We should put load data methods in different thread. Here data is not that big so we won't expect any delay on UI refreshing.
+        Task.Factory.StartNew(() =>
+        {
+          IsBusy = true;
+          //Deliberately put this sleep to demonstrate responsiveness of UI if save method takes more time than estimated.
+          Thread.Sleep(2000);
+          LoadReservationsAsync();
+          IsBusy = false;
+        });
+      }
+      catch (Exception exception)
+      {
+        NLogger.LogError(exception);
+      }
+    }
+
+    private bool RefreshReservationCommand_CanExecute(object param)
+    {
+      return true;
+    }
 
     #endregion
 
@@ -347,7 +413,6 @@ namespace Restaurant.Reservations.ViewModel
       }
     }
 
-
     private void CloseApplicationCommand_Execute(object param)
     {
       var resultTask = _view.ShowMessageAsync("Reservation System", "Do you want to close application?",
@@ -359,6 +424,7 @@ namespace Restaurant.Reservations.ViewModel
         if (t.Result != MessageDialogResult.Affirmative)
           return;
 
+        SaveReservationsAsync();
         _view.Close();
       }, TaskScheduler.FromCurrentSynchronizationContext());
     }
@@ -374,9 +440,47 @@ namespace Restaurant.Reservations.ViewModel
 
     #region Public Methods
 
+    internal void ShowWindow()
+    {
+      if (this._view == null)
+        return;
+
+      this._view.DataContext = this;
+      this._view.Show();
+      this.LoadTableDetails();
+      if (File.Exists(_settingsViewModel.ReservationFileFullpath))
+      {
+        Task.Factory.StartNew(() =>
+        {
+          IsBusy = true;
+          //Deliberately put this sleep to demonstrate responsiveness of UI if save method takes more time than estimated.
+          Thread.Sleep(2000);
+          LoadReservationsAsync();
+          IsBusy = false;
+        });
+      }
+    }
+
     public void AddReservation(ReservationViewModel reservationViewModel)
     {
-      this.AddReservationToCollection(reservationViewModel);
+      if (!Reservations.Contains(reservationViewModel))
+      {
+        this.AddReservationToCollection(reservationViewModel);
+      }
+    }
+
+    public void RemoveReservation(ReservationViewModel reservationViewModel)
+    {
+      this.RemoveReservationFromCollection(reservationViewModel);
+    }
+
+    public void UpdateReservation(ReservationViewModel reservationViewModel)
+    {
+      reservationViewModel.ShowWindow(this._view);
+      GetReservationCounts();
+
+      //Load deserialized data
+      LoadReservationsAsync();
     }
 
     #endregion
@@ -428,18 +532,160 @@ namespace Restaurant.Reservations.ViewModel
 
     #endregion
 
-    internal void ShowWindow()
-    {
-      if (this._view == null)
-        return;
+    #region Helper Methods
 
-      this._view.DataContext = this;
-      this._view.Show();
-      this.LoadTableDetails();
-      if (File.Exists(_settingsViewModel.ReservationFileFullpath))
+    public void SaveReservationsAsync()
+    {
+      _view.Dispatcher.BeginInvoke((Action) (() => { SaveReservations(); }));
+    }
+
+    public void SaveReservations()
+    {
+      var reservationList = new ReservationList();
+      foreach (var reservationViewModel in Reservations)
       {
-        LoadReservations();
+        var newReservationModel = new Reservation()
+        {
+          ContactNumber = reservationViewModel.ContactNumber,
+          CheckInDate = reservationViewModel.CheckInDate.Add(reservationViewModel.CheckInTime),
+          CustomerName = reservationViewModel.CustomerName,
+          Occupants = reservationViewModel.Occupants
+        };
+
+        foreach (var tableViewModel in reservationViewModel.TablesSelected)
+        {
+          var table = new Table()
+          {
+            Id = tableViewModel.TableNumber,
+            MaxOccupancy = tableViewModel.MaxOccupancy
+          };
+          newReservationModel.Table.Add(table);
+        }
+
+        reservationList.TodayReservations.Add(newReservationModel);
+      }
+
+      //Serialize the data
+      XmlOperations.SerializeReservations(_settingsViewModel.ReservationFileFullpath, reservationList);
+    }
+
+    private void LoadReservations()
+    {
+      Reservations.Clear();
+
+      var reservationModelList = XmlOperations.DeSerializeReservationLists(_settingsViewModel.ReservationFileFullpath);
+      foreach (var resModel in reservationModelList)
+      {
+        var resVm = _reservationViewModel();
+        resVm.CustomerName = resModel.CustomerName;
+        resVm.ContactNumber = resModel.ContactNumber;
+        resVm.CheckInDate = resModel.CheckInDate.Date;
+        resVm.CheckInTime = resModel.CheckInDate.TimeOfDay;
+        resVm.CheckInDate = resVm.CheckInDate.Add(resVm.CheckInTime);
+
+
+        foreach (var tableModel in resModel.Table)
+        {
+          resVm.MaxOccupancy += tableModel.MaxOccupancy;
+          var tableVm =
+            TableList.FirstOrDefault(
+              s => s.TableNumber.Equals(tableModel.Id) && s.MaxOccupancy.Equals(tableModel.MaxOccupancy));
+          if (tableVm == null)
+            continue;
+
+          tableVm.IsSelected = true;
+          resVm.TablesSelected.Add(tableVm);
+        }
+
+        resVm.Occupants = resModel.Occupants;
+        resVm.GetTableSelectedString();
+        AddReservation(resVm);
       }
     }
+
+    private void LoadReservationsAsync()
+    {
+      this._view.Dispatcher.BeginInvoke((Action) (() => { LoadReservations(); }));
+    }
+
+    private void AddReservationToCollection(ReservationViewModel newReservationVm)
+    {
+      Reservations.Add(newReservationVm);
+
+      //_view.Dispatcher.BeginInvoke((Action) (() => { Reservations.Add(newReservationVm); }));
+      GetTodayReservations();
+      GetFutureReservations();
+
+      GetReservationCounts();
+    }
+
+    private void GetReservationCounts()
+    {
+      CurrentReservationCount = TodayReservations.Count;
+      FutureReservationCount = FutureReservations.Count;
+    }
+
+    private void RemoveReservationFromCollection(ReservationViewModel reservationViewModel)
+    {
+      try
+      {
+        foreach (var tableViewModel in reservationViewModel.TablesSelected)
+        {
+          tableViewModel.IsSelected = false;
+        }
+
+        if (TodayReservations.Contains(reservationViewModel))
+        {
+          _view.Dispatcher.BeginInvoke((Action) (() => { TodayReservations.Remove(reservationViewModel); }));
+        }
+
+        if (FutureReservations.Contains(reservationViewModel))
+        {
+          _view.Dispatcher.BeginInvoke((Action) (() => { FutureReservations.Remove(reservationViewModel); }));
+        }
+
+        if (Reservations.Contains(reservationViewModel))
+        {
+          _view.Dispatcher.BeginInvoke((Action) (() => { Reservations.Remove(reservationViewModel); }));
+        }
+
+        GetReservationCounts();
+
+
+        SaveReservationsAsync();
+      }
+      catch (Exception exception)
+      {
+        NLogger.LogError(exception);
+      }
+    }
+
+    private void GetTodayReservations()
+    {
+      var todayReservation =
+        Reservations.Where(s => s.CheckInDate.ToLocalTime().Date.Equals(DateTime.UtcNow.ToLocalTime().Date));
+      var newlyAdded =
+        todayReservation.Where(t => !TodayReservations.Any(s => s.ReservationGuid.Equals(t.ReservationGuid)));
+      TodayReservations.Clear();
+      foreach (var newReservation in newlyAdded)
+      {
+        TodayReservations.Add(newReservation);
+      }
+    }
+
+    private void GetFutureReservations()
+    {
+      var todayReservation =
+        Reservations.Where(s => s.CheckInDate.ToLocalTime().Date > (DateTime.UtcNow.ToLocalTime().Date));
+      var newlyAdded =
+        todayReservation.Where(t => !TodayReservations.Any(s => s.ReservationGuid.Equals(t.ReservationGuid)));
+      FutureReservations.Clear();
+      foreach (var newReservation in newlyAdded)
+      {
+        FutureReservations.Add(newReservation);
+      }
+    }
+
+    #endregion
   }
 }

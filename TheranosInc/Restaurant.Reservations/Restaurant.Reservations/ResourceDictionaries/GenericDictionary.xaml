@@ -6,7 +6,7 @@
     <ImageSource x:Key="AppIcon">../Images/AppIcon.ico</ImageSource>
     <ImageSource x:Key="ErrorImage">../Images/Error.png</ImageSource>
     <converters:ValidationErrorsToStringConverter x:Key="ValidationErrorsToStringConverter" />
-
+    <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     <!--  Error template  -->
     <ControlTemplate x:Key="TextBoxErrorTemplate" TargetType="Control">
         <Grid ClipToBounds="False">

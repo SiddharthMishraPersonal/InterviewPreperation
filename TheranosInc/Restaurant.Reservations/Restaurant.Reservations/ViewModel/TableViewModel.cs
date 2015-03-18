@@ -13,6 +13,7 @@ namespace Restaurant.Reservations.ViewModel
     private Guid _tableGuid;
     private int _tableNumber;
     private int _maxOccupancy;
+    private bool _isSelected;
 
     #endregion
 
@@ -45,6 +46,16 @@ namespace Restaurant.Reservations.ViewModel
       {
         _tableGuid = value;
         OnPropertyChanged("TableGuid");
+      }
+    }
+
+    public bool IsSelected
+    {
+      get { return _isSelected; }
+      set
+      {
+        _isSelected = value;
+        OnPropertyChanged("IsSelected");
       }
     }
 

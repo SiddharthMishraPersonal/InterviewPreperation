@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -416,6 +417,7 @@ namespace Restaurant.Reservations.ViewModel
       {
         if (s.Result == MessageDialogResult.Affirmative)
         {
+          _applicationViewModel.SaveReservationsAsync();
           this._view.Close();
         }
       }, TaskScheduler.FromCurrentSynchronizationContext());
@@ -499,6 +501,12 @@ namespace Restaurant.Reservations.ViewModel
       }
 
       MaxOccupancy = 0;
+      GetTableSelectedString();
+      //SelectedTableString = string.Format("Tables: {0}", SelectedTableString);
+    }
+
+    public void GetTableSelectedString()
+    {
       var comma = "";
       SelectedTableString = string.Empty;
       foreach (var tableViewModel in TablesSelected)
@@ -507,7 +515,6 @@ namespace Restaurant.Reservations.ViewModel
         comma = ",";
         MaxOccupancy += tableViewModel.MaxOccupancy;
       }
-      //SelectedTableString = string.Format("Tables: {0}", SelectedTableString);
     }
 
     private bool SelectingTableCommand_CanExecute(object param)
@@ -634,9 +641,13 @@ namespace Restaurant.Reservations.ViewModel
     {
       try
       {
-        _view.Owner = ownerWindow;
-        LoadTableData();
-        _view.ShowDialog();
+        _view.Dispatcher.BeginInvoke((Action) (() =>
+        {
+          _view.Owner = ownerWindow;
+          LoadTableData();
+          GetTableSelectedString();
+          _view.ShowDialog();
+        }));
       }
       catch (Exception exception)
       {
@@ -658,7 +669,8 @@ namespace Restaurant.Reservations.ViewModel
 
       foreach (var tableViewModel in availableTables)
       {
-        TablesAvaialble.Add(tableViewModel);
+        if (!tableViewModel.IsSelected)
+          TablesAvaialble.Add(tableViewModel);
       }
     }
 

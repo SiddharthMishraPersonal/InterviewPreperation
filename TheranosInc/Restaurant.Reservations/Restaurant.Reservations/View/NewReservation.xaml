@@ -40,7 +40,8 @@
                         <CheckBox Margin="0,2,0,0"
                                   Command="{Binding DataContext.SelectingTableCommand,
                                                     ElementName=TableItemsControl}"
-                                  CommandParameter="{Binding .}">
+                                  CommandParameter="{Binding .}"
+                                  IsChecked="{Binding IsSelected}">
                             <CheckBox.Content>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="Table:" />

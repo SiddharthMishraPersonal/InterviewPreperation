@@ -71,6 +71,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AutoFac\ApplicationRegisteration.cs" />
+    <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\ValidationErrorsToStringConverter.cs" />
     <Compile Include="Helper\RelayCommand.cs" />
     <Compile Include="UserControls\ucDateTimeUpDown.xaml.cs">
