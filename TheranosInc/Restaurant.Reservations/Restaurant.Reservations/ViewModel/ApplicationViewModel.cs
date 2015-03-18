@@ -229,7 +229,7 @@ namespace Restaurant.Reservations.ViewModel
 
       var areWeOpen = currentTime >= openTime && currentTime <= closeTime;
 
-      if (AvailableTablesCount == 0)
+      if (AvailableTablesCount == 0 && UsedTablesCount > 0)
       {
         _view.ShowMessageAsync("House Full!!",
           "All tables are booked. Please remove a reservation before creating new one.",
@@ -498,6 +498,9 @@ namespace Restaurant.Reservations.ViewModel
       {
         this.AddReservationToCollection(reservationViewModel);
       }
+
+      GetTodayReservations();
+      GetFutureReservations();
       GetTablesStatus();
     }
 
@@ -510,9 +513,6 @@ namespace Restaurant.Reservations.ViewModel
     {
       reservationViewModel.ShowWindow(this._view, true);
       GetReservationCounts();
-
-      //Load deserialized data
-      LoadReservationsAsync();
 
       //Count the table
       GetTablesStatus();
@@ -617,7 +617,7 @@ namespace Restaurant.Reservations.ViewModel
         resVm.CheckInDate = resModel.CheckInDate.Date;
         resVm.CheckInTime = resModel.CheckInDate.TimeOfDay;
         resVm.CheckInDate = resVm.CheckInDate.Add(resVm.CheckInTime);
-
+        resVm.ReservationGuid = Guid.NewGuid();
 
         foreach (var tableModel in resModel.Table)
         {
@@ -647,6 +647,13 @@ namespace Restaurant.Reservations.ViewModel
 
     private void AddReservationToCollection(ReservationViewModel newReservationVm)
     {
+      var existingReservation =
+        Reservations.FirstOrDefault(s => s.ReservationGuid.Equals(newReservationVm.ReservationGuid));
+
+      if (existingReservation != null)
+      {
+        Reservations.Remove(existingReservation);
+      }
       Reservations.Add(newReservationVm);
 
       //_view.Dispatcher.BeginInvoke((Action) (() => { Reservations.Add(newReservationVm); }));

@@ -19,7 +19,7 @@ namespace Restaurant.Reservations.ViewModel
   {
     #region Private Member Variables
 
-    private Guid _reservationGuid;
+    private Guid _reservationGuid = Guid.Empty;
     private ObservableCollection<TableViewModel> _tablesAvaialble = new ObservableCollection<TableViewModel>();
     private ObservableCollection<TableViewModel> _tablesSelected = new ObservableCollection<TableViewModel>();
     private string _selectedTableString;
@@ -34,6 +34,7 @@ namespace Restaurant.Reservations.ViewModel
     private TimeSpan _checkInTime;
     private double _maxOccupancy;
     private readonly int _monthRange;
+    private Func<NewReservation> _viewFunc;
     private NewReservation _view;
     private ApplicationViewModel _applicationViewModel;
     private bool _isSelected;
@@ -355,8 +356,8 @@ namespace Restaurant.Reservations.ViewModel
     public ReservationViewModel(Func<NewReservation> view, ApplicationViewModel applicationViewModel)
     {
       _applicationViewModel = applicationViewModel;
-
-      _view = view();
+      _viewFunc = view;
+      _view = _viewFunc();
       _view.DataContext = this;
 
 
@@ -377,7 +378,7 @@ namespace Restaurant.Reservations.ViewModel
 
       _monthRange = 12;
       StartDate = DateTime.Now;
-      ReservationGuid = Guid.NewGuid();
+
       CheckInTime = DateTime.Now.TimeOfDay;
     }
 
@@ -427,6 +428,7 @@ namespace Restaurant.Reservations.ViewModel
         MessageDialogStyle.AffirmativeAndNegative,
         new MetroDialogSettings() {AffirmativeButtonText = "Yes", NegativeButtonText = "No"});
 
+      CheckInDate = this.CheckInDate.Add(CheckInTime);
       _applicationViewModel.AddReservation(this);
 
       resultTask.ContinueWith(s =>
@@ -434,7 +436,7 @@ namespace Restaurant.Reservations.ViewModel
         if (s.Result == MessageDialogResult.Affirmative)
         {
           _applicationViewModel.SaveReservationsAsync();
-          this._view.Close();
+          this._view.Hide();
         }
       }, TaskScheduler.FromCurrentSynchronizationContext());
     }
@@ -474,7 +476,7 @@ namespace Restaurant.Reservations.ViewModel
       {
         if (s.Result == MessageDialogResult.Affirmative)
         {
-          _view.Close();
+          _view.Hide();
         }
       }, TaskScheduler.FromCurrentSynchronizationContext());
     }
@@ -663,7 +665,7 @@ namespace Restaurant.Reservations.ViewModel
           _view.Owner = ownerWindow;
           LoadTableData(toUpdate);
           GetTableSelectedString();
-          _view.ShowDialog();
+          _view.Show();
         }));
       }
       catch (Exception exception)
