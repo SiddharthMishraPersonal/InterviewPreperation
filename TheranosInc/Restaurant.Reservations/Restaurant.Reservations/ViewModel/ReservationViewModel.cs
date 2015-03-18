@@ -29,7 +29,7 @@ namespace Restaurant.Reservations.ViewModel
     private DateTime _startDate;
     private DateTime _endDate;
     private DateTime _checkInDate;
-    private DateTime _checkInTime;
+    private TimeSpan _checkInTime;
     private double _maxOccupancy;
     private readonly int _monthRange;
     private NewReservation _view;
@@ -150,9 +150,9 @@ namespace Restaurant.Reservations.ViewModel
       }
     }
 
-    public DateTime CheckInTime
+    public TimeSpan CheckInTime
     {
-      get { return _checkInTime.ToLocalTime(); }
+      get { return _checkInTime; }
       set
       {
         _checkInTime = value;
@@ -310,7 +310,7 @@ namespace Restaurant.Reservations.ViewModel
         OnPropertyChanged("DisplayTimeMinutes");
         OnPropertyChanged("DisplayAmPm");
         SelectedTime = value.ToLocalTime().ToString("t");
-        CheckInTime = CurrentTime;
+        CheckInTime = CurrentTime.TimeOfDay;
       }
     }
 
@@ -361,7 +361,7 @@ namespace Restaurant.Reservations.ViewModel
       _monthRange = 12;
       StartDate = DateTime.UtcNow;
       ReservationGuid = Guid.NewGuid();
-      CheckInTime = DateTime.UtcNow;
+      CheckInTime = DateTime.UtcNow.TimeOfDay;
     }
 
     #endregion
@@ -425,8 +425,8 @@ namespace Restaurant.Reservations.ViewModel
     {
       var closingTime =
         new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 21, 30, 00).TimeOfDay;
-      var inStoreTime = CheckInTime.Hour >= 10 &&
-                        CheckInTime.TimeOfDay <= closingTime;
+      var inStoreTime = CheckInDate.Add(CheckInTime).Hour >= 10 &&
+                        CheckInTime <= closingTime;
       var isValid = !string.IsNullOrEmpty(CustomerName) && !string.IsNullOrEmpty(ContactNumber) &&
                     CheckInDate.Date >= DateTime.Now.Date && inStoreTime;
       isValid = isValid && Occupants > 0;
@@ -636,7 +636,7 @@ namespace Restaurant.Reservations.ViewModel
       {
         _view.Owner = ownerWindow;
         LoadTableData();
-        _view.Show();
+        _view.ShowDialog();
       }
       catch (Exception exception)
       {

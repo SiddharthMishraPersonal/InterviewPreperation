@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Restaurant.Reservations.Shared.Models;
+using Restaurant.Reservations.Shared.NLogger;
 
 namespace Restaurant.Reservations.Helper
 {
@@ -13,8 +14,38 @@ namespace Restaurant.Reservations.Helper
   {
     private static string _xmlFilePath;
 
-    public static void Serialize()
+    public static void SerializeReservations(string xmlFilePath, ReservationList reservationList)
     {
+      try
+      {
+        var serializer = new XmlSerializer(typeof (ReservationList));
+
+        using (var streamWriter = new StreamWriter(xmlFilePath))
+        {
+          serializer.Serialize(streamWriter, reservationList);
+        }
+      }
+      catch (Exception exception)
+      {
+        NLogger.LogError(exception);
+      }
+    }
+
+    public static void SerializeSettings(string xmlFilePath, SettingsModel settingsModel)
+    {
+      try
+      {
+        var serializer = new XmlSerializer(typeof (SettingsModel));
+
+        using (var streamWriter = new StreamWriter(xmlFilePath))
+        {
+          serializer.Serialize(streamWriter, settingsModel);
+        }
+      }
+      catch (Exception exception)
+      {
+        NLogger.LogError(exception);
+      }
     }
 
     public static List<Table> DeSerializeTableList(string xmlFilePath)

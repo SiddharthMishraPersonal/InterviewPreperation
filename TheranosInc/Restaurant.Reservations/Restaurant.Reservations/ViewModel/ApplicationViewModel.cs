@@ -10,6 +10,7 @@ using System.Windows.Input;
 using MahApps.Metro.Controls.Dialogs;
 using Restaurant.Reservations.View;
 using System.Windows;
+using Restaurant.Reservations.Shared.Models;
 using Restaurant.Reservations.Shared.NLogger;
 
 namespace Restaurant.Reservations.ViewModel
@@ -26,6 +27,8 @@ namespace Restaurant.Reservations.ViewModel
     private Func<ReservationViewModel> _reservationViewModel;
     private Func<TableViewModel> _tableViewModel;
     private SettingsViewModel _settingsViewModel;
+    private int _currentReservationCount;
+    private int _futureReservationCount;
 
 
     private ObservableCollection<ReservationViewModel> _reservations =
@@ -33,6 +36,10 @@ namespace Restaurant.Reservations.ViewModel
 
     private ObservableCollection<ReservationViewModel> _todayReservations =
       new ObservableCollection<ReservationViewModel>();
+
+    private ObservableCollection<ReservationViewModel> _futureReservations =
+      new ObservableCollection<ReservationViewModel>();
+
 
     private ObservableCollection<TableViewModel> _tableList = new ObservableCollection<TableViewModel>();
 
@@ -50,6 +57,12 @@ namespace Restaurant.Reservations.ViewModel
     {
       get { return _todayReservations; }
       set { _todayReservations = value; }
+    }
+
+    public ObservableCollection<ReservationViewModel> FutureReservations
+    {
+      get { return _futureReservations; }
+      set { _futureReservations = value; }
     }
 
     public ObservableCollection<TableViewModel> TableList
@@ -86,6 +99,26 @@ namespace Restaurant.Reservations.ViewModel
       {
         _endDate = value;
         OnPropertyChanged("EndDate");
+      }
+    }
+
+    public int CurrentReservationCount
+    {
+      get { return _currentReservationCount; }
+      set
+      {
+        _currentReservationCount = value;
+        OnPropertyChanged("CurrentReservationCount");
+      }
+    }
+
+    public int FutureReservationCount
+    {
+      get { return _futureReservationCount; }
+      set
+      {
+        _futureReservationCount = value;
+        OnPropertyChanged("FutureReservationCount");
       }
     }
 
@@ -159,6 +192,8 @@ namespace Restaurant.Reservations.ViewModel
           {
             var newReservationVm = _reservationViewModel();
             newReservationVm.ShowWindow(this._view);
+            //Serialize Reservation Data.
+            SaveReservations();
           }
         }, TaskScheduler.FromCurrentSynchronizationContext());
       }
@@ -166,6 +201,65 @@ namespace Restaurant.Reservations.ViewModel
       {
         var newReservationVm = _reservationViewModel();
         newReservationVm.ShowWindow(this._view);
+        //Serialize Reservation Data.
+        SaveReservations();
+      }
+    }
+
+    private void SaveReservations()
+    {
+      var reservationList = new ReservationList();
+      foreach (var reservationViewModel in _reservations)
+      {
+        var newReservationModel = new Reservation()
+        {
+          ContactNumber = reservationViewModel.ContactNumber,
+          CheckInDate = reservationViewModel.CheckInDate.Add(reservationViewModel.CheckInTime),
+          CustomerName = reservationViewModel.CustomerName,
+          Occupants = reservationViewModel.Occupants
+        };
+
+        foreach (var tableViewModel in reservationViewModel.TablesSelected)
+        {
+          var table = new Table()
+          {
+            Id = tableViewModel.TableNumber,
+            MaxOccupancy = tableViewModel.MaxOccupancy
+          };
+          newReservationModel.Table.Add(table);
+        }
+
+        reservationList.TodayReservations.Add(newReservationModel);
+      }
+
+      //Serialize the data
+      XmlOperations.SerializeReservations(_settingsViewModel.ReservationFileFullpath, reservationList);
+
+      //Load serialized data
+      LoadReservations();
+    }
+
+    private void LoadReservations()
+    {
+      Reservations.Clear();
+      var reservationModelList = XmlOperations.DeSerializeReservationLists(_settingsViewModel.ReservationFileFullpath);
+      foreach (var resModel in reservationModelList)
+      {
+        var resVm = _reservationViewModel();
+        resVm.CustomerName = resModel.CustomerName;
+        resVm.ContactNumber = resModel.ContactNumber;
+        resVm.CheckInDate = resModel.CheckInDate.Date;
+        resVm.CheckInTime = resModel.CheckInDate.TimeOfDay;
+        resVm.Occupants = resModel.Occupants;
+
+        foreach (var tableModel in resModel.Table)
+        {
+          var tableVm = _tableViewModel();
+          tableVm.TableNumber = tableModel.Id;
+          tableVm.MaxOccupancy = tableModel.MaxOccupancy;
+          resVm.TablesSelected.Add(tableVm);
+        }
+        AddReservationToCollection(resVm);
       }
     }
 
@@ -179,10 +273,14 @@ namespace Restaurant.Reservations.ViewModel
     private void AddReservationToCollection(ReservationViewModel newReservationVm)
     {
       Reservations.Add(newReservationVm);
-      GetTodayReservation();
+      GetTodayReservations();
+      GetFutureReservations();
+
+      CurrentReservationCount = TodayReservations.Count;
+      FutureReservationCount = FutureReservations.Count;
     }
 
-    private void GetTodayReservation()
+    private void GetTodayReservations()
     {
       var todayReservation =
         Reservations.Where(s => s.CheckInDate.ToLocalTime().Date.Equals(DateTime.UtcNow.ToLocalTime().Date));
@@ -191,6 +289,18 @@ namespace Restaurant.Reservations.ViewModel
       foreach (var newReservation in newlyAdded)
       {
         TodayReservations.Add(newReservation);
+      }
+    }
+
+    private void GetFutureReservations()
+    {
+      var todayReservation =
+        Reservations.Where(s => s.CheckInDate.ToLocalTime().Date > (DateTime.UtcNow.ToLocalTime().Date));
+      var newlyAdded =
+        todayReservation.Where(t => !TodayReservations.Any(s => s.ReservationGuid.Equals(t.ReservationGuid)));
+      foreach (var newReservation in newlyAdded)
+      {
+        FutureReservations.Add(newReservation);
       }
     }
 
@@ -236,6 +346,7 @@ namespace Restaurant.Reservations.ViewModel
         return _closeApplicationCommand;
       }
     }
+
 
     private void CloseApplicationCommand_Execute(object param)
     {
@@ -325,6 +436,10 @@ namespace Restaurant.Reservations.ViewModel
       this._view.DataContext = this;
       this._view.Show();
       this.LoadTableDetails();
+      if (File.Exists(_settingsViewModel.ReservationFileFullpath))
+      {
+        LoadReservations();
+      }
     }
   }
 }

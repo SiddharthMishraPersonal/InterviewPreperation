@@ -12,47 +12,38 @@ namespace Restaurant.Reservations.Shared.Models
   {
     #region Private member variables
 
-    private DateTime _date;
-    private DateTime _time;
-    private string _firstName;
-    private string _lastName;
+    private DateTime _checkInDate;
+    private string _customerName;
     private string _contactNumber;
-    private Table _table;
+    private int _occupants;
+    private List<Table> _table;
 
     #endregion
 
     #region Constructors
 
+    public Reservation()
+    {
+      Table = new List<Table>();
+    }
+
     #endregion
 
     #region Properties
 
-    [XmlElement("Date")]
-    public DateTime Date
+    [XmlElement("CheckInDate")]
+    public DateTime CheckInDate
     {
-      get { return _date; }
-      set { _date = value; }
+      get { return _checkInDate; }
+      set { _checkInDate = value; }
     }
 
-    [XmlElement("Time")]
-    public DateTime Time
-    {
-      get { return _time; }
-      set { _time = value; }
-    }
 
-    [XmlElement("FirstName")]
-    public string FirstName
+    [XmlElement("CustomerName")]
+    public string CustomerName
     {
-      get { return _firstName; }
-      set { _firstName = value; }
-    }
-
-    [XmlElement("LastName")]
-    public string LastName
-    {
-      get { return _lastName; }
-      set { _lastName = value; }
+      get { return _customerName; }
+      set { _customerName = value; }
     }
 
     [XmlElement("ContactNumber")]
@@ -63,10 +54,17 @@ namespace Restaurant.Reservations.Shared.Models
     }
 
     [XmlElement("Table")]
-    public Table Table
+    public List<Table> Table
     {
       get { return _table; }
       set { _table = value; }
+    }
+
+    [XmlElement("Occupants")]
+    public int Occupants
+    {
+      get { return _occupants; }
+      set { _occupants = value; }
     }
 
     #endregion
