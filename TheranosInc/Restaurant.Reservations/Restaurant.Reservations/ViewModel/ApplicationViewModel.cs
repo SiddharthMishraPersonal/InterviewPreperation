@@ -492,7 +492,7 @@ namespace Restaurant.Reservations.ViewModel
       }
     }
 
-    public void AddReservation(ReservationViewModel reservationViewModel)
+    public void AddReservation(ReservationViewModel reservationViewModel, bool canSaveToFile = false)
     {
       _view.Dispatcher.BeginInvoke((Action) (() =>
       {
@@ -504,8 +504,12 @@ namespace Restaurant.Reservations.ViewModel
         GetTodayReservations();
         GetFutureReservations();
         GetTablesStatus();
+
+        if (canSaveToFile)
+          SaveReservationsAsync();
       }));
-      SaveReservationsAsync();
+
+     
     }
 
     public void RemoveReservationAsync(ReservationViewModel reservationViewModel)
@@ -626,9 +630,8 @@ namespace Restaurant.Reservations.ViewModel
         var resVm = _reservationViewModel();
         resVm.CustomerName = resModel.CustomerName;
         resVm.ContactNumber = resModel.ContactNumber;
-        resVm.CheckInDate = resModel.CheckInDate.Date;
+        resVm.CheckInDate = resModel.CheckInDate;
         resVm.CheckInTime = resModel.CheckInDate.TimeOfDay;
-        resVm.CheckInDate = resVm.CheckInDate.Add(resVm.CheckInTime);
         resVm.ReservationGuid = Guid.NewGuid();
 
         foreach (var tableModel in resModel.Table)

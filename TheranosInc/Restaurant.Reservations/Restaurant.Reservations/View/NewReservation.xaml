@@ -134,8 +134,7 @@
                     <TextBox.Text>
                         <Binding Path="ContactNumber" UpdateSourceTrigger="PropertyChanged">
                             <Binding.ValidationRules>
-                                <validation:RegexValidationRule ErrorMessage="10 digit phone no. required."
-                                                                Pattern="{StaticResource ContactRegExPattern}" />
+                                <validation:RegexValidationRule ErrorMessage="10 digit phone no. required." Pattern="{StaticResource ContactRegExPattern}" />
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox.Text>
@@ -183,7 +182,7 @@
                             VerticalAlignment="Center"
                             Orientation="Horizontal">
                     <controls:NumericUpDown Interval="1"
-                                            IsReadOnly="False"
+                                            IsReadOnly="True"
                                             Minimum="0"
                                             Value="{Binding Occupants}" />
                     <TextBlock Margin="5,0,0,0"
@@ -381,12 +380,8 @@
                     <Style.Triggers>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition
-                                    Binding="{Binding Path=(Validation.HasError), ElementName=ContactNumberTextBox}"
-                                    Value="False" />
-                                <Condition
-                                    Binding="{Binding Path=(Validation.HasError), ElementName=CustomerNameTextBox}"
-                                    Value="False" />
+                                <Condition Binding="{Binding Path=(Validation.HasError), ElementName=ContactNumberTextBox}" Value="False" />
+                                <Condition Binding="{Binding Path=(Validation.HasError), ElementName=CustomerNameTextBox}" Value="False" />
                             </MultiDataTrigger.Conditions>
                             <Setter Property="IsEnabled" Value="True" />
                         </MultiDataTrigger>

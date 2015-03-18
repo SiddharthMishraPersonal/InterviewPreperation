@@ -145,7 +145,7 @@ namespace Restaurant.Reservations.ViewModel
 
     public DateTime CheckInDate
     {
-      get { return _checkInDate; }
+      get { return _checkInDate.Add(_checkInTime); }
       set
       {
         _checkInDate = value;
@@ -361,7 +361,7 @@ namespace Restaurant.Reservations.ViewModel
       _view.DataContext = this;
 
 
-      this.CheckInDate = DateTime.Now;
+      this.CheckInDate = DateTime.Now.Date;
       if (_view == null)
       {
         return;
@@ -427,15 +427,12 @@ namespace Restaurant.Reservations.ViewModel
         "Your reservation has been saved.\r\nDo you want to close the window?",
         MessageDialogStyle.AffirmativeAndNegative,
         new MetroDialogSettings() {AffirmativeButtonText = "Yes", NegativeButtonText = "No"});
-
-      CheckInDate = this.CheckInDate.Add(CheckInTime);
-      _applicationViewModel.AddReservation(this);
-
       resultTask.ContinueWith(s =>
       {
         if (s.Result == MessageDialogResult.Affirmative)
         {
-          _applicationViewModel.SaveReservationsAsync();
+          _applicationViewModel.AddReservation(this, true);
+
           this._view.Hide();
         }
       }, TaskScheduler.FromCurrentSynchronizationContext());
@@ -445,11 +442,11 @@ namespace Restaurant.Reservations.ViewModel
     {
       var closingTime =
         new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 21, 30, 00).TimeOfDay;
-      var inStoreTime = CheckInDate.Add(CheckInTime).Hour >= 10 &&
+      var inStoreTime = CheckInDate.Hour >= 10 &&
                         CheckInTime <= closingTime;
       var isValid = !string.IsNullOrEmpty(CustomerName) && !string.IsNullOrEmpty(ContactNumber) &&
                     CheckInDate.Date >= DateTime.Now.Date && inStoreTime;
-      isValid = isValid && Occupants > 0;
+      isValid = isValid && Occupants > 0 && Occupants <= MaxOccupancy;
 
       return isValid;
     }
