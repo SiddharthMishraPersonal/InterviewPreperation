@@ -4,8 +4,8 @@
                       xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                       xmlns:userControls="clr-namespace:Restaurant.Reservations.UserControls"
                       Title="Reservation System"
-                      Width="650"
-                      Height="470"
+                      Width="750"
+                      Height="600"
                       BorderBrush="Black"
                       BorderThickness="1"
                       Icon="{StaticResource AppIcon}">
@@ -47,32 +47,39 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Width="Auto" Header="Contact">
+                        <DataGridTemplateColumn Width="Auto"
+                                                MinWidth="120"
+                                                Header="Contact">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock HorizontalAlignment="Center" Text="{Binding ContactNumber}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Width="Auto" Header="Occupants">
+                        <DataGridTemplateColumn Width="Auto"
+                                                MinWidth="100"
+                                                Header="Occupants">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock HorizontalAlignment="Center" Text="{Binding Occupants}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Width="Auto" Header="Table">
+                        <DataGridTemplateColumn Width="Auto"
+                                                MinWidth="60"
+                                                Header="Table">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock HorizontalAlignment="Center" Text="{Binding SelectedTableString}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Width="Auto" Header="Check-in">
+                        <DataGridTemplateColumn Width="Auto"
+                                                MinWidth="150"
+                                                Header="Check-in">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock HorizontalAlignment="Center"
-                                               Text="{Binding CheckInDate, StringFormat='{}{0:h:mm tt}'}" />
+                                    <TextBlock HorizontalAlignment="Center" Text="{Binding CheckInDate, StringFormat='{}{0:h:mm tt}'}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -275,32 +282,39 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Width="Auto" Header="Contact">
+                        <DataGridTemplateColumn Width="Auto"
+                                                MinWidth="120"
+                                                Header="Contact">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock HorizontalAlignment="Center" Text="{Binding ContactNumber}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Width="Auto" Header="Occupants">
+                        <DataGridTemplateColumn Width="Auto"
+                                                MinWidth="100"
+                                                Header="Occupants">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock HorizontalAlignment="Center" Text="{Binding Occupants}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Width="Auto" Header="Table">
+                        <DataGridTemplateColumn Width="Auto"
+                                                MinWidth="60"
+                                                Header="Table">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock HorizontalAlignment="Center" Text="{Binding SelectedTableString}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Width="*" Header="Check-in">
+                        <DataGridTemplateColumn Width="Auto"
+                                                MinWidth="150"
+                                                Header="Check-in">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock HorizontalAlignment="Center"
-                                               Text="{Binding CheckInDate, StringFormat='{}{0:dd-MMM-yyyy h:mm tt}'}" />
+                                    <TextBlock HorizontalAlignment="Center" Text="{Binding CheckInDate, StringFormat='{}{0:dd-MMM-yyyy h:mm tt}'}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
