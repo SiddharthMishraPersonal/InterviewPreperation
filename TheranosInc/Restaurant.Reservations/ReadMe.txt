@@ -40,3 +40,4 @@ Pending Tasks:
 2. Tooltip for each row.
 3. Validation on Settings page.
 4. If App Crashes, data should not be lost.
+5. Update is not working properly.
