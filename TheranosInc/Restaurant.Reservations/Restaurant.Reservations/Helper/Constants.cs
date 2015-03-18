@@ -8,6 +8,6 @@ namespace Restaurant.Reservations.Helper
 {
   internal class Constants
   {
-    public const string MutexName = "Restaurant.Reservations.Mutex";
+    public const string MutexName = "RestaurantMutex";
   }
 }

@@ -494,19 +494,25 @@ namespace Restaurant.Reservations.ViewModel
 
     public void AddReservation(ReservationViewModel reservationViewModel)
     {
-      if (!Reservations.Contains(reservationViewModel))
+      _view.Dispatcher.BeginInvoke((Action) (() =>
       {
-        this.AddReservationToCollection(reservationViewModel);
-      }
+        if (!Reservations.Contains(reservationViewModel))
+        {
+          this.AddReservationToCollection(reservationViewModel);
+        }
 
-      GetTodayReservations();
-      GetFutureReservations();
-      GetTablesStatus();
+        GetTodayReservations();
+        GetFutureReservations();
+        GetTablesStatus();
+      }));
+      SaveReservationsAsync();
     }
 
     public void RemoveReservationAsync(ReservationViewModel reservationViewModel)
     {
       _view.Dispatcher.BeginInvoke((Action) ((() => { this.RemoveReservationFromCollection(reservationViewModel); })));
+
+      SaveReservationsAsync();
     }
 
     public void UpdateReservation(ReservationViewModel reservationViewModel)
@@ -516,6 +522,8 @@ namespace Restaurant.Reservations.ViewModel
 
       //Count the table
       GetTablesStatus();
+
+      SaveReservationsAsync();
     }
 
     #endregion
@@ -569,11 +577,17 @@ namespace Restaurant.Reservations.ViewModel
 
     #region Helper Methods
 
+    /// <summary>
+    /// Saves data in different non-ui thread.
+    /// </summary>
     public void SaveReservationsAsync()
     {
-      _view.Dispatcher.BeginInvoke((Action) (() => { SaveReservations(); }));
+      Task.Factory.StartNew(() => { SaveReservations(); });
     }
 
+    /// <summary>
+    /// Save data on UI thread.
+    /// </summary>
     public void SaveReservations()
     {
       var reservationList = new ReservationList();
@@ -606,8 +620,6 @@ namespace Restaurant.Reservations.ViewModel
 
     private void LoadReservations()
     {
-      Reservations.Clear();
-
       var reservationModelList = XmlOperations.DeSerializeReservationLists(_settingsViewModel.ReservationFileFullpath);
       foreach (var resModel in reservationModelList)
       {
@@ -642,7 +654,8 @@ namespace Restaurant.Reservations.ViewModel
 
     private void LoadReservationsAsync()
     {
-      this._view.Dispatcher.BeginInvoke((Action) (() => { LoadReservations(); }));
+      Reservations.Clear();
+      Task.Factory.StartNew(() => { this._view.Dispatcher.BeginInvoke((Action) (() => { LoadReservations(); })); });
     }
 
     private void AddReservationToCollection(ReservationViewModel newReservationVm)

@@ -33,6 +33,12 @@ namespace Restaurant.Reservations.Shared.NLogger
       Logger.Error(exception);
     }
 
+    public static void LogError(string message)
+    {
+      Trace.WriteLine(message);
+      Logger.Error(message);
+    }
+
     public static void LogDebug(string debugContent)
     {
       Trace.WriteLine(debugContent);

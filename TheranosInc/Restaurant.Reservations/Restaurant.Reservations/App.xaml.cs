@@ -10,6 +10,7 @@ using System.Windows;
 using Autofac;
 using Restaurant.Reservations.AutoFac;
 using Restaurant.Reservations.Helper;
+using Restaurant.Reservations.Shared.NLogger;
 using Restaurant.Reservations.View;
 
 namespace Restaurant.Reservations
@@ -32,10 +33,15 @@ namespace Restaurant.Reservations
     {
       try
       {
-        base.OnStartup(e);
-
         if (IsMutexBound())
+        {
+          NLogger.LogError("Another instance of the application is running");
+          MessageBox.Show("Another instance of the application is running.", "Restaurant Reservation System",
+            MessageBoxButton.OK, MessageBoxImage.Information);
           Environment.Exit(1);
+        }
+
+        base.OnStartup(e);
 
         var builder = new ContainerBuilder();
         builder.RegisterModule<ApplicationRegisteration>();
@@ -46,7 +52,7 @@ namespace Restaurant.Reservations
       }
       catch (Exception exception)
       {
-        throw;
+        NLogger.LogError(exception);
       }
     }
 
@@ -58,11 +64,12 @@ namespace Restaurant.Reservations
       }
       catch (WaitHandleCannotBeOpenedException)
       {
-        var _applicationMutex = new Mutex(true, Constants.MutexName);
+        _applicationMutex = new Mutex(true, Constants.MutexName);
         return false;
       }
-      catch (Exception)
+      catch (Exception exception)
       {
+        NLogger.LogError(exception);
       }
       return true;
     }
