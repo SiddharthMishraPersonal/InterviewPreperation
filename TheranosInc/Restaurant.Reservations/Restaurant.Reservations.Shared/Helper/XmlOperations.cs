@@ -5,12 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using Restaurant.Reservations.Shared.Log;
 using Restaurant.Reservations.Shared.Models;
-using Restaurant.Reservations.Shared.NLogger;
 
-namespace Restaurant.Reservations.Helper
+
+namespace Restaurant.Reservations.Shared.Helper
 {
-  internal static class XmlOperations
+  public static class XmlOperations
   {
     private static string _xmlFilePath;
 

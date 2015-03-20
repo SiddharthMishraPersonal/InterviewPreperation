@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Restaurant.Reservations.Shared.NLogger
+namespace Restaurant.Reservations.Shared.Log
 {
   public static class NLogger
   {

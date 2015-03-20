@@ -12,6 +12,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		ReadMe.txt = ReadMe.txt
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestData", "TestData", "{4FDA6745-DEC9-4D36-B3D4-A0512C02A746}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\..\..\..\..\ProgramData\Reservations\Reservations.xml = ..\..\..\..\..\..\..\ProgramData\Reservations\Reservations.xml
+		..\..\..\..\..\..\..\ProgramData\Reservations\Tables.xml = ..\..\..\..\..\..\..\ProgramData\Reservations\Tables.xml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

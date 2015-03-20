@@ -11,7 +11,7 @@ using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
 using Restaurant.Reservations.Helper;
-using Restaurant.Reservations.Shared.NLogger;
+using Restaurant.Reservations.Shared.Log;
 
 namespace Restaurant.Reservations.ViewModel
 {

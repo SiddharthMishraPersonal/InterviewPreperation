@@ -10,7 +10,7 @@ using System.Windows.Input;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using Restaurant.Reservations.Helper;
-using Restaurant.Reservations.Shared.NLogger;
+using Restaurant.Reservations.Shared.Log;
 using Restaurant.Reservations.View;
 
 namespace Restaurant.Reservations.ViewModel
