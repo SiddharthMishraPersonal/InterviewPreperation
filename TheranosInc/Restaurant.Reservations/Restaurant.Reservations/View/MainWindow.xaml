@@ -3,12 +3,21 @@
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                       xmlns:userControls="clr-namespace:Restaurant.Reservations.UserControls"
+                      x:Name="MetroWindow"
                       Title="Reservation System"
                       Width="750"
                       Height="600"
+                      MinWidth="725"
+                      MinHeight="550"
+                      MaxWidth="1000"
+                      MaxHeight="700"
                       BorderBrush="Black"
                       BorderThickness="1"
-                      Icon="{StaticResource AppIcon}">
+                      Icon="{StaticResource AppIcon}"
+                      ShowMinButton="False"
+                      ShowMaxRestoreButton="False"
+                      WindowStartupLocation="CenterScreen"
+                      WindowStyle="ToolWindow">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -43,7 +52,11 @@
                         <DataGridTemplateColumn Width="*" Header="Customer">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock HorizontalAlignment="Left" Text="{Binding CustomerName}" />
+                                    <TextBlock HorizontalAlignment="Left" Text="{Binding CustomerName}">
+                                        <TextBlock.ToolTip>
+                                            <ToolTip Style="{StaticResource ReservationToolTipStyle}" />
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -52,7 +65,11 @@
                                                 Header="Contact">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock HorizontalAlignment="Center" Text="{Binding ContactNumber}" />
+                                    <TextBlock HorizontalAlignment="Center" Text="{Binding ContactNumber}">
+                                        <TextBlock.ToolTip>
+                                            <ToolTip Style="{StaticResource ReservationToolTipStyle}" />
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -61,7 +78,11 @@
                                                 Header="Occupants">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock HorizontalAlignment="Center" Text="{Binding Occupants}" />
+                                    <TextBlock HorizontalAlignment="Center" Text="{Binding Occupants}">
+                                        <TextBlock.ToolTip>
+                                            <ToolTip Style="{StaticResource ReservationToolTipStyle}" />
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -70,7 +91,11 @@
                                                 Header="Table">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock HorizontalAlignment="Center" Text="{Binding SelectedTableString}" />
+                                    <TextBlock HorizontalAlignment="Center" Text="{Binding SelectedTableString}">
+                                        <TextBlock.ToolTip>
+                                            <ToolTip Style="{StaticResource ReservationToolTipStyle}" />
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -79,12 +104,15 @@
                                                 Header="Check-in">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock HorizontalAlignment="Center" Text="{Binding CheckInDate, StringFormat='{}{0:h:mm tt}'}" />
+                                    <TextBlock HorizontalAlignment="Center"
+                                               Text="{Binding CheckInDate, StringFormat='{}{0:h:mm tt}'}">
+                                        <TextBlock.ToolTip>
+                                            <ToolTip Style="{StaticResource ReservationToolTipStyle}" />
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-
-
                     </DataGrid.Columns>
                 </DataGrid>
             </GroupBox>
@@ -131,7 +159,11 @@
                         VerticalAlignment="Center"
                         Background="LightGreen"
                         Command="{Binding CreateNewReservationCommand}"
-                        Content="New" />
+                        Content="New">
+                    <Button.ToolTip>
+                        <ToolTip Content="Press to add new reservation." Style="{StaticResource GenericToolTipStyle}" />
+                    </Button.ToolTip>
+                </Button>
                 <Button Grid.Row="2"
                         Width="80"
                         Margin="5,0,5,5"
@@ -139,7 +171,12 @@
                         VerticalAlignment="Center"
                         Background="OrangeRed"
                         Command="{Binding DeleteReservationCommand}"
-                        Content="Delete" />
+                        Content="Delete">
+                    <Button.ToolTip>
+                        <ToolTip Content="Press to delete selected reservation."
+                                 Style="{StaticResource GenericToolTipStyle}" />
+                    </Button.ToolTip>
+                </Button>
                 <Button Grid.Row="3"
                         Width="80"
                         Margin="5,0,5,5"
@@ -147,7 +184,12 @@
                         VerticalAlignment="Top"
                         Background="LightSkyBlue"
                         Command="{Binding UpdateReservationCommand}"
-                        Content="Update" />
+                        Content="Update">
+                    <Button.ToolTip>
+                        <ToolTip Content="Press to update selected reservation."
+                                 Style="{StaticResource GenericToolTipStyle}" />
+                    </Button.ToolTip>
+                </Button>
                 <Button Grid.Row="3"
                         Width="80"
                         Margin="5,0,5,5"
@@ -155,7 +197,12 @@
                         VerticalAlignment="Bottom"
                         Background="DarkKhaki"
                         Command="{Binding RefreshReservationCommand}"
-                        Content="Refresh" />
+                        Content="Refresh">
+                    <Button.ToolTip>
+                        <ToolTip Content="Press to reload all reservations."
+                                 Style="{StaticResource GenericToolTipStyle}" />
+                    </Button.ToolTip>
+                </Button>
                 <Border Grid.Row="4"
                         Background="LightGray"
                         BorderBrush="Gray"
@@ -256,7 +303,12 @@
                         VerticalAlignment="Stretch"
                         Background="Bisque"
                         Command="{Binding SettingsCommand}"
-                        Content="Settings" />
+                        Content="Settings">
+                    <Button.ToolTip>
+                        <ToolTip Content="Press to change application settings."
+                                 Style="{StaticResource GenericToolTipStyle}" />
+                    </Button.ToolTip>
+                </Button>
 
             </Grid>
             <Separator Grid.Row="1"
@@ -278,7 +330,11 @@
                         <DataGridTemplateColumn Width="*" Header="Customer">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock HorizontalAlignment="Left" Text="{Binding CustomerName}" />
+                                    <TextBlock HorizontalAlignment="Left" Text="{Binding CustomerName}">
+                                        <TextBlock.ToolTip>
+                                            <ToolTip Style="{StaticResource ReservationToolTipStyle}" />
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -287,7 +343,11 @@
                                                 Header="Contact">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock HorizontalAlignment="Center" Text="{Binding ContactNumber}" />
+                                    <TextBlock HorizontalAlignment="Center" Text="{Binding ContactNumber}">
+                                        <TextBlock.ToolTip>
+                                            <ToolTip Style="{StaticResource ReservationToolTipStyle}" />
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -296,7 +356,11 @@
                                                 Header="Occupants">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock HorizontalAlignment="Center" Text="{Binding Occupants}" />
+                                    <TextBlock HorizontalAlignment="Center" Text="{Binding Occupants}">
+                                        <TextBlock.ToolTip>
+                                            <ToolTip Style="{StaticResource ReservationToolTipStyle}" />
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -305,7 +369,11 @@
                                                 Header="Table">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock HorizontalAlignment="Center" Text="{Binding SelectedTableString}" />
+                                    <TextBlock HorizontalAlignment="Center" Text="{Binding SelectedTableString}">
+                                        <TextBlock.ToolTip>
+                                            <ToolTip Style="{StaticResource ReservationToolTipStyle}" />
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -314,7 +382,12 @@
                                                 Header="Check-in">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock HorizontalAlignment="Center" Text="{Binding CheckInDate, StringFormat='{}{0:dd-MMM-yyyy h:mm tt}'}" />
+                                    <TextBlock HorizontalAlignment="Center"
+                                               Text="{Binding CheckInDate, StringFormat='{}{0:dd-MMM-yyyy h:mm tt}'}">
+                                        <TextBlock.ToolTip>
+                                            <ToolTip Style="{StaticResource ReservationToolTipStyle}" />
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -331,7 +404,11 @@
                     Grid.Column="2"
                     Margin="5"
                     Command="{Binding CloseApplicationCommand}"
-                    Content="Close" />
+                    Content="Close">
+                <Button.ToolTip>
+                    <ToolTip Content="Press to close the application." Style="{StaticResource GenericToolTipStyle}" />
+                </Button.ToolTip>
+            </Button>
 
         </Grid>
         <Border Grid.Row="0"

@@ -145,7 +145,7 @@ namespace Restaurant.Reservations.ViewModel
 
     public DateTime CheckInDate
     {
-      get { return _checkInDate.Add(_checkInTime); }
+      get { return _checkInDate; }
       set
       {
         _checkInDate = value;
@@ -153,6 +153,7 @@ namespace Restaurant.Reservations.ViewModel
 
         OnPropertyChanged("SelectedDate");
         OnPropertyChanged("CheckInDate");
+        OnPropertyChanged("CheckInTime");
       }
     }
 
@@ -163,8 +164,10 @@ namespace Restaurant.Reservations.ViewModel
       {
         _selectedDate = value;
         _checkInDate = _selectedDate.Date;
+        _checkInDate = SelectedDate.Date.Add(CheckInTime);
         OnPropertyChanged("SelectedDate");
         OnPropertyChanged("CheckInDate");
+        OnPropertyChanged("CheckInTime");
       }
     }
 
@@ -174,7 +177,10 @@ namespace Restaurant.Reservations.ViewModel
       set
       {
         _checkInTime = value;
-
+        CheckInDate = SelectedDate.Date.Add(CheckInTime);
+        _currentTime = CheckInDate;
+        OnPropertyChanged("SelectedDate");
+        OnPropertyChanged("CheckInDate");
         OnPropertyChanged("CheckInTime");
       }
     }
@@ -575,6 +581,10 @@ namespace Restaurant.Reservations.ViewModel
 
       if (code == 0)
       {
+        //We can't allow user to reserve table in past.
+        if (CurrentTime.Date.Equals(DateTime.Now.Date) && CurrentTime.Hour <= DateTime.Now.Hour)
+          return;
+
         //Subtract Hours
         CurrentTime = CurrentTime.AddHours(-1);
 
@@ -629,6 +639,11 @@ namespace Restaurant.Reservations.ViewModel
 
       if (code == 0)
       {
+        //We can't allow user to reserve table in past.
+        if (CurrentTime.Date.Equals(DateTime.Now.Date) && CurrentTime.Hour == DateTime.Now.Hour &&
+            CurrentTime.Minute <= DateTime.Now.Minute)
+          return;
+
         //Subtract Minutes
         CurrentTime = CurrentTime.AddMinutes(-15);
 

@@ -508,8 +508,6 @@ namespace Restaurant.Reservations.ViewModel
         if (canSaveToFile)
           SaveReservationsAsync();
       }));
-
-     
     }
 
     public void RemoveReservationAsync(ReservationViewModel reservationViewModel)
@@ -600,7 +598,7 @@ namespace Restaurant.Reservations.ViewModel
         var newReservationModel = new Reservation()
         {
           ContactNumber = reservationViewModel.ContactNumber,
-          CheckInDate = reservationViewModel.CheckInDate.Add(reservationViewModel.CheckInTime),
+          CheckInDate = reservationViewModel.CheckInDate,
           CustomerName = reservationViewModel.CustomerName,
           Occupants = reservationViewModel.Occupants
         };
