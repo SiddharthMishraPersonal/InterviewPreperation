@@ -407,41 +407,52 @@ namespace Restaurant.Reservations.ViewModel
 
     private void SaveCommand_Execute(object param)
     {
-      //Check whether reservation is between 10AM to 10PM.
-      var currentTime = DateTime.Now.TimeOfDay;
-      var openTime = DateTime.Parse("10:00 AM").TimeOfDay;
-      var closeTime = DateTime.Parse("10:00 PM").TimeOfDay;
+      try
+      {
+        //Check whether reservation is between 10AM to 10PM.
+        var currentTime = DateTime.Now.TimeOfDay;
+        var openTime = DateTime.Parse("10:00 AM").TimeOfDay;
+        var closeTime = DateTime.Parse("10:00 PM").TimeOfDay;
 
 #if DEBUG
-      currentTime = new TimeSpan(10, 35, 33);
+        currentTime = new TimeSpan(10, 35, 33);
 #endif
 
 
-      var areWeOpen = currentTime >= openTime && currentTime <= closeTime;
+        var areWeOpen = currentTime >= openTime && currentTime <= closeTime;
 
-      if (!areWeOpen)
-      {
-        _view.ShowMessageAsync("New Reservation",
-          "We are closed.\r\nWe are open between 10 A.M. to 10 P.M.\r\n\nPlease try later.");
-        return;
-      }
-
-      //Can select multiple tables
-      //
-
-      var resultTask = _view.ShowMessageAsync("Save & Close",
-        "Your reservation has been saved.\r\nDo you want to close the window?",
-        MessageDialogStyle.AffirmativeAndNegative,
-        new MetroDialogSettings() {AffirmativeButtonText = "Yes", NegativeButtonText = "No"});
-      resultTask.ContinueWith(s =>
-      {
-        if (s.Result == MessageDialogResult.Affirmative)
+        if (!areWeOpen)
         {
-          _applicationViewModel.AddReservation(this, true);
-
-          this._view.Hide();
+          _view.ShowMessageAsync("New Reservation",
+            "We are closed.\r\nWe are open between 10 A.M. to 10 P.M.\r\n\nPlease try later.");
+          return;
         }
-      }, TaskScheduler.FromCurrentSynchronizationContext());
+
+        //Can select multiple tables
+        //
+
+        var resultTask = _view.ShowMessageAsync("Save & Close",
+          "Your reservation has been saved.\r\nDo you want to close the window?",
+          MessageDialogStyle.AffirmativeAndNegative,
+          new MetroDialogSettings() {AffirmativeButtonText = "Yes", NegativeButtonText = "No"});
+        resultTask.ContinueWith(s =>
+        {
+          if (s.Result == MessageDialogResult.Affirmative)
+          {
+            _applicationViewModel.AddReservation(this, true);
+
+            this._view.Hide();
+          }
+        }, TaskScheduler.FromCurrentSynchronizationContext());
+      }
+      catch (Exception exception)
+      {
+        NLogger.LogError(exception);
+        _view.ShowMessageAsync("Error",
+          exception.Message,
+          MessageDialogStyle.Affirmative,
+          new MetroDialogSettings() {AffirmativeButtonText = "Ok", NegativeButtonText = "No"});
+      }
     }
 
     private bool SaveCommand_CanExecute(object param)
@@ -470,18 +481,29 @@ namespace Restaurant.Reservations.ViewModel
 
     private void CancelCommand_Execute(object param)
     {
-      var resultTask = _view.ShowMessageAsync("Close",
-        "All your reservation information will be lost.\r\nDo you still want to continue?",
-        MessageDialogStyle.AffirmativeAndNegative,
-        new MetroDialogSettings() {AffirmativeButtonText = "Yes", NegativeButtonText = "No"});
-
-      resultTask.ContinueWith(s =>
+      try
       {
-        if (s.Result == MessageDialogResult.Affirmative)
+        var resultTask = _view.ShowMessageAsync("Close",
+          "All your reservation information will be lost.\r\nDo you still want to continue?",
+          MessageDialogStyle.AffirmativeAndNegative,
+          new MetroDialogSettings() {AffirmativeButtonText = "Yes", NegativeButtonText = "No"});
+
+        resultTask.ContinueWith(s =>
         {
-          _view.Hide();
-        }
-      }, TaskScheduler.FromCurrentSynchronizationContext());
+          if (s.Result == MessageDialogResult.Affirmative)
+          {
+            _view.Hide();
+          }
+        }, TaskScheduler.FromCurrentSynchronizationContext());
+      }
+      catch (Exception exception)
+      {
+        NLogger.LogError(exception);
+        _view.ShowMessageAsync("Error",
+          exception.Message,
+          MessageDialogStyle.Affirmative,
+          new MetroDialogSettings() {AffirmativeButtonText = "Ok", NegativeButtonText = "No"});
+      }
     }
 
     private bool CancelCommand_CanExecute(object param)
@@ -507,23 +529,33 @@ namespace Restaurant.Reservations.ViewModel
 
     private void SelectingTableCommand_Execute(object param)
     {
-      if (param == null)
-        return;
-
-      var table = param as TableViewModel;
-      var existingTable = TablesSelected.FirstOrDefault(s => s.TableGuid.Equals(table.TableGuid));
-      if (null != existingTable)
+      try
       {
-        TablesSelected.Remove(existingTable);
-      }
-      else
-      {
-        TablesSelected.Add(table);
-      }
+        if (param == null)
+          return;
 
-      MaxOccupancy = 0;
-      GetTableSelectedString();
-      //SelectedTableString = string.Format("Tables: {0}", SelectedTableString);
+        var table = param as TableViewModel;
+        var existingTable = TablesSelected.FirstOrDefault(s => s.TableGuid.Equals(table.TableGuid));
+        if (null != existingTable)
+        {
+          TablesSelected.Remove(existingTable);
+        }
+        else
+        {
+          TablesSelected.Add(table);
+        }
+
+        MaxOccupancy = 0;
+        GetTableSelectedString();
+      }
+      catch (Exception exception)
+      {
+        NLogger.LogError(exception);
+        _view.ShowMessageAsync("Error",
+          exception.Message,
+          MessageDialogStyle.Affirmative,
+          new MetroDialogSettings() {AffirmativeButtonText = "Ok", NegativeButtonText = "No"});
+      }
     }
 
     public void GetTableSelectedString()
@@ -551,7 +583,6 @@ namespace Restaurant.Reservations.ViewModel
 
     private ICommand _addHoursCommand;
 
-
     public ICommand AddHoursCommand
     {
       get
@@ -563,36 +594,47 @@ namespace Restaurant.Reservations.ViewModel
 
     private void AddHoursCommand_Execute(object param)
     {
-      if (null == param)
-        return;
-      int code = Convert.ToInt32(param.ToString());
-
-      if (code == 1)
+      try
       {
-        //Add hours
-        CurrentTime = CurrentTime.AddHours(1);
-
-        if (CurrentTime.Hour >= 22)
-        {
-          CurrentTime = new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 21, 30, 00);
+        if (null == param)
           return;
+        int code = Convert.ToInt32(param.ToString());
+
+        if (code == 1)
+        {
+          //Add hours
+          CurrentTime = CurrentTime.AddHours(1);
+
+          if (CurrentTime.Hour >= 22)
+          {
+            CurrentTime = new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 21, 30, 00);
+            return;
+          }
+        }
+
+        if (code == 0)
+        {
+          //We can't allow user to reserve table in past.
+          if (CurrentTime.Date.Equals(DateTime.Now.Date) && CurrentTime.Hour <= DateTime.Now.Hour)
+            return;
+
+          //Subtract Hours
+          CurrentTime = CurrentTime.AddHours(-1);
+
+          if (CurrentTime.Hour < 10)
+          {
+            CurrentTime = new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 10, 00, 00);
+            return;
+          }
         }
       }
-
-      if (code == 0)
+      catch (Exception exception)
       {
-        //We can't allow user to reserve table in past.
-        if (CurrentTime.Date.Equals(DateTime.Now.Date) && CurrentTime.Hour <= DateTime.Now.Hour)
-          return;
-
-        //Subtract Hours
-        CurrentTime = CurrentTime.AddHours(-1);
-
-        if (CurrentTime.Hour < 10)
-        {
-          CurrentTime = new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 10, 00, 00);
-          return;
-        }
+        NLogger.LogError(exception);
+        _view.ShowMessageAsync("Error",
+          exception.Message,
+          MessageDialogStyle.Affirmative,
+          new MetroDialogSettings() {AffirmativeButtonText = "Ok", NegativeButtonText = "No"});
       }
     }
 
@@ -617,41 +659,51 @@ namespace Restaurant.Reservations.ViewModel
       }
     }
 
-
     private void AddMinutesCommand_Execute(object param)
     {
-      if (null == param)
-        return;
-
-      int code = Convert.ToInt32(param.ToString());
-
-      if (code == 1)
+      try
       {
-        //Add Minutes
-        CurrentTime = CurrentTime.AddMinutes(15);
-
-        if (CurrentTime.Hour >= 21 && CurrentTime.Minute > 30)
-        {
-          CurrentTime = new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 21, 30, 00);
+        if (null == param)
           return;
+
+        int code = Convert.ToInt32(param.ToString());
+
+        if (code == 1)
+        {
+          //Add Minutes
+          CurrentTime = CurrentTime.AddMinutes(15);
+
+          if (CurrentTime.Hour >= 21 && CurrentTime.Minute > 30)
+          {
+            CurrentTime = new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 21, 30, 00);
+            return;
+          }
+        }
+
+        if (code == 0)
+        {
+          //We can't allow user to reserve table in past.
+          if (CurrentTime.Date.Equals(DateTime.Now.Date) && CurrentTime.Hour == DateTime.Now.Hour &&
+              CurrentTime.Minute <= DateTime.Now.Minute)
+            return;
+
+          //Subtract Minutes
+          CurrentTime = CurrentTime.AddMinutes(-15);
+
+          if (CurrentTime.Hour < 10 && CurrentTime.Minute <= 59)
+          {
+            CurrentTime = new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 10, 00, 00);
+            return;
+          }
         }
       }
-
-      if (code == 0)
+      catch (Exception exception)
       {
-        //We can't allow user to reserve table in past.
-        if (CurrentTime.Date.Equals(DateTime.Now.Date) && CurrentTime.Hour == DateTime.Now.Hour &&
-            CurrentTime.Minute <= DateTime.Now.Minute)
-          return;
-
-        //Subtract Minutes
-        CurrentTime = CurrentTime.AddMinutes(-15);
-
-        if (CurrentTime.Hour < 10 && CurrentTime.Minute <= 59)
-        {
-          CurrentTime = new DateTime(CheckInDate.Year, CheckInDate.Month, CheckInDate.Day, 10, 00, 00);
-          return;
-        }
+        NLogger.LogError(exception);
+        _view.ShowMessageAsync("Error",
+          exception.Message,
+          MessageDialogStyle.Affirmative,
+          new MetroDialogSettings() {AffirmativeButtonText = "Ok", NegativeButtonText = "No"});
       }
     }
 
@@ -688,33 +740,44 @@ namespace Restaurant.Reservations.ViewModel
 
     private void LoadTableData(bool toUpdate = false)
     {
-      TablesAvaialble.Clear();
-
-      var allTables = _applicationViewModel.TableList;
-      var reservations = _applicationViewModel.Reservations;
-
-      if (toUpdate)
+      try
       {
-        foreach (var tableViewModel in allTables)
+        TablesAvaialble.Clear();
+
+        var allTables = _applicationViewModel.TableList;
+        var reservations = _applicationViewModel.Reservations;
+
+        if (toUpdate)
         {
-          TablesAvaialble.Add(tableViewModel);
+          foreach (var tableViewModel in allTables)
+          {
+            TablesAvaialble.Add(tableViewModel);
+          }
+          return;
         }
-        return;
+
+
+        var availableTables =
+          allTables.Where(
+            s => !reservations.Any(r => r.SelectedTable != null && r.SelectedTable.TableGuid.Equals(s.TableGuid)))
+            .ToList();
+
+        if (availableTables == null)
+          return;
+
+        foreach (var tableViewModel in availableTables)
+        {
+          if (!tableViewModel.IsSelected)
+            TablesAvaialble.Add(tableViewModel);
+        }
       }
-
-
-      var availableTables =
-        allTables.Where(
-          s => !reservations.Any(r => r.SelectedTable != null && r.SelectedTable.TableGuid.Equals(s.TableGuid)))
-          .ToList();
-
-      if (availableTables == null)
-        return;
-
-      foreach (var tableViewModel in availableTables)
+      catch (Exception exception)
       {
-        if (!tableViewModel.IsSelected)
-          TablesAvaialble.Add(tableViewModel);
+        NLogger.LogError(exception);
+        _view.ShowMessageAsync("Error",
+          exception.Message,
+          MessageDialogStyle.Affirmative,
+          new MetroDialogSettings() {AffirmativeButtonText = "Ok", NegativeButtonText = "No"});
       }
     }
 

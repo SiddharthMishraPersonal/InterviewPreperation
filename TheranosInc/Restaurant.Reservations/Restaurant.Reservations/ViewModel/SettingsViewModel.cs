@@ -104,18 +104,29 @@ namespace Restaurant.Reservations.ViewModel
 
     private void BrowseOutputFolder_Execute(object param)
     {
-      var folderDialog = new FolderBrowserDialog();
-      folderDialog.Description = "Select folder path for reservation xml file.";
-      folderDialog.RootFolder = Environment.SpecialFolder.CommonApplicationData;
-      var result = folderDialog.ShowDialog();
-      while (DialogResult.OK != result && DialogResult.Cancel != result)
+      try
       {
-        folderDialog.Reset();
-        result = folderDialog.ShowDialog();
-      }
+        var folderDialog = new FolderBrowserDialog();
+        folderDialog.Description = "Select folder path for reservation xml file.";
+        folderDialog.RootFolder = Environment.SpecialFolder.CommonApplicationData;
+        var result = folderDialog.ShowDialog();
+        while (DialogResult.OK != result && DialogResult.Cancel != result)
+        {
+          folderDialog.Reset();
+          result = folderDialog.ShowDialog();
+        }
 
-      if (result == DialogResult.OK)
-        this.ReservationFileLocation = folderDialog.SelectedPath;
+        if (result == DialogResult.OK)
+          this.ReservationFileLocation = folderDialog.SelectedPath;
+      }
+      catch (Exception exception)
+      {
+        NLogger.LogError(exception);
+        _view.ShowMessageAsync("Error",
+          exception.Message,
+          MessageDialogStyle.Affirmative,
+          new MetroDialogSettings() {AffirmativeButtonText = "Ok", NegativeButtonText = "No"});
+      }
     }
 
     private bool BrowseOutputFolder_CanExecute(object param)
@@ -157,6 +168,10 @@ namespace Restaurant.Reservations.ViewModel
       catch (Exception exception)
       {
         NLogger.LogError(exception);
+        _view.ShowMessageAsync("Error",
+          exception.Message,
+          MessageDialogStyle.Affirmative,
+          new MetroDialogSettings() {AffirmativeButtonText = "Ok", NegativeButtonText = "No"});
       }
     }
 
@@ -202,6 +217,10 @@ namespace Restaurant.Reservations.ViewModel
       catch (Exception exception)
       {
         NLogger.LogError(exception);
+        _view.ShowMessageAsync("Error",
+          exception.Message,
+          MessageDialogStyle.Affirmative,
+          new MetroDialogSettings() {AffirmativeButtonText = "Ok", NegativeButtonText = "No"});
       }
     }
 

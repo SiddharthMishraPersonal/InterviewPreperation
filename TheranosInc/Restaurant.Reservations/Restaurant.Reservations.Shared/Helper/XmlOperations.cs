@@ -29,6 +29,7 @@ namespace Restaurant.Reservations.Shared.Helper
       catch (Exception exception)
       {
         NLogger.LogError(exception);
+        throw new Exception(Constants.ErrorSavingReservations);
       }
     }
 
@@ -46,24 +47,31 @@ namespace Restaurant.Reservations.Shared.Helper
       catch (Exception exception)
       {
         NLogger.LogError(exception);
+        throw new Exception(Constants.ErrorSavingSettings);
       }
     }
 
     public static List<Table> DeSerializeTableList(string xmlFilePath)
     {
-      //xmlFilePath =
-      //  @"C:\Users\smishra\Documents\GitHub\InterviewPreperation\TheranosInc\Restaurant.Reservations\Restaurant.Reservations\Data\Tables.xml";
       List<Table> _tableList = null;
 
-      _xmlFilePath = xmlFilePath;
-
-      var xmlSerializer = new XmlSerializer(typeof (TableList));
-      using (var fileStream = new FileStream(xmlFilePath, FileMode.Open))
+      try
       {
-        var tableModelsObj = (TableList) xmlSerializer.Deserialize(fileStream);
+        _xmlFilePath = xmlFilePath;
 
-        if (tableModelsObj != null)
-          _tableList = tableModelsObj.ListTableModel;
+        var xmlSerializer = new XmlSerializer(typeof (TableList));
+        using (var fileStream = new FileStream(xmlFilePath, FileMode.Open))
+        {
+          var tableModelsObj = (TableList) xmlSerializer.Deserialize(fileStream);
+
+          if (tableModelsObj != null)
+            _tableList = tableModelsObj.ListTableModel;
+        }
+      }
+      catch (Exception exception)
+      {
+        NLogger.LogError(exception);
+        throw new Exception(Constants.ErrorLoadingTable);
       }
 
       return _tableList;
@@ -73,15 +81,23 @@ namespace Restaurant.Reservations.Shared.Helper
     {
       List<Reservation> _reservationList = null;
 
-      _xmlFilePath = xmlFilePath;
-
-      var xmlSerializer = new XmlSerializer(typeof (ReservationList));
-      using (var fileStream = new FileStream(xmlFilePath, FileMode.Open))
+      try
       {
-        var tableModelsObj = (ReservationList) xmlSerializer.Deserialize(fileStream);
+        _xmlFilePath = xmlFilePath;
 
-        if (tableModelsObj != null)
-          _reservationList = tableModelsObj.TodayReservations;
+        var xmlSerializer = new XmlSerializer(typeof (ReservationList));
+        using (var fileStream = new FileStream(xmlFilePath, FileMode.Open))
+        {
+          var tableModelsObj = (ReservationList) xmlSerializer.Deserialize(fileStream);
+
+          if (tableModelsObj != null)
+            _reservationList = tableModelsObj.TodayReservations;
+        }
+      }
+      catch (Exception exception)
+      {
+        NLogger.LogError(exception);
+        throw new Exception(Constants.ErrorLoadingReservations);
       }
 
       return _reservationList;
@@ -91,14 +107,21 @@ namespace Restaurant.Reservations.Shared.Helper
     {
       SettingsModel settingsObject = null;
 
-      _xmlFilePath = xmlFilePath;
-
-      var xmlSerializer = new XmlSerializer(typeof (SettingsModel));
-      using (var fileStream = new FileStream(xmlFilePath, FileMode.Open))
+      try
       {
-        settingsObject = (SettingsModel) xmlSerializer.Deserialize(fileStream);
-      }
+        _xmlFilePath = xmlFilePath;
 
+        var xmlSerializer = new XmlSerializer(typeof (SettingsModel));
+        using (var fileStream = new FileStream(xmlFilePath, FileMode.Open))
+        {
+          settingsObject = (SettingsModel) xmlSerializer.Deserialize(fileStream);
+        }
+      }
+      catch (Exception exception)
+      {
+        NLogger.LogError(exception);
+        throw new Exception(Constants.ErrorLoadingSettings);
+      }
       return settingsObject;
     }
   }

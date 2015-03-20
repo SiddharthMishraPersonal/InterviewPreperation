@@ -77,7 +77,6 @@
     <Compile Include="UserControls\ucDateTimeUpDown.xaml.cs">
       <DependentUpon>ucDateTimeUpDown.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Helper\Constants.cs" />
     <Compile Include="UserControls\ucReservation.xaml.cs">
       <DependentUpon>ucReservation.xaml</DependentUpon>
     </Compile>

@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helper\Constants.cs" />
     <Compile Include="Models\Reservation.cs" />
     <Compile Include="Models\ReservationList.cs" />
     <Compile Include="Models\SettingsModel.cs" />

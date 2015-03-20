@@ -10,6 +10,7 @@ using System.Windows;
 using Autofac;
 using Restaurant.Reservations.AutoFac;
 using Restaurant.Reservations.Helper;
+using Restaurant.Reservations.Shared.Helper;
 using Restaurant.Reservations.Shared.Log;
 using Restaurant.Reservations.View;
 
@@ -53,6 +54,8 @@ namespace Restaurant.Reservations
       catch (Exception exception)
       {
         NLogger.LogError(exception);
+        MessageBox.Show("An error occurred. Please see the log files.", "Application Error", MessageBoxButton.OK,
+          MessageBoxImage.Error);
       }
     }
 

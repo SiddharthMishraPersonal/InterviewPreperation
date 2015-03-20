@@ -224,42 +224,53 @@ namespace Restaurant.Reservations.ViewModel
 
     private void CreateNewReservationCommand_Execute(object param)
     {
-      var currentTime = DateTime.Now.TimeOfDay;
-      var openTime = DateTime.Parse("10:00 AM").TimeOfDay;
-      var closeTime = DateTime.Parse("10:00 PM").TimeOfDay;
-
-      var areWeOpen = currentTime >= openTime && currentTime <= closeTime;
-
-      if (AvailableTablesCount == 0 && UsedTablesCount > 0)
+      try
       {
-        _view.ShowMessageAsync("House Full!!",
-          "All tables are booked. Please remove a reservation before creating new one.",
+        var currentTime = DateTime.Now.TimeOfDay;
+        var openTime = DateTime.Parse("10:00 AM").TimeOfDay;
+        var closeTime = DateTime.Parse("10:00 PM").TimeOfDay;
+
+        var areWeOpen = currentTime >= openTime && currentTime <= closeTime;
+
+        if (AvailableTablesCount == 0 && UsedTablesCount > 0)
+        {
+          _view.ShowMessageAsync("House Full!!",
+            "All tables are booked. Please remove a reservation before creating new one.",
+            MessageDialogStyle.Affirmative,
+            new MetroDialogSettings() {AffirmativeButtonText = "Ok", NegativeButtonText = "No"});
+          return;
+        }
+
+        if (!areWeOpen)
+        {
+          var resultTask = _view.ShowMessageAsync("Closed!!",
+            "We are closed for the day.\r\nWe are open between 10 A.M. to 10 P.M.\r\n\nDo you still want to continue?",
+            MessageDialogStyle.AffirmativeAndNegative,
+            new MetroDialogSettings() {AffirmativeButtonText = "Yes", NegativeButtonText = "No"});
+          resultTask.ContinueWith(s =>
+          {
+            if (s.Result != MessageDialogResult.Affirmative)
+              return;
+            else
+            {
+              var newReservationVm = _reservationViewModel();
+              newReservationVm.ShowWindow(this._view);
+            }
+          }, TaskScheduler.FromCurrentSynchronizationContext());
+        }
+        else
+        {
+          var newReservationVm = _reservationViewModel();
+          newReservationVm.ShowWindow(this._view);
+        }
+      }
+      catch (Exception exception)
+      {
+        NLogger.LogError(exception);
+        _view.ShowMessageAsync("Error",
+          exception.Message,
           MessageDialogStyle.Affirmative,
           new MetroDialogSettings() {AffirmativeButtonText = "Ok", NegativeButtonText = "No"});
-        return;
-      }
-
-      if (!areWeOpen)
-      {
-        var resultTask = _view.ShowMessageAsync("Closed!!",
-          "We are closed for the day.\r\nWe are open between 10 A.M. to 10 P.M.\r\n\nDo you still want to continue?",
-          MessageDialogStyle.AffirmativeAndNegative,
-          new MetroDialogSettings() {AffirmativeButtonText = "Yes", NegativeButtonText = "No"});
-        resultTask.ContinueWith(s =>
-        {
-          if (s.Result != MessageDialogResult.Affirmative)
-            return;
-          else
-          {
-            var newReservationVm = _reservationViewModel();
-            newReservationVm.ShowWindow(this._view);
-          }
-        }, TaskScheduler.FromCurrentSynchronizationContext());
-      }
-      else
-      {
-        var newReservationVm = _reservationViewModel();
-        newReservationVm.ShowWindow(this._view);
       }
     }
 
@@ -287,26 +298,37 @@ namespace Restaurant.Reservations.ViewModel
 
     private void DeleteReservationCommand_Execute(object param)
     {
-      if (SelectedReservation == null)
+      try
       {
-        _view.ShowMessageAsync("Not Selected!", "No reservation is selected for deletion.",
+        if (SelectedReservation == null)
+        {
+          _view.ShowMessageAsync("Not Selected!", "No reservation is selected for deletion.",
+            MessageDialogStyle.Affirmative,
+            new MetroDialogSettings() {AffirmativeButtonText = "Ok", NegativeButtonText = "No"});
+        }
+        else
+        {
+          var resultTask = _view.ShowMessageAsync("Delete?",
+            string.Format("Do you want to delete {0}'s reservation?", SelectedReservation.CustomerName),
+            MessageDialogStyle.AffirmativeAndNegative,
+            new MetroDialogSettings() {AffirmativeButtonText = "Yes", NegativeButtonText = "No"});
+
+          resultTask.ContinueWith(s =>
+          {
+            if (s.Result.Equals(MessageDialogResult.Affirmative))
+            {
+              RemoveReservationAsync(SelectedReservation);
+            }
+          });
+        }
+      }
+      catch (Exception exception)
+      {
+        NLogger.LogError(exception);
+        _view.ShowMessageAsync("Error",
+          exception.Message,
           MessageDialogStyle.Affirmative,
           new MetroDialogSettings() {AffirmativeButtonText = "Ok", NegativeButtonText = "No"});
-      }
-      else
-      {
-        var resultTask = _view.ShowMessageAsync("Delete?",
-          string.Format("Do you want to delete {0}'s reservation?", SelectedReservation.CustomerName),
-          MessageDialogStyle.AffirmativeAndNegative,
-          new MetroDialogSettings() {AffirmativeButtonText = "Yes", NegativeButtonText = "No"});
-
-        resultTask.ContinueWith(s =>
-        {
-          if (s.Result.Equals(MessageDialogResult.Affirmative))
-          {
-            RemoveReservationAsync(SelectedReservation);
-          }
-        });
       }
     }
 
@@ -334,26 +356,37 @@ namespace Restaurant.Reservations.ViewModel
 
     private void UpdateReservationCommand_Execute(object param)
     {
-      if (SelectedReservation == null)
+      try
       {
-        _view.ShowMessageAsync("Not Selected!", "No reservation is selected for deletion.",
+        if (SelectedReservation == null)
+        {
+          _view.ShowMessageAsync("Not Selected!", "No reservation is selected for deletion.",
+            MessageDialogStyle.Affirmative,
+            new MetroDialogSettings() {AffirmativeButtonText = "Ok", NegativeButtonText = "No"});
+        }
+        else
+        {
+          var resultTask = _view.ShowMessageAsync("Update?",
+            string.Format("Do you want to update {0}'s reservation details?", SelectedReservation.CustomerName),
+            MessageDialogStyle.AffirmativeAndNegative,
+            new MetroDialogSettings() {AffirmativeButtonText = "Yes", NegativeButtonText = "No"});
+
+          resultTask.ContinueWith(s =>
+          {
+            if (s.Result.Equals(MessageDialogResult.Affirmative))
+            {
+              UpdateReservation(SelectedReservation);
+            }
+          });
+        }
+      }
+      catch (Exception exception)
+      {
+        NLogger.LogError(exception);
+        _view.ShowMessageAsync("Error",
+          exception.Message,
           MessageDialogStyle.Affirmative,
           new MetroDialogSettings() {AffirmativeButtonText = "Ok", NegativeButtonText = "No"});
-      }
-      else
-      {
-        var resultTask = _view.ShowMessageAsync("Update?",
-          string.Format("Do you want to update {0}'s reservation details?", SelectedReservation.CustomerName),
-          MessageDialogStyle.AffirmativeAndNegative,
-          new MetroDialogSettings() {AffirmativeButtonText = "Yes", NegativeButtonText = "No"});
-
-        resultTask.ContinueWith(s =>
-        {
-          if (s.Result.Equals(MessageDialogResult.Affirmative))
-          {
-            UpdateReservation(SelectedReservation);
-          }
-        });
       }
     }
 
@@ -396,6 +429,10 @@ namespace Restaurant.Reservations.ViewModel
       catch (Exception exception)
       {
         NLogger.LogError(exception);
+        _view.ShowMessageAsync("Error",
+          exception.Message,
+          MessageDialogStyle.Affirmative,
+          new MetroDialogSettings() {AffirmativeButtonText = "Ok", NegativeButtonText = "No"});
       }
     }
 
@@ -421,7 +458,18 @@ namespace Restaurant.Reservations.ViewModel
 
     private void SettingsCommand_Execute(object param)
     {
-      _settingsViewModel.ShowWindow(this._view);
+      try
+      {
+        _settingsViewModel.ShowWindow(this._view);
+      }
+      catch (Exception exception)
+      {
+        NLogger.LogError(exception);
+        _view.ShowMessageAsync("Error",
+          exception.Message,
+          MessageDialogStyle.Affirmative,
+          new MetroDialogSettings() {AffirmativeButtonText = "Ok", NegativeButtonText = "No"});
+      }
     }
 
     private bool SettingsCommand_CanExecute(object param)
@@ -447,18 +495,29 @@ namespace Restaurant.Reservations.ViewModel
 
     private void CloseApplicationCommand_Execute(object param)
     {
-      var resultTask = _view.ShowMessageAsync("Reservation System", "Do you want to close application?",
-        MessageDialogStyle.AffirmativeAndNegative,
-        new MetroDialogSettings() {AffirmativeButtonText = "Yes", NegativeButtonText = "No"});
-
-      resultTask.ContinueWith(t =>
+      try
       {
-        if (t.Result != MessageDialogResult.Affirmative)
-          return;
+        var resultTask = _view.ShowMessageAsync("Reservation System", "Do you want to close application?",
+          MessageDialogStyle.AffirmativeAndNegative,
+          new MetroDialogSettings() {AffirmativeButtonText = "Yes", NegativeButtonText = "No"});
 
-        SaveReservationsAsync();
-        _view.Close();
-      }, TaskScheduler.FromCurrentSynchronizationContext());
+        resultTask.ContinueWith(t =>
+        {
+          if (t.Result != MessageDialogResult.Affirmative)
+            return;
+
+          SaveReservationsAsync();
+          _view.Close();
+        }, TaskScheduler.FromCurrentSynchronizationContext());
+      }
+      catch (Exception exception)
+      {
+        NLogger.LogError(exception);
+        _view.ShowMessageAsync("Error",
+          exception.Message,
+          MessageDialogStyle.Affirmative,
+          new MetroDialogSettings() {AffirmativeButtonText = "Ok", NegativeButtonText = "No"});
+      }
     }
 
     private bool CloseApplicationCommand_CanExecute(object param)
@@ -573,6 +632,10 @@ namespace Restaurant.Reservations.ViewModel
       catch (Exception exception)
       {
         NLogger.LogError(exception);
+        _view.ShowMessageAsync("Error",
+          exception.Message,
+          MessageDialogStyle.Affirmative,
+          new MetroDialogSettings() {AffirmativeButtonText = "Ok", NegativeButtonText = "No"});
       }
     }
 
@@ -585,7 +648,18 @@ namespace Restaurant.Reservations.ViewModel
     /// </summary>
     public void SaveReservationsAsync()
     {
-      Task.Factory.StartNew(() => { SaveReservations(); });
+      try
+      {
+        Task.Factory.StartNew(() => { SaveReservations(); });
+      }
+      catch (Exception exception)
+      {
+        NLogger.LogError(exception);
+        _view.ShowMessageAsync("Error",
+          exception.Message,
+          MessageDialogStyle.Affirmative,
+          new MetroDialogSettings() {AffirmativeButtonText = "Ok", NegativeButtonText = "No"});
+      }
     }
 
     /// <summary>
@@ -593,71 +667,104 @@ namespace Restaurant.Reservations.ViewModel
     /// </summary>
     public void SaveReservations()
     {
-      var reservationList = new ReservationList();
-      foreach (var reservationViewModel in Reservations)
+      try
       {
-        var newReservationModel = new Reservation()
+        var reservationList = new ReservationList();
+        foreach (var reservationViewModel in Reservations)
         {
-          ContactNumber = reservationViewModel.ContactNumber,
-          CheckInDate = reservationViewModel.CheckInDate,
-          CustomerName = reservationViewModel.CustomerName,
-          Occupants = reservationViewModel.Occupants
-        };
-
-        foreach (var tableViewModel in reservationViewModel.TablesSelected)
-        {
-          var table = new Table()
+          var newReservationModel = new Reservation()
           {
-            Id = tableViewModel.TableNumber,
-            MaxOccupancy = tableViewModel.MaxOccupancy
+            ContactNumber = reservationViewModel.ContactNumber,
+            CheckInDate = reservationViewModel.CheckInDate,
+            CustomerName = reservationViewModel.CustomerName,
+            Occupants = reservationViewModel.Occupants
           };
-          newReservationModel.Table.Add(table);
+
+          foreach (var tableViewModel in reservationViewModel.TablesSelected)
+          {
+            var table = new Table()
+            {
+              Id = tableViewModel.TableNumber,
+              MaxOccupancy = tableViewModel.MaxOccupancy
+            };
+            newReservationModel.Table.Add(table);
+          }
+
+          reservationList.TodayReservations.Add(newReservationModel);
         }
 
-        reservationList.TodayReservations.Add(newReservationModel);
+        //Serialize the data
+        XmlOperations.SerializeReservations(_settingsViewModel.ReservationFileFullpath, reservationList);
       }
-
-      //Serialize the data
-      XmlOperations.SerializeReservations(_settingsViewModel.ReservationFileFullpath, reservationList);
+      catch (Exception exception)
+      {
+        NLogger.LogError(exception);
+        _view.ShowMessageAsync("Error",
+          exception.Message,
+          MessageDialogStyle.Affirmative,
+          new MetroDialogSettings() {AffirmativeButtonText = "Ok", NegativeButtonText = "No"});
+      }
     }
 
     private void LoadReservations()
     {
-      var reservationModelList = XmlOperations.DeSerializeReservationLists(_settingsViewModel.ReservationFileFullpath);
-      foreach (var resModel in reservationModelList)
+      try
       {
-        var resVm = _reservationViewModel();
-        resVm.CustomerName = resModel.CustomerName;
-        resVm.ContactNumber = resModel.ContactNumber;
-        resVm.CheckInDate = resModel.CheckInDate;
-        resVm.CheckInTime = resModel.CheckInDate.TimeOfDay;
-        resVm.ReservationGuid = Guid.NewGuid();
-
-        foreach (var tableModel in resModel.Table)
+        var reservationModelList = XmlOperations.DeSerializeReservationLists(_settingsViewModel.ReservationFileFullpath);
+        foreach (var resModel in reservationModelList)
         {
-          resVm.MaxOccupancy += tableModel.MaxOccupancy;
-          var tableVm =
-            TableList.FirstOrDefault(
-              s => s.TableNumber.Equals(tableModel.Id) && s.MaxOccupancy.Equals(tableModel.MaxOccupancy));
-          if (tableVm == null)
-            continue;
+          var resVm = _reservationViewModel();
+          resVm.CustomerName = resModel.CustomerName;
+          resVm.ContactNumber = resModel.ContactNumber;
+          resVm.CheckInDate = resModel.CheckInDate;
+          resVm.CheckInTime = resModel.CheckInDate.TimeOfDay;
+          resVm.ReservationGuid = Guid.NewGuid();
 
-          tableVm.IsSelected = true;
-          resVm.TablesSelected.Add(tableVm);
+          foreach (var tableModel in resModel.Table)
+          {
+            resVm.MaxOccupancy += tableModel.MaxOccupancy;
+            var tableVm =
+              TableList.FirstOrDefault(
+                s => s.TableNumber.Equals(tableModel.Id) && s.MaxOccupancy.Equals(tableModel.MaxOccupancy));
+            if (tableVm == null)
+              continue;
+
+            tableVm.IsSelected = true;
+            resVm.TablesSelected.Add(tableVm);
+          }
+
+          resVm.Occupants = resModel.Occupants;
+          resVm.GetTableSelectedString();
+          AddReservation(resVm);
         }
 
-        resVm.Occupants = resModel.Occupants;
-        resVm.GetTableSelectedString();
-        AddReservation(resVm);
+        GetTablesStatus();
       }
-
-      GetTablesStatus();
+      catch (Exception exception)
+      {
+        NLogger.LogError(exception);
+        _view.ShowMessageAsync("Error",
+          exception.Message,
+          MessageDialogStyle.Affirmative,
+          new MetroDialogSettings() {AffirmativeButtonText = "Ok", NegativeButtonText = "No"});
+      }
     }
 
     private void LoadReservationsAsync()
     {
-      Reservations.Clear();
-      Task.Factory.StartNew(() => { this._view.Dispatcher.BeginInvoke((Action) (() => { LoadReservations(); })); });
+      try
+      {
+        Reservations.Clear();
+        Task.Factory.StartNew(() => { this._view.Dispatcher.BeginInvoke((Action) (() => { LoadReservations(); })); });
+      }
+      catch (Exception exception)
+      {
+        NLogger.LogError(exception);
+        _view.ShowMessageAsync("Error",
+          exception.Message,
+          MessageDialogStyle.Affirmative,
+          new MetroDialogSettings() {AffirmativeButtonText = "Ok", NegativeButtonText = "No"});
+      }
     }
 
     private void AddReservationToCollection(ReservationViewModel newReservationVm)
