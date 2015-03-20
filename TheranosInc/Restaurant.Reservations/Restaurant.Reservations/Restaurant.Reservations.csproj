@@ -80,6 +80,9 @@
     <Compile Include="UserControls\ucReservation.xaml.cs">
       <DependentUpon>ucReservation.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ValidationRules\FileNotFoundValidationRule.cs" />
+    <Compile Include="ValidationRules\DirectoryNotFoundValidationRule.cs" />
+    <Compile Include="ValidationRules\NullOrEmptyValueValidationRule.cs" />
     <Compile Include="ValidationRules\RegexValidationRule.cs" />
     <Compile Include="ViewModel\ApplicationViewModel.cs" />
     <Compile Include="ViewModel\ReservationViewModel.cs" />

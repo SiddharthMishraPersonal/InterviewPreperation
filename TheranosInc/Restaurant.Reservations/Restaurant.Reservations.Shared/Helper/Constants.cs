@@ -24,5 +24,11 @@ namespace Restaurant.Reservations.Shared.Helper
 
     public const string ErrorSavingReservations =
       "Error occurred while saving Reservations. See the logs for more information.";
+
+    public const string FileNotFoundError = "File not found!";
+
+    public const string DirectoryNotFoundError = "Directory not found!";
+
+    public const string ValueRequiredError = "Value required!";
   }
 }

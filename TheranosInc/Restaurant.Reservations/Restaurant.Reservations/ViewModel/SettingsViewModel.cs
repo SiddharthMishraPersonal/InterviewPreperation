@@ -161,9 +161,10 @@ namespace Restaurant.Reservations.ViewModel
         openFileDialog.CheckFileExists = true;
         openFileDialog.Multiselect = false;
         openFileDialog.Filter = "XML files (*.xml)|*.xml";
-        openFileDialog.ShowDialog();
+        var result = openFileDialog.ShowDialog();
 
-        TableFilePath = openFileDialog.FileName;
+        if (result == DialogResult.OK)
+          TableFilePath = openFileDialog.FileName;
       }
       catch (Exception exception)
       {
@@ -235,6 +236,45 @@ namespace Restaurant.Reservations.ViewModel
 
     #endregion
 
+    #region Revalidate Command
+
+    private ICommand _revalidateCommand;
+
+    public ICommand RevalidateCommand
+    {
+      get
+      {
+        _revalidateCommand = _revalidateCommand ??
+                             new RelayCommands(RevalidateCommand_Execute, RevalidateCommand_CanExecute);
+        return _revalidateCommand;
+      }
+    }
+
+    private void RevalidateCommand_Execute(object param)
+    {
+      try
+      {
+        OnPropertyChanged("ReservationFileFullpath");
+        OnPropertyChanged("ReservationFileLocation");
+        OnPropertyChanged("TableFilePath");
+      }
+      catch (Exception exception)
+      {
+        NLogger.LogError(exception);
+        _view.ShowMessageAsync("Error",
+          exception.Message,
+          MessageDialogStyle.Affirmative,
+          new MetroDialogSettings() {AffirmativeButtonText = "Ok", NegativeButtonText = "No"});
+      }
+    }
+
+    private bool RevalidateCommand_CanExecute(object param)
+    {
+      return true;
+    }
+
+    #endregion
+
     #endregion
 
     #region Public Methods
@@ -246,11 +286,11 @@ namespace Restaurant.Reservations.ViewModel
       _view.Owner = ownerWindow;
       _view.ShowDialog();
     }
+
+    #endregion
+
+    #region Private Methods
+
+    #endregion
   }
-
-  #endregion
-
-  #region Private Methods
-
-  #endregion
 }
