@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,6 +17,7 @@ using Restaurant.Reservations.View;
 
 namespace Restaurant.Reservations.ViewModel
 {
+  [Serializable]
   public class ReservationViewModel : ViewModelBase
   {
     #region Private Member Variables
@@ -22,6 +25,7 @@ namespace Restaurant.Reservations.ViewModel
     private Guid _reservationGuid = Guid.Empty;
     private ObservableCollection<TableViewModel> _tablesAvaialble = new ObservableCollection<TableViewModel>();
     private ObservableCollection<TableViewModel> _tablesSelected = new ObservableCollection<TableViewModel>();
+    private List<string> _selectedTableIdList = new List<string>();
     private string _selectedTableString;
     private TableViewModel _selectedTable;
     private string _customerName;
@@ -35,9 +39,11 @@ namespace Restaurant.Reservations.ViewModel
     private double _maxOccupancy;
     private readonly int _monthRange;
     private Func<NewReservation> _viewFunc;
+    private Func<TableViewModel> _tableFunc;
     private NewReservation _view;
     private ApplicationViewModel _applicationViewModel;
     private bool _isSelected;
+    private bool _toUpdate;
 
     #region Timer Up Down variable
 
@@ -359,8 +365,10 @@ namespace Restaurant.Reservations.ViewModel
     /// </summary>
     /// <param name="view"></param>
     /// <param name="applicationViewModel"></param>
-    public ReservationViewModel(Func<NewReservation> view, ApplicationViewModel applicationViewModel)
+    public ReservationViewModel(Func<NewReservation> view, ApplicationViewModel applicationViewModel,
+      Func<TableViewModel> tableViewModel)
     {
+      _tableFunc = tableViewModel;
       _applicationViewModel = applicationViewModel;
       _viewFunc = view;
       _view = _viewFunc();
@@ -410,7 +418,7 @@ namespace Restaurant.Reservations.ViewModel
       try
       {
         //Check whether reservation is between 10AM to 10PM.
-        var currentTime = DateTime.Now.TimeOfDay;
+        var currentTime = CheckInTime;
         var openTime = DateTime.Parse("10:00 AM").TimeOfDay;
         var closeTime = DateTime.Parse("10:00 PM").TimeOfDay;
 
@@ -483,8 +491,9 @@ namespace Restaurant.Reservations.ViewModel
     {
       try
       {
+        var allTables = _applicationViewModel.TableList;
         var resultTask = _view.ShowMessageAsync("Close",
-          "All your reservation information will be lost.\r\nDo you still want to continue?",
+          "All your changes will be lost.\r\nDo you still want to continue?",
           MessageDialogStyle.AffirmativeAndNegative,
           new MetroDialogSettings() {AffirmativeButtonText = "Yes", NegativeButtonText = "No"});
 
@@ -492,6 +501,20 @@ namespace Restaurant.Reservations.ViewModel
         {
           if (s.Result == MessageDialogResult.Affirmative)
           {
+            if (_toUpdate)
+            {
+              CustomerName = _oldCustomerName;
+              _oldCustomerName = CustomerName;
+              ContactNumber = _oldContactNumbner;
+              CheckInDate = _oldCheckInDate;
+              CheckInTime = _oldCheckInTime;
+              Occupants = _oldOccupants;
+
+              foreach (var tableViewModel in allTables)
+              {
+                tableViewModel.IsSelected = _oldTableSelectedIdList.Any(t => t.Equals(tableViewModel.TableGuid));
+              }
+            }
             _view.Hide();
           }
         }, TaskScheduler.FromCurrentSynchronizationContext());
@@ -724,6 +747,7 @@ namespace Restaurant.Reservations.ViewModel
     {
       try
       {
+        _toUpdate = toUpdate;
         _view.Dispatcher.BeginInvoke((Action) (() =>
         {
           _view.Owner = ownerWindow;
@@ -738,6 +762,14 @@ namespace Restaurant.Reservations.ViewModel
       }
     }
 
+    private List<Guid> _oldTableSelectedIdList = new List<Guid>();
+    private string _oldCustomerName = string.Empty;
+    private string _oldContactNumbner = string.Empty;
+    private DateTime _oldCheckInDate;
+    private TimeSpan _oldCheckInTime;
+    private int _oldOccupants;
+
+
     private void LoadTableData(bool toUpdate = false)
     {
       try
@@ -749,17 +781,27 @@ namespace Restaurant.Reservations.ViewModel
 
         if (toUpdate)
         {
-          foreach (var tableViewModel in allTables)
+          _oldCustomerName = CustomerName;
+          _oldContactNumbner = ContactNumber;
+          _oldCheckInDate = CheckInDate;
+          _oldCheckInTime = CheckInTime;
+          _oldOccupants = Occupants;
+
+          foreach (var tableViewModel in TablesSelected)
           {
-            TablesAvaialble.Add(tableViewModel);
+            if (tableViewModel.IsSelected)
+              _oldTableSelectedIdList.Add(tableViewModel.TableGuid);
           }
-          return;
         }
 
 
         var availableTables =
           allTables.Where(
-            s => !reservations.Any(r => r.SelectedTable != null && r.SelectedTable.TableGuid.Equals(s.TableGuid)))
+            s =>
+              !reservations.Any(
+                r =>
+                  r.SelectedTable != null && r.SelectedTable.TableNumber.Equals(s.TableNumber) &&
+                  r.SelectedTable.MaxOccupancy.Equals(s.MaxOccupancy)))
             .ToList();
 
         if (availableTables == null)
@@ -779,6 +821,19 @@ namespace Restaurant.Reservations.ViewModel
           MessageDialogStyle.Affirmative,
           new MetroDialogSettings() {AffirmativeButtonText = "Ok", NegativeButtonText = "No"});
       }
+    }
+
+    private void RestoreOldValues()
+    {
+      var allTables = _applicationViewModel.TableList;
+      foreach (var tableViewModel in allTables)
+      {
+        tableViewModel.IsSelected = _oldTableSelectedIdList.Any(s => s.Equals(tableViewModel.TableGuid));
+      }
+
+
+      MaxOccupancy = 0;
+      GetTableSelectedString();
     }
 
     #endregion

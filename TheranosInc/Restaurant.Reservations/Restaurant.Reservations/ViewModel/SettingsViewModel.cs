@@ -15,6 +15,7 @@ using Restaurant.Reservations.Shared.Log;
 
 namespace Restaurant.Reservations.ViewModel
 {
+  [Serializable]
   public class SettingsViewModel : ViewModelBase
   {
     #region Private Member Variables

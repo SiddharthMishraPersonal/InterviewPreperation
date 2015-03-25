@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Restaurant.Reservations.ViewModel
 {
+  [Serializable]
   public class TableViewModel : ViewModelBase
   {
     #region Private Member Variables

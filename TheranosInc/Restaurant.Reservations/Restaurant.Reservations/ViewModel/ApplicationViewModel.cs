@@ -18,6 +18,7 @@ using Restaurant.Reservations.Shared.Log;
 
 namespace Restaurant.Reservations.ViewModel
 {
+  [Serializable]
   public class ApplicationViewModel : ViewModelBase
   {
     #region Private Member Variables
@@ -580,6 +581,7 @@ namespace Restaurant.Reservations.ViewModel
     public void UpdateReservation(ReservationViewModel reservationViewModel)
     {
       reservationViewModel.ShowWindow(this._view, true);
+
       GetReservationCounts();
 
       //Count the table
@@ -626,7 +628,7 @@ namespace Restaurant.Reservations.ViewModel
           var tableVm = _tableViewModel();
           tableVm.TableNumber = tableModel.Id;
           tableVm.MaxOccupancy = tableModel.MaxOccupancy;
-          _tableList.Add(tableVm);
+          TableList.Add(tableVm);
         }
       }
       catch (Exception exception)
@@ -713,6 +715,9 @@ namespace Restaurant.Reservations.ViewModel
         var reservationModelList = XmlOperations.DeSerializeReservationLists(_settingsViewModel.ReservationFileFullpath);
         foreach (var resModel in reservationModelList)
         {
+          if (resModel.CheckInDate < DateTime.Now)
+            continue;
+
           var resVm = _reservationViewModel();
           resVm.CustomerName = resModel.CustomerName;
           resVm.ContactNumber = resModel.ContactNumber;
@@ -737,7 +742,9 @@ namespace Restaurant.Reservations.ViewModel
           resVm.GetTableSelectedString();
           AddReservation(resVm);
         }
-
+        GetTodayReservations();
+        GetFutureReservations();
+        GetReservationCounts();
         GetTablesStatus();
       }
       catch (Exception exception)
@@ -864,6 +871,14 @@ namespace Restaurant.Reservations.ViewModel
 
     private void GetTablesStatus()
     {
+      if (CurrentReservationCount == 0 && FutureReservationCount == 0)
+      {
+        foreach (var tableViewModel in TableList)
+        {
+          tableViewModel.IsSelected = false;
+        }
+      }
+
       UsedTablesCount = TableList.Count(s => s.IsSelected == true);
       AvailableTablesCount = TableList.Count(s => s.IsSelected == false);
     }
