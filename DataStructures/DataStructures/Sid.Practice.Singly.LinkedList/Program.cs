@@ -144,13 +144,23 @@ namespace Sid.Practice.Singly.LinkedList
       RemovepedNode.Display();
     }
 
-    private static void SortLinkedList(string key)
+      /// <summary>
+      /// The sort linked list.
+      /// </summary>
+      /// <param name="key">
+      /// The key.
+      /// </param>
+      private static void SortLinkedList(string key)
     {
       switch (key)
       {
-        case "a": linkedList.SortListAcending(); break;
-        case "o": linkedList.SortListDecending(); break;
-        default: break;
+          case "a":
+              linkedList.SortListAscending();
+              break;
+          case "o":
+              linkedList.SortListDescending();
+              break;
+          default: break;
       }
     }
   }
