@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFTutorial", "WPFTutorial\WPFTutorial.csproj", "{A362A119-F939-4039-AF77-28E5CA4E8E0A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFContentPresenter", "WPFContentPresenter\WPFContentPresenter.csproj", "{7E99F548-D93B-42FA-9826-23684B1EFEFB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCTS70-511Questions", "MCTS70-511Questions\MCTS70-511Questions.csproj", "{B435E606-9A1C-4BF2-8FC0-51EBD2C71FE0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A362A119-F939-4039-AF77-28E5CA4E8E0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A362A119-F939-4039-AF77-28E5CA4E8E0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A362A119-F939-4039-AF77-28E5CA4E8E0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A362A119-F939-4039-AF77-28E5CA4E8E0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E99F548-D93B-42FA-9826-23684B1EFEFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E99F548-D93B-42FA-9826-23684B1EFEFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E99F548-D93B-42FA-9826-23684B1EFEFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E99F548-D93B-42FA-9826-23684B1EFEFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B435E606-9A1C-4BF2-8FC0-51EBD2C71FE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B435E606-9A1C-4BF2-8FC0-51EBD2C71FE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B435E606-9A1C-4BF2-8FC0-51EBD2C71FE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B435E606-9A1C-4BF2-8FC0-51EBD2C71FE0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

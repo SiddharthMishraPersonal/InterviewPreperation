@@ -1,0 +1,39 @@
+﻿<Window x:Class="MCTS70_511Questions.RoutedEventsExample"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="RoutedEventsExample"
+        Width="300"
+        Height="300">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+    <TextBlock x:Name="DisplayTextBlock"
+               Grid.Row="0"
+               Width="100"
+               Margin="5"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Center"
+               Text="Clicked...." />
+    <Border Grid.Row="1" Background="Yellow">
+      <Button x:Name="TestButton"
+              Width="75"
+              Height="75"
+              Margin="5"
+              HorizontalAlignment="Left"
+              VerticalAlignment="Top">
+        <Button.Content>
+
+          <Ellipse x:Name="TestEllipse"
+                   Width="{Binding Path=Height,
+                                   RelativeSource={RelativeSource Self}}"
+                   Height="70"
+                   Fill="Violet"
+                   PreviewMouseDown="TestEllipse_OnPreviewMouseDown" />
+        </Button.Content>
+      </Button>
+    </Border>
+  </Grid>
+</Window>

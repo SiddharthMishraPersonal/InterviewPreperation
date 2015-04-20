@@ -3,50 +3,43 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow"
         Width="525"
-        Loaded="MainWindow_OnLoaded"
         Height="350">
   <Grid>
-    <Button x:Name="btnStop"
-            Width="89"
-            Margin="418,38,0,0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Click="btnStop_Click"
-            Content="Stop"
-            RenderTransformOrigin="0.467,-1.727" />
-    <TextBox x:Name="txtInput"
-             Width="341"
-             Height="23"
-             Margin="72,10,0,0"
-             HorizontalAlignment="Left"
-             VerticalAlignment="Top"
-             Text="0"
-             TextWrapping="Wrap" />
-    <Label Width="57"
-           Margin="10,10,0,0"
-           HorizontalAlignment="Left"
-           VerticalAlignment="Top"
-           Content="Counter" />
-    <Button x:Name="btnStart"
-            Width="89"
-            Margin="418,10,0,0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Click="btnStart_Click"
-            Content="Start"
-            RenderTransformOrigin="0.467,-1.727" />
-    <TextBlock x:Name="txtOutput"
-               Width="207"
-               Height="60"
-               Margin="10,58,0,0"
-               HorizontalAlignment="Left"
-               VerticalAlignment="Top"
-               Text="TextBlock"
-               TextWrapping="Wrap" />
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="*" MinWidth="50" />
+      <ColumnDefinition Width="Auto" />
+      <ColumnDefinition Width="Auto" />
+      <ColumnDefinition Width="Auto" />
+    </Grid.ColumnDefinitions>
+    <ListBox x:Name="listBox"
+             Grid.Row="0"
+             Grid.Column="0"
+             Margin="5" />
 
+    <Grid Grid.Column="1">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
 
+      <Button x:Name="StartButton"
+              Grid.Row="0"
+              Grid.Column="0"
+              Width="60"
+              Height="23"
+              Margin="5,5,5,0"
+              VerticalAlignment="Top"
+              Click="StartButton_OnClick"
+              Content="Start" />
 
-
-
+      <Button x:Name="StopButton"
+              Grid.Row="1"
+              Grid.Column="0"
+              Width="60"
+              Margin="5 0 5 5"
+              Click="StopButton_OnClick"
+              Content="Stop" />
+    </Grid>
   </Grid>
+
 </Window>

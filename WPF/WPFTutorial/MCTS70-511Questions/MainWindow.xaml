@@ -1,0 +1,130 @@
+﻿<Window x:Class="MCTS70_511Questions.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:CurrentWindow="clr-namespace:MCTS70_511Questions"
+        Title="MainWindow"
+        Width="525"
+        Height="350">
+  <Window.Resources>
+    <CurrentWindow:DoubleThePriceConverter x:Key="DoubleThePriceConverter" />
+    <CurrentWindow:NameMultiConverter x:Key="NameMultiConverter" />
+
+  </Window.Resources>
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="Auto" />
+      <ColumnDefinition Width="Auto" />
+      <ColumnDefinition Width="Auto" />
+      <ColumnDefinition Width="Auto" />
+      <ColumnDefinition Width="Auto" />
+    </Grid.ColumnDefinitions>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition />
+    </Grid.RowDefinitions>
+    <ListBox x:Name="listBox"
+             MinWidth="68"
+             MinHeight="98"
+             Margin="10,10,0,0"
+             HorizontalAlignment="Left"
+             VerticalAlignment="Top"
+             ItemsSource="{Binding ListBoxItems}">
+      <ListBox.ItemTemplate>
+        <DataTemplate>
+          <TextBlock Text="{Binding Path=DisplayValue}" />
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+      <!--
+        <ListBox.Items>
+        <ListBoxItem Content="Items 1" />
+        <ListBoxItem Content="Items 2" />
+        <ListBoxItem Content="Items 3" />
+        <ListBoxItem Content="Items 4" />
+        <ListBoxItem Content="Items 5" />
+        <ListBoxItem Content="Items 6" />
+        <ListBoxItem Content="Items 7" />
+        </ListBox.Items>
+      -->
+    </ListBox>
+
+    <Button x:Name="btnForListBox"
+            Grid.Row="1"
+            Grid.Column="0"
+            MinWidth="70"
+            MinHeight="35"
+            Margin="10,10,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Content="{Binding ElementName=listBox,
+                              Path=SelectedItem.DisplayValue}" />
+    <TextBlock Grid.Row="1"
+               Grid.Column="1"
+               Height="35"
+               MinWidth="100"
+               Margin="11,10,8,0"
+               HorizontalAlignment="Stretch"
+               VerticalAlignment="Top"
+               Text="{Binding ElementName=listBox,
+                              Path=SelectedValue.DisplayValue}" />
+
+    <TextBlock Grid.Row="0"
+               Grid.Column="1"
+               Height="35"
+               MinWidth="100"
+               Margin="11,36,8,36">
+      <TextBlock.Text>
+        <Binding ElementName="listBox"
+                 Path="SelectedValue.DisplayValue"
+                 UpdateSourceTrigger="LostFocus" />
+      </TextBlock.Text>
+    </TextBlock>
+
+    <StackPanel Grid.Row="0"
+                Grid.Column="2"
+                Orientation="Vertical">
+      <TextBox Width="100"
+               Height="25"
+               Margin="10"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Top"
+               Text="{Binding Price,
+                              Converter={StaticResource DoubleThePriceConverter},
+                              Mode=TwoWay}" />
+
+      <TextBox Width="100"
+               Height="25"
+               Margin="10,0,10,10"
+               Text="{Binding Price,
+                              Converter={StaticResource DoubleThePriceConverter},
+                              Mode=OneWayToSource}" />
+    </StackPanel>
+
+    <StackPanel Grid.Row="1"
+                Grid.Column="2"
+                Orientation="Vertical">
+      <TextBox x:Name="TextBoxFirstName"
+               Width="100"
+               Height="25"
+               Margin="10"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Top" />
+
+      <TextBox x:Name="TextBoxSecondName"
+               Width="100"
+               Height="25"
+               Margin="10,0,10,10" />
+
+      <TextBlock Width="100"
+                 Height="25"
+                 Margin="10,0,10,10">
+        <TextBlock.Text>
+          <MultiBinding Converter="{StaticResource NameMultiConverter}">
+            <Binding ElementName="TextBoxFirstName" Path="Text" />
+            <Binding ElementName="TextBoxSecondName" Path="Text" />
+          </MultiBinding>
+        </TextBlock.Text>
+      </TextBlock>
+    </StackPanel>
+
+  </Grid>
+</Window>
