@@ -112,6 +112,7 @@ namespace Sid.Practice.Singly.LinkedList
                     prevNode = currentNode;
                     currentNode = currentNode.NextNode;
                 }
+
                 var newNode = new SinglyNode(nodeValue);
                 prevNode.NextNode = newNode;
                 newNode.NextNode = currentNode;
@@ -191,24 +192,25 @@ namespace Sid.Practice.Singly.LinkedList
                 throw new MyException("Linked List is Empty.");
             }
 
+            // We will use 4 pointers to do simple sorting.
             var prevNode = this._head;
             var currentNode = this._head;
             var nextNode = this._head.NextNode;
-
             while (nextNode != null)
             {
                 if (currentNode.NodeValue > nextNode.NodeValue)
                 {
                     SinglyNode tempNode = nextNode.NextNode;
-                    nextNode.NextNode = currentNode;
 
                     // While swapping in and out we can lose Head pointer. So we need to set that Head pointer here to very first node.
-                    if (currentNode.NodeId == prevNode.NodeId)
+                    if (currentNode.NodeId == _head.NodeId)
                     {
                         this._head = nextNode;
                     }
-                    prevNode.NextNode = nextNode;
+
+                    nextNode.NextNode = currentNode;
                     currentNode.NextNode = tempNode;
+                    prevNode.NextNode = nextNode;
 
                     prevNode = this._head;
                     currentNode = this._head;
@@ -217,7 +219,7 @@ namespace Sid.Practice.Singly.LinkedList
                 }
                 else
                 {
-                    prevNode = nextNode;
+                    prevNode = currentNode;
                     currentNode = nextNode;
                     nextNode = nextNode.NextNode;
                 }
