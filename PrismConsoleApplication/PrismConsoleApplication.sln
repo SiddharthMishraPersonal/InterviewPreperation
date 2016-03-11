@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrismConsoleApplication", "PrismConsoleApplication\PrismConsoleApplication.csproj", "{96E134CB-9517-43D6-8F82-42759E6FC6DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonTypesLibrary", "CommonTypesLibrary\CommonTypesLibrary.csproj", "{A6E0BBFF-F8F5-47D6-B64E-3EEB26205BE3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InputOutputLibrary", "InputOutputLibrary\InputOutputLibrary.csproj", "{BAFA74DF-A213-4040-811D-DEB3E618FD51}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalculatorLibrary", "CalculatorLibrary\CalculatorLibrary.csproj", "{3F5E2379-6C8D-4BF9-AFC7-8EEAC40D438C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalculatorCommandParsingLibrary", "CalculatorCommandParsingLibrary\CalculatorCommandParsingLibrary.csproj", "{2B3B38B4-3894-4CDE-A350-779476908C9A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InterfacesLibrary", "InterfacesLibrary\InterfacesLibrary.csproj", "{4A5C6D63-98D8-4D8A-A24E-176BE97201AF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{96E134CB-9517-43D6-8F82-42759E6FC6DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96E134CB-9517-43D6-8F82-42759E6FC6DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96E134CB-9517-43D6-8F82-42759E6FC6DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96E134CB-9517-43D6-8F82-42759E6FC6DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6E0BBFF-F8F5-47D6-B64E-3EEB26205BE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6E0BBFF-F8F5-47D6-B64E-3EEB26205BE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6E0BBFF-F8F5-47D6-B64E-3EEB26205BE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6E0BBFF-F8F5-47D6-B64E-3EEB26205BE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAFA74DF-A213-4040-811D-DEB3E618FD51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAFA74DF-A213-4040-811D-DEB3E618FD51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAFA74DF-A213-4040-811D-DEB3E618FD51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAFA74DF-A213-4040-811D-DEB3E618FD51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F5E2379-6C8D-4BF9-AFC7-8EEAC40D438C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F5E2379-6C8D-4BF9-AFC7-8EEAC40D438C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F5E2379-6C8D-4BF9-AFC7-8EEAC40D438C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F5E2379-6C8D-4BF9-AFC7-8EEAC40D438C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B3B38B4-3894-4CDE-A350-779476908C9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B3B38B4-3894-4CDE-A350-779476908C9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B3B38B4-3894-4CDE-A350-779476908C9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B3B38B4-3894-4CDE-A350-779476908C9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A5C6D63-98D8-4D8A-A24E-176BE97201AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A5C6D63-98D8-4D8A-A24E-176BE97201AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A5C6D63-98D8-4D8A-A24E-176BE97201AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A5C6D63-98D8-4D8A-A24E-176BE97201AF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
