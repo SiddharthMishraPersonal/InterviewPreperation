@@ -151,6 +151,22 @@ namespace HeapDotNet
             }
         }
 
+        public void PostorderDisplay(int index)
+        {
+            if (index < 0 || index >= this.currentSize)
+            {
+                return;
+            }
+
+            var leftChildIndex = this.GetLeftChildIndex(index);
+            this.PostorderDisplay(leftChildIndex);
+
+            var rightChildIndex = this.GetRightChildIndex(index);
+            this.PostorderDisplay(rightChildIndex);
+
+            Console.WriteLine(this.heapNodeArray[index].Data);
+        }
+
         private void Swap(int index1, int index2)
         {
             var temp = this.heapNodeArray[index1];
