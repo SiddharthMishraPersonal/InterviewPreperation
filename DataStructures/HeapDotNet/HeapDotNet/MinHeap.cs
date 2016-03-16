@@ -10,9 +10,11 @@ namespace HeapDotNet
     {
         HeapNode[] heapNodeArray;
         int currentSize = 0;
+        int maxSize = 0;
 
         public MinHeap(int maxSize)
         {
+            this.maxSize = maxSize;
             heapNodeArray = new HeapNode[maxSize];
         }
 
@@ -40,25 +42,120 @@ namespace HeapDotNet
 
                 heapNodeArray[index] = newNode;
             }
-
         }
 
-        public void InorderDisplay()
+
+        public void Delete()
         {
-            var level = 0;
-            for (int i = 0; i < heapNodeArray.Count(); i++)
+            if (currentSize == 0)
             {
-                if (i <= 2 * level-1)
-                {
-                    Console.WriteLine(heapNodeArray[i].Data + "\t");
-                    level++;
-                }
-                else
-                {
-                    Console.Write(heapNodeArray[i].Data + "\t");
-                }
-               // Console.Write("{0}\t{1}", heapNodeArray[GetLeftChildIndex(i)].Data, heapNodeArray[GetRightChildIndex(i)].Data);
+                Console.WriteLine("Heap is empty.");
+                return;
             }
+            var lastIndex = currentSize - 1;
+            heapNodeArray[0] = heapNodeArray[lastIndex];
+            this.heapNodeArray[lastIndex] = null;
+            currentSize--;
+
+            // heapify the whole heap to arrange it
+            this.Heapify(0);
+        }
+
+        /// <summary>
+        /// Rearranges the Heap.
+        /// </summary>
+        /// <param name="index"></param>
+        private void Heapify(int index)
+        {
+            if (index < 0 || index >= maxSize || heapNodeArray[index] == null)
+            {
+                return;
+            }
+
+            var currentNode = heapNodeArray[index];
+            var leftChildIndex = this.GetLeftChildIndex(index);
+
+            if (leftChildIndex > this.currentSize || this.heapNodeArray[leftChildIndex] == null)
+            {
+                return;
+            }
+
+            if (currentNode.Data > heapNodeArray[leftChildIndex].Data)
+            {
+                this.Swap(index, leftChildIndex);
+                this.Heapify(leftChildIndex);
+            }
+
+            currentNode = heapNodeArray[index];
+            var rightChildIndex = this.GetRightChildIndex(index);
+            if (rightChildIndex > this.currentSize || this.heapNodeArray[rightChildIndex] == null)
+            {
+                return;
+            }
+
+            if (currentNode.Data > heapNodeArray[rightChildIndex].Data)
+            {
+                this.Swap(index, rightChildIndex);
+                this.Heapify(rightChildIndex);
+            }
+        }
+
+
+        /// <summary>
+        /// Inorder display.
+        /// </summary>
+        public void InorderDisplay(int index)
+        {
+            //var count = heapNodeArray.Where(s => s != null).Count();
+            //for (int i = 0; i < count; i++)
+            //{
+
+            //    Console.Write("{0}\t{1}", GetLeftChildIndex(i) >= count ? 0 : heapNodeArray[GetLeftChildIndex(i)].Data,
+            //        GetRightChildIndex(i) >= count ? 0 :heapNodeArray[GetRightChildIndex(i)].Data);
+            //}
+
+            var leftChildIndex = this.GetLeftChildIndex(index);
+            if (leftChildIndex < this.currentSize)
+            {
+                this.InorderDisplay(leftChildIndex);
+            }
+
+            Console.WriteLine(this.heapNodeArray[index].Data);
+
+            var rightChildIndex = this.GetRightChildIndex(index);
+            if (rightChildIndex < this.currentSize)
+            {
+                this.InorderDisplay(rightChildIndex);
+            }
+        }
+
+        public void PreorderDisplay(int index)
+        {
+            if (index < 0 || index >= this.currentSize)
+            {
+                return;
+            }
+
+            Console.WriteLine(this.heapNodeArray[index].Data);
+
+            var leftChildIndex = this.GetLeftChildIndex(index);
+            if (leftChildIndex < this.currentSize)
+            {
+                this.PreorderDisplay(leftChildIndex);
+            }
+
+            var rightChildIndex = this.GetRightChildIndex(index);
+            if (rightChildIndex < this.currentSize)
+            {
+                this.PreorderDisplay(rightChildIndex);
+            }
+        }
+
+        private void Swap(int index1, int index2)
+        {
+            var temp = this.heapNodeArray[index1];
+            this.heapNodeArray[index1] = this.heapNodeArray[index2];
+            this.heapNodeArray[index2] = temp;
         }
 
         private int GetParentIndex(int index)

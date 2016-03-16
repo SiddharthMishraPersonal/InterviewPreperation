@@ -19,7 +19,15 @@ namespace HeapDotNet
             minHeap.Insert(1);
             minHeap.Insert(5);
 
-            minHeap.InorderDisplay();
+            Console.WriteLine("In-order display");
+            minHeap.InorderDisplay(0);
+
+            Console.WriteLine("Pre-order display");
+            minHeap.PreorderDisplay(0);
+
+            minHeap.Delete();
+            Console.WriteLine("Pre-order display");
+            minHeap.PreorderDisplay(0);
 
             Console.ReadKey();
         }
