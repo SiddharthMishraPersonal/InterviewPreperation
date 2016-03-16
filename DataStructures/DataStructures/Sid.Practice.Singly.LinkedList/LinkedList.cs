@@ -164,6 +164,29 @@ namespace Sid.Practice.Singly.LinkedList
             return currentNode;
         }
 
+        public void Reverse()
+        {
+            if (this._head == null)
+            {
+                return;
+            }
+
+            var currentNode = this._head;
+            var nextNode = currentNode.NextNode;
+            SinglyNode temp;
+            while (nextNode != null)
+            {
+                temp = nextNode.NextNode;
+                nextNode.NextNode = currentNode;
+                currentNode = nextNode;
+                nextNode = temp;
+            }
+
+            // Last item after reversing should have null as nextnode
+            this._head.NextNode = null;
+            this._head = currentNode;
+        }
+
         /// <summary>
         /// Displays the linked list.
         /// </summary>
