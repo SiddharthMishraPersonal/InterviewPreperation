@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sid.Practice.Singly.LinkedL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwapAdjacentNodes", "SwapAdjacentNodes\SwapAdjacentNodes.csproj", "{23927C3F-B800-4765-9CDF-63D60BAB9710}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LastWithFirstArrange", "LastWithFirstArrange\LastWithFirstArrange.csproj", "{2648221D-5381-40A3-87DE-44A7CF4369ED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,10 @@ Global
 		{23927C3F-B800-4765-9CDF-63D60BAB9710}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23927C3F-B800-4765-9CDF-63D60BAB9710}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23927C3F-B800-4765-9CDF-63D60BAB9710}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2648221D-5381-40A3-87DE-44A7CF4369ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2648221D-5381-40A3-87DE-44A7CF4369ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2648221D-5381-40A3-87DE-44A7CF4369ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2648221D-5381-40A3-87DE-44A7CF4369ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -90,5 +96,6 @@ Global
 		{9D9DA08D-6D3B-49D1-A116-24844568AFE0} = {B8384A90-5FCB-40B6-A929-9E51BBA5C134}
 		{F7C4B3BA-4C43-4198-9AE3-2837C38F1609} = {A16A4E8D-1A71-4A8C-A33F-B1E35AD26346}
 		{23927C3F-B800-4765-9CDF-63D60BAB9710} = {0DE8F22E-E4B5-48E4-AA21-49147A4BF995}
+		{2648221D-5381-40A3-87DE-44A7CF4369ED} = {0DE8F22E-E4B5-48E4-AA21-49147A4BF995}
 	EndGlobalSection
 EndGlobal

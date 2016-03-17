@@ -18,14 +18,19 @@ namespace SwapAdjacentNodes
 
             list.Display();
 
+
+            var midNode = list.MidOfList();
+            Console.WriteLine("Mid Node: "+midNode.NodeValue);
+
+            Console.WriteLine("Swapping");
+            list.Swap();
+            list.Display();
+            Console.ReadKey();
+
             Console.WriteLine("Reverse the list");
 
             list.Reverse();
             list.Display();
-
-            Console.ReadKey();
-
-            list.Swap();
 
         }
     }

@@ -1,0 +1,6 @@
+﻿Given LinkedList is below:
+1->2->3->4->5->6->7
+
+Create linkedlist like given below
+
+7->1->6->2->5->3->4

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SwapAdjacentNodes
+namespace LastWithFirstArrange
 {
     public class LinkedList
     {
@@ -106,7 +106,27 @@ namespace SwapAdjacentNodes
 
         public void Swap()
         {
-            
+            var secondHalf = this.MidOfList();
+            var second = this.Reverse(secondHalf);
+            var first = rootNode;
+
+            var newRoot = second;
+
+            while (first != null)
+            {
+                if (second == null)
+                {
+                    break;
+                }
+
+                var temp = second.NextNode;
+                second.NextNode = first;
+                first = first.NextNode;
+                second.NextNode.NextNode = temp;
+                second = temp;
+            }
+
+            rootNode = newRoot;
         }
 
         public void Display()
