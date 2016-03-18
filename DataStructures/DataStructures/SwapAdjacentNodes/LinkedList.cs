@@ -106,7 +106,30 @@ namespace SwapAdjacentNodes
 
         public void Swap()
         {
-            
+            var currentNode = rootNode;
+            var prevNode = rootNode;
+            prevNode = currentNode;
+            currentNode = currentNode.NextNode;
+            int count = 0;
+            while (currentNode != null)
+            {
+                
+
+                prevNode.NextNode = currentNode.NextNode;
+                currentNode.NextNode = prevNode;
+
+                if (count == 0)
+                {
+                    rootNode = currentNode;
+                }
+                prevNode = prevNode.NextNode;
+                currentNode = prevNode.NextNode;
+                count++;
+            }
+
+
+
+
         }
 
         public void Display()
