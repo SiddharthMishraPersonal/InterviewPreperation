@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InterfacesLibrary
+namespace InputOutputLibrary
 {
+    using InterfacesLibrary;
     using System.Windows.Forms;
 
     public class MessageBoxOutputService : IOutputService

@@ -7,7 +7,7 @@
     <ProjectGuid>{BAFA74DF-A213-4040-811D-DEB3E618FD51}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>InterfacesLibrary</RootNamespace>
+    <RootNamespace>InputOutputLibrary</RootNamespace>
     <AssemblyName>InputOutputLibrary</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

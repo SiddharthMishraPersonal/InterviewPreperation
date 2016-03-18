@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InterfacesLibrary
+namespace InputOutputLibrary
 {
     using CommonTypesLibrary;
-
+    using InterfacesLibrary;
     public class ConsoleInputService : IInputService
     {
         public string ReadCommand()
