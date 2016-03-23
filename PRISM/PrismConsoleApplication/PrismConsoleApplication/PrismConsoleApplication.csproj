@@ -49,6 +49,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -65,18 +66,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CalculatorCommandParsingLibrary\CalculatorCommandParsingLibrary.csproj">
-      <Project>{2b3b38b4-3894-4cde-a350-779476908c9a}</Project>
-      <Name>CalculatorCommandParsingLibrary</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CalculatorLibrary\CalculatorLibrary.csproj">
-      <Project>{3f5e2379-6c8d-4bf9-afc7-8eeac40d438c}</Project>
-      <Name>CalculatorLibrary</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\InputOutputLibrary\InputOutputLibrary.csproj">
-      <Project>{bafa74df-a213-4040-811d-deb3e618fd51}</Project>
-      <Name>InputOutputLibrary</Name>
-    </ProjectReference>
     <ProjectReference Include="..\InterfacesLibrary\InterfacesLibrary.csproj">
       <Project>{4a5c6d63-98d8-4d8a-a24e-176be97201af}</Project>
       <Name>InterfacesLibrary</Name>
